@@ -4,6 +4,7 @@
 Homestead.yaml
 Homestead.json
 .env
+.env.example
 composer.lock
 /storage/logs
 /.idea
