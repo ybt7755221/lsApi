@@ -11,6 +11,7 @@ if [ ! -f "$file" ]; then
     chmod -R 777 storage/
     chmod -R 777 bootstrap/cache/
     cp .env.example .env
+    php artisan key:gennerate
     echo 'Create the config variable file ".env", you can modified that file to modified the project configuration.'
 else
     echo 'You had installed this project.'
