@@ -13,7 +13,7 @@ file="./.env"
 
 if [ ! -f "$file" ]; then
     echo 'Create the ".env" configuration file...'
-    cp .env.example .env
+    cp .env.default .env
     php artisan key:generate
     echo 'Create the config variable file ".env", you can modified that file to modified the project configuration.'
 else

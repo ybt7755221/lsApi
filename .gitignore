@@ -6,4 +6,5 @@ Homestead.json
 .env
 composer.lock
 /storage/logs
-.idea
+/.idea
+
