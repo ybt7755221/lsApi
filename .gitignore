@@ -7,5 +7,9 @@ Homestead.json
 .env.example
 composer.lock
 /storage/logs
+/storage/framework/views
+/storage/framework/sessions
+/storage/framework/cache
+/storage/app/public
 /.idea
 
