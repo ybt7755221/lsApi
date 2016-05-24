@@ -1,6 +1,6 @@
 /vendor
 /node_modules
-/bootstrap/cache/*
+/bootstrap/cache/
 Homestead.yaml
 Homestead.json
 .env
