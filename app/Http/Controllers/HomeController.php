@@ -24,6 +24,11 @@ class HomeController extends Controller
      */
     public function index()
     {
+        return view('home');
+    }
+
+    public function error()
+    {
         return view('errors/503')->with('errorInfo', ['errorCode' => trans('errors.LS40301_NAME'), 'errorMsg' => trans('errors.LS40301_INFO')]);
     }
 }
