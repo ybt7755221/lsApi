@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>@lang('system.title');</title>
+    <title>@lang('system.title')</title>
 
     <!-- Fonts ->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
@@ -23,10 +23,19 @@
         .fa-btn {
             margin-right: 6px;
         }
+        .blur{
+            position: fixed;
+            min-width: 100%;
+            min-height: 100%;
+            -webkit-filter: blur(10px);
+            -ms-filter: blur(10px);
+            filter: blur(10px);
+            z-index: -1;
+        }
     </style>
 </head>
 <body id="app-layout">
-
+<img src="{{url('images/bg4.jpg')}}" class="blur" />
 @yield('content')
 
 <!-- JavaScripts -->

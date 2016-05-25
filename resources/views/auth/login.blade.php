@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">{{ trans('system.login') }}</div>
+                <div class="panel-heading">{{trans('system.title')}} -- {{ trans('system.login') }}</div>
                 <div class="panel-body">
                     <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
                         {{ csrf_field() }}
@@ -53,10 +53,7 @@
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fa fa-btn fa-sign-in"></i>Login
                                 </button>
-                                <button type="button" onclick="javascript:window.location.href='{{url("/register")}}';" class="btn btn-primary">
-                                    <i class="fa fa-btn fa-user"></i>{{ trans('system.register') }}
-                                </button>
-                                <a class="btn btn-link" id="forget_password" href="javascript:void(0);" data-toggle="modal" data-target="#myModal">{{ trans('auth.forgotPassword') }}</a>
+                                <a class="btn btn-link" id="forget_password" data-toggle="modal" data-target="#myModal">{{ trans('auth.forgotPassword') }}</a>
                             </div>
                         </div>
                     </form>

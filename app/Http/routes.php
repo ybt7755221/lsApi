@@ -18,6 +18,7 @@ Route::auth();
  * all of the route about system configration.
  */
 Route::group(['middleware' => 'auth'], function () {
+
     Route::get('/', 'HomeController@index');
     Route::get('home', 'HomeController@index');
 });

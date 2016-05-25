@@ -1,47 +1,20 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Be right back.</title>
-
-        <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
-
-        <style>
-            html, body {
-                height: 100%;
-            }
-
-            body {
-                margin: 0;
-                padding: 0;
-                width: 100%;
-                color: #B0BEC5;
-                display: table;
-                font-weight: 100;
-                font-family: 'Lato';
-            }
-
-            .container {
-                text-align: center;
-                display: table-cell;
-                vertical-align: middle;
-            }
-
-            .content {
-                text-align: center;
-                display: inline-block;
-            }
-
-            .title {
-                font-size: 72px;
-                margin-bottom: 40px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="content">
-                <div class="title">Be right back.</div>
-            </div>
+<head>
+    <title>{{$errorInfo['errorCode']}}</title>
+    <link rel="stylesheet" href="{{url('css/errors.css')}}" />
+</head>
+<body>
+<div class="container">
+    <div class="content">
+        <div class="title">HTTP Error 503</div>
+        <div class="tab-content">Service unavailable.</div>
+        <hr />
+        <div class="tab-pane">
+            <a href="{{url('/home')}}">Return to the index page</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="" onclick="javascript:history.go(-1);">Be right back</a>
         </div>
-    </body>
+    </div>
+</div>
+</body>
 </html>
