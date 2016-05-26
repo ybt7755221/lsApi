@@ -13,20 +13,12 @@
     < Fonts -->
     <!-- Styles -->
     <link rel="stylesheet" href="{{url('css/bootstrap.min.css')}}" >
+    <link rel="stylesheet" href="{{url('css/app.css')}}" >
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
-    <style>
-        body {
-            font-family: 'Lato';
-        }
-
-        .fa-btn {
-            margin-right: 6px;
-        }
-    </style>
 </head>
 <body id="app-layout">
-<nav class="navbar navbar-default navbar-static-top">
+<nav class="navbar navbar-inverse navbar-static-top">
     <div class="container">
         <div class="navbar-header">
 
@@ -62,8 +54,8 @@
                             {{ Auth::user()->name }} <span class="caret"></span>
                         </a>
 
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>{{ trans('system.logout') }}</a></li>
+                        <ul class="dropdown-menu bg-black text-grey" role="menu">
+                            <li><a class="text-white" href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>{{ trans('system.logout') }}</a></li>
                         </ul>
                     </li>
                 @endif

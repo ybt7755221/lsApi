@@ -4,5 +4,6 @@ return [
     'home' => 'Home',
     'login' => 'Login',
     'register' => 'Register',
-    'logout' => 'Logout'
+    'logout' => 'Logout',
+    'dashboard' => 'Dashboard',
 ];

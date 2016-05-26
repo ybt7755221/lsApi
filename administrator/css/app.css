@@ -1,0 +1,22 @@
+body {
+    font-family: 'Lato';
+}
+
+.fa-btn {
+    margin-right: 6px;
+}
+.bg-black {
+    background: #222 !important;
+}
+.bg-black a {
+    color: #aeaeae !important;
+}
+.bg-black a:hover {
+    color: #222 !important;
+}
+.text-white {
+    color: #FFFFFF !important;
+}
+.text-grey {
+    color: #aeaeae !important;
+}

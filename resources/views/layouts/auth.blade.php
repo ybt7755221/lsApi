@@ -13,26 +13,9 @@
     <-- Fonts -->
     <!-- Styles -->
     <link rel="stylesheet" href="{{url('css/bootstrap.min.css')}}" >
+    <link rel="stylesheet" href="{{url('css/login.css')}}" >
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
-    <style>
-        body {
-            font-family: 'Lato';
-        }
-
-        .fa-btn {
-            margin-right: 6px;
-        }
-        .blur{
-            position: fixed;
-            min-width: 100%;
-            min-height: 100%;
-            -webkit-filter: blur(10px);
-            -ms-filter: blur(10px);
-            filter: blur(10px);
-            z-index: -1;
-        }
-    </style>
 </head>
 <body id="app-layout">
 <img src="{{url('images/bg4.jpg')}}" class="blur" />

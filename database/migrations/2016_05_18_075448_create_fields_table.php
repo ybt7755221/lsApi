@@ -16,7 +16,7 @@ class CreateFieldsTable extends Migration
             $table->increments('id');
             $table->string('label');
             $table->string('key');
-            $table->text('params');
+            $table->string('params');
             $table->tinyInteger('publish');
             $table->char('field_type', 10);
             $table->integer('user_id');
