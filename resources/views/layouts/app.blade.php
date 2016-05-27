@@ -40,6 +40,9 @@
             <!-- Left Side Of Navbar -->
             <ul class="nav navbar-nav">
                 <li><a href="{{ url('/home') }}">{{ trans('system.home') }}</a></li>
+                <li><a href="{{ url('/') }}">{{ trans('system.user') }}</a></li>
+                <li><a href="{{ url('/') }}">{{ trans('system.category') }}</a></li>
+                <li><a href="{{ url('/') }}">{{ trans('system.content') }}</a></li>
             </ul>
 
             <!-- Right Side Of Navbar -->
@@ -47,7 +50,6 @@
                 <!-- Authentication Links -->
                 @if (Auth::guest())
                     <li><a href="{{ url('/login') }}">{{ trans('system.login') }}</a></li>
-                    <li><a href="{{ url('/register') }}">{{ trans('system.register') }}</a></li>
                 @else
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -69,6 +71,7 @@
 <!-- JavaScripts -->
 <script src="{{url('js/jquery.min-2.2.3.js')}}"></script>
 <script src="{{url('js/bootstrap.min-3.3.6.js')}}"></script>
+<script src="{{url('js/app.js')}}"></script>
 <!-- JavaScripts -->
 </body>
 </html>

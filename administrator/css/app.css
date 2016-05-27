@@ -20,3 +20,14 @@ body {
 .text-grey {
     color: #aeaeae !important;
 }
+a.text-grey:hover {
+    color: #FFFFFF !important;
+    text-decoration: none;
+}
+.position-right {
+    position: absolute;
+    right:30px;
+}
+.list-group-item-grey {
+    background: #f9f9f9;
+}
