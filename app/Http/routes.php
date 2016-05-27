@@ -25,9 +25,8 @@ Route::group(['middleware' => 'auth'], function () {
 /**
  * all of the route about users configration.
  */
-Route::group(['middleware' => 'auth', 'prefix' => 'users'], function () {
-    Route::get('/', 'HomeController@index');
-    Route::get('home', 'HomeController@index');
+Route::group(['middleware' => 'auth', 'prefix' => 'user'], function () {
+    Route::get('/', 'UserController@index');
 });
 /**
  * all of the route about content configration.
@@ -39,7 +38,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'content'], function () {
 /**
  * all of the route about menus configration.
  */
-Route::group(['middleware' => 'auth', 'prefix' => 'menus'], function () {
+Route::group(['middleware' => 'auth', 'prefix' => 'menu'], function () {
     Route::get('/', 'HomeController@index');
     Route::get('home', 'HomeController@index');
 });

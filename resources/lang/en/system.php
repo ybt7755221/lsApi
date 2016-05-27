@@ -28,5 +28,7 @@ return [
     'user' => 'User',
     'content' => 'Content',
     'category' =>'Category',
-    'link' => 'Friend Link'
+    'link' => 'Friend Link',
+    'disable' => 'Disable',
+    'disable_select' => 'Disable Selected',
 ];

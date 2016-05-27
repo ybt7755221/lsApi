@@ -33,7 +33,7 @@
                                     <td>{{$field->id}}</td>
                                     <td>{{$field->label}}</td>
                                     <td>{{$field->params}}</td>
-                                    <td>{{$field->publish}}</td>
+                                    <td>{{trans('database.field.publishValue.'.$field->publish)}}</td>
                                     <td>{{$field->field_type}}</td>
                                     <td><a href="">{{trans('system.edit')}}</a>&nbsp;|&nbsp;<a href="">{{trans('system.hidden')}}</a>&nbsp;|&nbsp;<a href="">{{trans('system.remove')}}</a></td>
                                 </tr>
