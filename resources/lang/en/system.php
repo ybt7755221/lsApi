@@ -32,4 +32,5 @@ return [
     'link' => 'Friend Link',
     'disable' => 'Disable',
     'disable_select' => 'Disable Selected',
+    'create' => 'Create',
 ];

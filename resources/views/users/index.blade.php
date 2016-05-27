@@ -43,6 +43,7 @@
                                         ||&nbsp;&nbsp;&nbsp;&nbsp;
                                         <a href="">{{trans('system.disable_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
                                         <a href="">{{trans('system.remove_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <a href="">{{trans('system.create')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||
                                     </td>
                                 </tr>
                             </form>
