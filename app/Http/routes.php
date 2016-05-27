@@ -32,13 +32,11 @@ Route::group(['middleware' => 'auth', 'prefix' => 'user'], function () {
  * all of the route about content configration.
  */
 Route::group(['middleware' => 'auth', 'prefix' => 'content'], function () {
-    Route::get('/', 'HomeController@index');
-    Route::get('home', 'HomeController@index');
+    Route::get('/', 'ContentController@index');
 });
 /**
  * all of the route about menus configration.
  */
 Route::group(['middleware' => 'auth', 'prefix' => 'menu'], function () {
-    Route::get('/', 'HomeController@index');
-    Route::get('home', 'HomeController@index');
+    Route::get('/', 'CategoryController@index');
 });

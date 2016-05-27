@@ -8,7 +8,7 @@
                 <div class="panel panel-default">
                     <!--the field table header-->
                     <div class="panel-heading bg-black text-grey">
-                        {{trans('system.dashboard')}} -- {{trans('system.field_description')}}
+                        {{trans('system.dashboard')}} -- {{trans('system.user_information')}}
                         <a id="field_button" class="text-grey position-right" role="button" data-toggle="collapse" href="#field_table" aria-expanded="true" aria-controls="field_table">{{trans('system.hidden')}}</a>
                         <span id="show" class="hidden">{{trans('system.show')}}</span> <span id="hidden" class="hidden">{{trans('system.hidden')}}</span>
                     </div>

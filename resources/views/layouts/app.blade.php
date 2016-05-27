@@ -41,8 +41,8 @@
             <ul class="nav navbar-nav">
                 <li><a href="{{ url('/home') }}">{{ trans('system.home') }}</a></li>
                 <li><a href="{{ url('/user') }}">{{ trans('system.user') }}</a></li>
-                <li><a href="{{ url('/') }}">{{ trans('system.category') }}</a></li>
-                <li><a href="{{ url('/') }}">{{ trans('system.content') }}</a></li>
+                <li><a href="{{ url('/menu') }}">{{ trans('system.category') }}</a></li>
+                <li><a href="{{ url('/content') }}">{{ trans('system.content') }}</a></li>
             </ul>
 
             <!-- Right Side Of Navbar -->
