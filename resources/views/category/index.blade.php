@@ -23,7 +23,6 @@
                             <tr>
                                 <th></th>
                                 <th>{{trans('database.category.fid')}}</th>
-                                <th>{{trans('database.id')}}</th>
                                 <th>{{trans('database.category.cat_name')}}</th>
                                 <th>{{trans('database.category.display')}}</th>
                                 <th>{{trans('database.category.type')}}</th>
@@ -38,7 +37,6 @@
                                     <tr>
                                         <td><input type="checkbox" name="id_{{$category->id}}" value="{{$category->id}}"/></td>
                                         <td>{{trans('system.top_menu')}}</td>
-                                        <td>{{$category->id}}</td>
                                         <td>{{$category->cat_name}}</td>
                                         <td>{{$category->display}}</td>
                                         <td>{{$category->type}}</td>
@@ -53,7 +51,7 @@
                                     </tr>
                                 @endforeach
                                 <tr>
-                                    <td colspan="10" class="text-center">
+                                    <td colspan="9" class="text-center">
                                         ||&nbsp;&nbsp;&nbsp;&nbsp;
                                         <a href="">{{trans('system.disable_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
                                         <a href="">{{trans('system.remove_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;

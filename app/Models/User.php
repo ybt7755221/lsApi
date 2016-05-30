@@ -21,7 +21,12 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'status', 'password', 'remember_token',
+        'created_at', 'updated_at', 'email', 'status', 'password', 'remember_token',
     ];
     public $timestamps = true;
+
+    public function content()
+    {
+        return $this->hasMany('App\Models\content');
+    }
 }

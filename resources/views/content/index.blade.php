@@ -37,7 +37,7 @@
                                         <td><input type="checkbox" name="id_{{$content->id}}" value="{{$content->id}}"/></td>
                                         <td>{{$content->title}}</td>
                                         <td>{{$content->thumb}}</td>
-                                        <td>{{$content->user_id}}</td>
+                                        <td>{{$content->user->name}}</td>
                                         <td>{{trans('database.commentValue.'.$content->comment_status)}}</td>
                                         <td>{{trans('database.stateValue.'.$content->state)}}</td>
                                         <td>{{$content->updated_at}}</td>
