@@ -3,17 +3,17 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <!--the field table div-->
+        <!--the user table div-->
         <div class="col-md-10 col-md-offset-1">
                 <div class="panel panel-default">
-                    <!--the field table header-->
+                    <!--the user table header-->
                     <div class="panel-heading bg-black text-grey">
                         {{trans('system.dashboard')}} -- {{trans('system.user_information')}}
                         <a id="field_button" class="text-grey position-right" role="button" data-toggle="collapse" href="#field_table" aria-expanded="true" aria-controls="field_table">{{trans('system.hidden')}}</a>
                         <span id="show" class="hidden">{{trans('system.show')}}</span> <span id="hidden" class="hidden">{{trans('system.hidden')}}</span>
                     </div>
-                    <!--the field table header-->
-                    <!--the field table body-->
+                    <!--the user table header-->
+                    <!--the user table body-->
                     <div id="field_table" class="panel-body table-responsive panel-collapse collapse in" >
                         <table class="table table-striped table-hover">
                             <thead><tr>
@@ -21,7 +21,7 @@
                                 <th>{{trans('database.user.name')}}</th>
                                 <th>{{trans('database.user.email')}}</th>
                                 <th>{{trans('database.user.status')}}</th>
-                                <th>{{trans('database.user.created_at')}}</th>
+                                <th>{{trans('database.created_at')}}</th>
                                 <th>{{trans('database.user.updated_at')}}</th>
                                 <th>{{trans('database.option')}}</th>
                             </tr></thead>
@@ -50,10 +50,10 @@
                             </tbody>
                         </table>
                     </div>
-                    <!--the field table body-->
+                    <!--the user table body-->
                 </div>
             </div>
-        <!--the field table div-->
+        <!--the user table div-->
     </div>
 </div>
 @endsection

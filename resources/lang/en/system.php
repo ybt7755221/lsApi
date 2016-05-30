@@ -33,4 +33,8 @@ return [
     'disable' => 'Disable',
     'disable_select' => 'Disable Selected',
     'create' => 'Create',
+    'show_detail' => 'Show Detail',
+    'more' => 'More',
+    'top_menu' => 'Top Menu',
+    'sub_menu' => 'Sub Menu',
 ];
