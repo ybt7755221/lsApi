@@ -24,7 +24,7 @@ class User extends Authenticatable
         'created_at', 'updated_at', 'email', 'status', 'password', 'remember_token',
     ];
     public $timestamps = true;
-
+    protected $table = 'users';
     public function content()
     {
         return $this->hasMany('App\Models\content');
