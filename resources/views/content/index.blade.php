@@ -46,11 +46,10 @@
                                             <a href="">{{trans('system.disable')}}</a>&nbsp;|&nbsp;
                                             <a href="">{{trans('system.remove')}}</a></td>&nbsp;
                                         </td>
-                                        <td><a href="">{{trans('system.sub_menu')}}</a></td>
                                     </tr>
                                 @endforeach
                                 <tr>
-                                    <td colspan="10" class="text-center">
+                                    <td colspan="8" class="text-center">
                                         ||&nbsp;&nbsp;&nbsp;&nbsp;
                                         <a href="">{{trans('system.disable_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
                                         <a href="">{{trans('system.remove_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
