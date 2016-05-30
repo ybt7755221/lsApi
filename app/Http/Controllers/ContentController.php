@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Content;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -14,6 +15,7 @@ class ContentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        return view('content/index');
+        $contentObj = Content::where('state', 1)->orderBy('updated_at')->get();
+        return view('content/index', ['contentObj' => $contentObj]);
     }
 }

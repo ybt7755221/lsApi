@@ -11,7 +11,6 @@ return [
         'field_type' => 'Field Type',
         'user_id' => 'User ID',
         'hits' => 'Hits',
-        'publishValue' => ['Hidden', 'Show', 'Removed'],
     ],
     'link' => [
         'url' => 'Link URL',
@@ -25,7 +24,6 @@ return [
         'email' => 'E-Mail',
         'status' => 'Status',
         'updated_at' => 'Last Login Time',
-        'statusValue' => ['Disabled', 'Editor', 'Manager', 'Administrator', 'Super Administrator'],
     ],
     'content' => [
         'title' => 'Title',
@@ -56,4 +54,8 @@ return [
         'content' => 'Content',
         'status' => 'Status',
     ],
+    'commentValue' => ['Disable', 'Enable'],
+    'stateValue' => ['Padding Audit', 'Published', 'Removed'],
+    'publishValue' => ['Hidden', 'Show', 'Removed'],
+    'statusValue' => ['Disabled', 'Editor', 'Manager', 'Administrator', 'Super Administrator'],
 ];

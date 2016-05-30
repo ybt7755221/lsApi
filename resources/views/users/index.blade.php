@@ -32,7 +32,7 @@
                                         <td><input type="checkbox" name="id_{{$user->id}}" value="{{$user->id}}" /></td>
                                         <td>{{$user->name}}</td>
                                         <td>{{$user->email}}</td>
-                                        <td>{{trans('database.user.statusValue.'.$user->status)}}</td>
+                                        <td>{{trans('database.statusValue.'.$user->status)}}</td>
                                         <td>{{$user->created_at}}</td>
                                         <td>{{$user->updated_at}}</td>
                                         <td><a href="">{{trans('system.edit')}}</a>&nbsp;|&nbsp;<a href="">{{trans('system.disable')}}</a>&nbsp;|&nbsp;<a href="">{{trans('system.remove')}}</a></td>
