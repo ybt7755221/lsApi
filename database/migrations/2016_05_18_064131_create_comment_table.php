@@ -21,7 +21,8 @@ class CreateCommentTable extends Migration
             $table->text('content');
             $table->timestamp('created_at');
             $table->enum('status',['display', 'hidden', 'remove']);
-            $table->index('content_id', 'status');
+            $table->index('content_id', 'content_id');
+            $table->index('status', 'status');
         });
     }
 

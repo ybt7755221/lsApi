@@ -23,7 +23,10 @@ class CreateContentTable extends Migration
             $table->tinyInteger('cat_id');
             $table->timestamp('created_at');
             $table->timestamp('updated_at');
-            $table->index('title','user_id', 'updated_at', 'comment_status');
+            $table->index('title','title');
+            $table->index('user_id', 'user_id');
+            $table->index('updated_at', 'updated_at');
+            $table->index('comment_status', 'comment_status');
             $table->index(['state', 'cat_id']);
         });
     }

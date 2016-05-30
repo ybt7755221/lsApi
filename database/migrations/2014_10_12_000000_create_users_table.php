@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->tinyInteger('status')->default(0);
             $table->rememberToken();
             $table->timestamps();
-            $table->index('status');
+            $table->index('status', 'status');
         });
     }
 

@@ -24,7 +24,9 @@ class CreateCategoryTable extends Migration
             $table->enum('type',['local','single','link']);
             $table->string('url',100);
             $table->timestamp('created_at');
-            $table->index('sort', 'display', 'path');
+            $table->index('sort', 'sort');
+            $table->index('display', 'display');
+            $table->index('path', 'path');
         });
     }
 

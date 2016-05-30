@@ -21,7 +21,8 @@ class CreateFieldsTable extends Migration
             $table->char('field_type', 10);
             $table->integer('user_id');
             $table->integer('hits')->default(0);
-            $table->index('key', 'publish');
+            $table->index('key', 'key');
+            $table->index('publish', 'publish');
         });
     }
 
