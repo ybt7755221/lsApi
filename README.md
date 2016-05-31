@@ -16,7 +16,7 @@ THE STEP:
   
 CODE:
 
-    sh start.sh
+    sh start.sh --auto
   
 SYSTEM REQUIREMENTS: 
 
@@ -38,7 +38,7 @@ THE STEP:
 CODE:
     
     composer install              // Change to your configration.
-    sh start.sh
+    sh start.sh --semi-auto
     
 SYSTEM REQUIREMENTS: 
 
