@@ -61,7 +61,7 @@ if [ "$checkVar" = 'y' -o "$checkVar" = 'Y' ]; then
 		fi
 	fi
     echo 'Installing the database...'
-    php artisan migrate:install
+    php artisan migrate
 else
     echo 'You can add your database information to ".env" file and the run "php artisan migrate:install" to create the database.'
     exit 0
