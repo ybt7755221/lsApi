@@ -21,6 +21,20 @@ chmod -R 777 storage/
 chmod -R 777 bootstrap/cache/
 echo "Modify the file Competence is done."
 
+# Install vendor folder
+if [ "$1" = '--auto' ]; then
+	if [ ! -d "./vendor" ]; then
+		echo 'Installing the vendor from network...'
+		$COMPOSER_CMD install
+	    echo 'Successfully install the vendor folder.'
+	else
+		read -p 'You had a vendor folder. So we can not install it.If you want to update it?[ "Y" or "N"] ' update_status
+		if [ "$update_status" = 'Y' -o "$update_status" = 'y' ]; then
+			$COMPOSER_CMD update
+		fi
+	fi
+fi
+
 # Check env file and create .env file
 ENV_DIR="./.env"
 if [ -f "$ENV_DIR" ]; then
@@ -36,20 +50,6 @@ echo 'Create the ".env" configuration file...'
 cp .env.default .env
 php artisan key:generate
 echo 'Successfully create the config variable file ".env".'
-
-# Install vendor folder
-if [ "$1" = '--auto' ]; then
-	if [ ! -d "./vendor" ]; then
-		echo 'Installing the vendor from network...'
-		$COMPOSER_CMD install
-	    echo 'Successfully install the vendor folder.'
-	else
-		read -p 'You had a vendor folder. So we can not install it.If you want to update it?[ "Y" or "N"] ' update_status
-		if [ "$update_status" = 'Y' -o "$update_status" = 'y' ]; then
-			$COMPOSER_CMD update
-		fi
-	fi
-fi
 
 # Create the all of tables in the database
 read -p 'Please ensure you had finished the database configuration in the ".env" file [Y or N]:' checkVar
