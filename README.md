@@ -74,5 +74,5 @@ SYSTEM REQUIREMENTS:
     * apache 2.4 or higher
     * mysql 5.5 or higher
     * composer
-    * 
+
 The LsApi system come from chinese. The developer english level in general. I gratefully welcome corrections about anything.
