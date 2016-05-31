@@ -66,3 +66,12 @@ else
     echo 'You can add your database information to ".env" file and the run "php artisan migrate:install" to create the database.'
     exit 0
 fi
+
+#Insert the baseline data and seed data.
+echo 'Inserting the baseline data...'
+php artisan db:seed --class=DatabaseSeeder
+if [ "$2" = "--dev" -o "$2" = "" ]; then 
+	echo 'Inserting the seed data...'	
+	php artisan db:seed --class=SeedDataSeeder
+fi
+echo "Congratulations! You finished all work, you can login the LsApi now."
