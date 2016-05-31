@@ -1,5 +1,11 @@
 LsAPI - a openAPI platform.
 ====
+Introduction
+----
+The LsAPI is a open Api platform. The customer can create and publish their Api and added data and through the Restful way to get data use any machine (including mobile or pc or others).
+
+The LsAPI is based on Laravel 5.2. Now we just work on the apache and mysql version, the cache use file cache in order to provide virtual space customer. In the feature we will provide the nginx and nosql version and use memcache/redis as cache system in order to provide customer that there is server machine.
+
 How to start to run this project. (3 ways)
 ----
 #### NO.1 The fully automatic installation.
@@ -68,3 +74,5 @@ SYSTEM REQUIREMENTS:
     * apache 2.4 or higher
     * mysql 5.5 or higher
     * composer
+    * 
+The LsApi system come from chinese. The developer english level in general. I gratefully welcome corrections about anything.
