@@ -16,7 +16,7 @@ THE STEP:
   
 CODE:
 
-    sudo sh start.sh --auto
+    sh start.sh --auto
   
 SYSTEM REQUIREMENTS: 
 
@@ -26,7 +26,6 @@ SYSTEM REQUIREMENTS:
     * apache 2.4 or higher
     * mysql 5.5 or higher
     * composer and you need added it to enviroment variable
-  * Must use 'sudo' to run shell script
 
 #### NO.2 The semi-automatic installation.
 THE STEP:
@@ -38,7 +37,7 @@ THE STEP:
 CODE:
     
     composer install              // Change to your configration.
-    sudo sh start.sh --semi-auto
+    sh start.sh --semi-auto
     
 SYSTEM REQUIREMENTS: 
 
@@ -48,7 +47,6 @@ SYSTEM REQUIREMENTS:
     * apache 2.4 or higher
     * mysql 5.5 or higher
     * composer
-  * Must use 'sudo' to run shell script
 
 #### NO.3 The no-script installation.
 THE STEP:
