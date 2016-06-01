@@ -27,6 +27,6 @@ class User extends Authenticatable
     protected $table = 'users';
     public function content()
     {
-        return $this->hasMany('App\Models\content');
+        return $this->hasMany('App\Models\content', 'user_id');
     }
 }

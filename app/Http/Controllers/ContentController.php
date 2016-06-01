@@ -15,7 +15,12 @@ class ContentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $contentObj = Content::where('state', 1)->orderBy('updated_at')->with(['users'])->get(['title','thumb','user_id','comment_status','state','updated_at']);
+        $contentObj = Content::where('state', 1)
+                    ->orderBy('updated_at')
+                    ->with(['users' => function($query){
+                        $query->select('id','name');
+                    }])
+                    ->get(['id', 'title','thumb','user_id','comment_status','state','updated_at']);
         return view('content/index', ['contentObj' => $contentObj]);
     }
 }
