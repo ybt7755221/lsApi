@@ -31,3 +31,8 @@ a.text-grey:hover {
 .list-group-item-grey {
     background: #f9f9f9;
 }
+.bg-footer{
+    padding-top: 10px !important;
+    padding-bottom: 0px !important;
+    margin-bottom: 0px !important;
+}

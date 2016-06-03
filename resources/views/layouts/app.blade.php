@@ -72,6 +72,7 @@
 <script src="{{url('js/jquery.min-2.2.3.js')}}"></script>
 <script src="{{url('js/bootstrap.min-3.3.6.js')}}"></script>
 <script src="{{url('js/app.js')}}"></script>
+@stack('ls-js')
 <!-- JavaScripts -->
 </body>
 </html>

@@ -27,6 +27,8 @@ Route::group(['middleware' => 'auth'], function () {
  */
 Route::group(['middleware' => 'auth', 'prefix' => 'user'], function () {
     Route::get('/', 'UserController@index');
+    Route::get('/create', 'UserController@create');
+    Route::post('/create', 'UserController@create');
 });
 /**
  * all of the route about content configration.

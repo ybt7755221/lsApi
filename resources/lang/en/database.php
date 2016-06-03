@@ -23,6 +23,7 @@ return [
         'name' => 'User Name',
         'email' => 'E-Mail',
         'status' => 'Status',
+        'password' => 'Password',
         'updated_at' => 'Last Login Time',
     ],
     'content' => [
@@ -57,5 +58,5 @@ return [
     'commentValue' => ['Disable', 'Enable'],
     'stateValue' => ['Padding Audit', 'Published', 'Removed'],
     'publishValue' => ['Hidden', 'Show', 'Removed'],
-    'statusValue' => ['Disabled', 'Editor', 'Manager', 'Administrator', 'Super Administrator'],
+    'statusValue' => ['Forbidden User', 'Editor', 'Manager', 'Administrator', 'Super Administrator'],
 ];

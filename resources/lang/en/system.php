@@ -37,4 +37,6 @@ return [
     'more' => 'More',
     'top_menu' => 'Top Menu',
     'sub_menu' => 'Sub Menu',
+    'confirm_password' => 'Confirm Password',
+    'user_dialog' => 'Dialog - Users',
 ];

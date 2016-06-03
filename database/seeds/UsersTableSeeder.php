@@ -18,6 +18,8 @@ class UsersTableSeeder extends Seeder
             'email' => 'admin@example.com',
             'password' => bcrypt('lsApi123sa'),
             'status' => 4,
+            'created_at' => $_SERVER['REQUEST_TIME'],
+            'updated_at' => $_SERVER['REQUEST_TIME'],
         ]);
     }
 }

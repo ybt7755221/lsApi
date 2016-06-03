@@ -61,12 +61,15 @@ class AuthController extends Controller
      * @param  array  $data
      * @return User
      */
-    protected function create(array $data)
+    /*protected function create(array $data)
     {
+        if (!isset( $data['status'] ) && empty($data['status']) )
+            $data['status'] = 1;
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'status' => $data['status'],
         ]);
-    }
+    }*/
 }
