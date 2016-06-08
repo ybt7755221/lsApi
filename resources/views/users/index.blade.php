@@ -1,14 +1,31 @@
 @extends('layouts.app')
-
 @section('content')
   <div class="container">
     <div class="row">
+      <!--the alert area-->
+      <div id="alert-static" class="alert hidden" role="alert">
+        <button type="button" class="close" id="alert-static-close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <p></p>
+      </div>
       @if(Session::has('success'))
-        <div class="alert alert-success" role="alert">
+        <div class="alert alert-success will-hide" role="alert">
           <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           {{Session::get('success')}}
         </div>
       @endif
+      @if(Session::has('error'))
+        <div class="alert alert-danger will-hide" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          {{Session::get('error')}}
+        </div>
+      @endif
+      @if(Session::has('waring'))
+        <div class="alert alert-warning will-hide" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          {{Session::get('waring')}}
+        </div>
+      @endif
+      <!--the alert area-->
       <!--the user table div-->
       <div class="col-md-10 col-md-offset-1">
         <div class="panel panel-default">
@@ -36,24 +53,29 @@
               </thead>
               <tbody>
               <form>
+                {{ csrf_field() }}
                 @foreach($userObj as $user)
-                  <tr>
+                  <tr id="tr_{{$user->id}}">
                     <td><input type="checkbox" name="id_{{$user->id}}" value="{{$user->id}}"/></td>
                     <td>{{$user->name}}</td>
                     <td>{{$user->email}}</td>
                     <td>{{trans('database.statusValue.'.$user->status)}}</td>
                     <td>{{$user->created_at}}</td>
                     <td>{{$user->updated_at}}</td>
-                    <td><a href="">{{trans('system.edit')}}</a>&nbsp;|&nbsp;<a href="">{{trans('system.disable')}}</a>&nbsp;|&nbsp;<a
-                          href="">{{trans('system.remove')}}</a></td>
+                    <td id="td_operation">
+                      <input type="hidden" name="all_data" value="{{ base64_encode($user->id.'-'.$user->name.'-'.$user->email.'-'.$user->status.'-'.$user->password) }}" readonly>
+                      <a data-toggle="modal" data-target="#myModal" class="db-href db-edit">{{trans('system.edit')}}</a>&nbsp;|&nbsp;
+                      <a class="db-href db-disabled">{{trans('system.disable')}}</a>&nbsp;|&nbsp;
+                      <a class="db-href db-removed">{{trans('system.remove')}}</a>
+                    </td>
                   </tr>
                 @endforeach
                 <tr>
                   <td><input class="check_all" type="checkbox" value="0"/></td>
                   <td colspan="6" class="text-center">
                     ||&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="">{{trans('system.disable_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="">{{trans('system.remove_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#" >{{trans('system.disable_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#" >{{trans('system.remove_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="#" data-toggle="modal" data-target="#myModal">{{trans('system.create')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||
                   </td>
                 </tr>

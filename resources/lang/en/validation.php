@@ -108,6 +108,15 @@ return [
     |
     */
 
-    'attributes' => [],
+    'user' => [
+        'edit_success' => 'Successfully edit a user.',
+        'create_success' => 'Successfully create a new user.',
+        'disable_success' => 'Successfully disable this user.',
+        'remove_success' => 'Successfully removed the ":name" user.',
+        'disabled_again' => 'This user had been disabled.',
+        'disabled_power' => 'Permission denied. You have not enough permission to do ":op" operation.',
+        'disabled_level' => 'Permission denied. You can not :op the user that higher level than you.',
+        'remove_super' => 'Permission denied. The Super Administrator can not be removed.',
+    ]
 
 ];

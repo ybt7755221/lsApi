@@ -36,3 +36,6 @@ a.text-grey:hover {
     padding-bottom: 0px !important;
     margin-bottom: 0px !important;
 }
+a {
+    cursor: pointer;
+}

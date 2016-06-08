@@ -5,7 +5,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">{{$title}}</h4>
       </div>
-      <form class="form-horizontal" role="form" method="POST" action="{{ url('/user/create') }}">
+      <form id="user-form" class="form-horizontal" role="form" method="POST" action="{{ url('/user/create') }}">
         {{ csrf_field() }}
         <div class="modal-body">
           <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
@@ -36,11 +36,11 @@
             </div>
           </div>
 
-          <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+          <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }} user_password">
             <label class="col-md-4 control-label">{{trans('database.user.password')}}</label>
 
             <div class="col-md-6">
-              <input type="password" class="form-control" name="password" minlength="6" maxlength="20">
+              <input type="password" class="form-control password" name="password" minlength="6" maxlength="20">
 
               @if ($errors->has('password'))
                 <span class="help-block">
@@ -50,11 +50,11 @@
             </div>
           </div>
 
-          <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+          <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }} user_password">
             <label class="col-md-4 control-label">{{trans('system.confirm_password')}}</label>
 
             <div class="col-md-6">
-              <input type="password" class="form-control" name="password_confirmation">
+              <input type="password" class="form-control password" name="password_confirmation">
 
               @if ($errors->has('password'))
                 <span class="help-block">
@@ -66,9 +66,11 @@
           <div class="form-group{{$errors->has('status')}} ? 'has-error' : '' ">
             <label class="col-md-4 control-label">{{trans('database.user.status')}}</label>
             <div class="col-md-6">
-              <select class="form-control" name="status" id="status" value="1">
+              <select class="form-control" name="status" id="status">
                 @foreach( trans('database.statusValue') as $key => $val )
-                  <option value="{{$key}}" {{$key == 1 ? 'selected' : ''}} >{{$val}}</option>
+                  @if($key !== 4)
+                    <option value="{{$key}}" {{$key == 1 ? 'selected' : ''}} >{{$val}}</option>
+                  @endif
                 @endforeach
               </select>
             </div>
@@ -77,7 +79,7 @@
         <div class="modal-footer bg-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           <button type="submit" class="btn btn-primary">
-            <i class="fa fa-btn fa-user"></i>{{trans('system.create')}}
+            <i class="fa fa-btn fa-user"></i>{{trans('system.save')}}
           </button>
         </div>
       </form>
