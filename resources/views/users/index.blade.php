@@ -56,7 +56,7 @@
                 {{ csrf_field() }}
                 @foreach($userObj as $user)
                   <tr id="tr_{{$user->id}}">
-                    <td><input type="checkbox" name="id_{{$user->id}}" value="{{$user->id}}"/></td>
+                    <td><input type="checkbox" class="checkbox" name="id_{{$user->id}}" value="{{$user->id}}"/></td>
                     <td>{{$user->name}}</td>
                     <td>{{$user->email}}</td>
                     <td>{{trans('database.statusValue.'.$user->status)}}</td>
@@ -74,9 +74,9 @@
                   <td><input class="check_all" type="checkbox" value="0"/></td>
                   <td colspan="6" class="text-center">
                     ||&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="#" >{{trans('system.disable_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="#" >{{trans('system.remove_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="#" data-toggle="modal" data-target="#myModal">{{trans('system.create')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||
+                    <a class="select_href" id="disable" >{{trans('system.disable_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="select_href" id="remove" >{{trans('system.remove_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a data-toggle="modal" data-target="#myModal">{{trans('system.create')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||
                   </td>
                 </tr>
               </form>

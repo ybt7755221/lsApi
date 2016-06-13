@@ -44,7 +44,21 @@ $(function () {
     $('#alert-static p').html('');
     $('#alert-static').attr('class', 'alert hidden');
   });
-
+  
+  $('.select_href').click(function (){
+    var currentClass = $(this).attr('id'),
+        ids=[],
+        url = $(location).attr('href').split("?")[0];
+    $.each($('.checkbox:checked'), function(){
+      ids.push($(this).val());
+    });
+    if (currentClass == 'disable') {
+      sendMsg(url, 'multiOperation', {ids:ids, op:'disable'});
+    } else if (currentClass === 'remove') {
+      sendMsg(url, 'multiOperation', {ids:ids, op:'remove'});
+    }
+  });
+  
   var sendMsg = function (url, operation, data) {
     $.post(url + '/' + operation, data, function (res, status) {
       var res = $.parseJSON(res);

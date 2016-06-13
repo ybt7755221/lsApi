@@ -31,6 +31,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'user'], function () {
     Route::post('/removed', 'UserController@remove');
     Route::post('/disabled', 'UserController@disable');
     Route::post('/edit', 'UserController@edit');
+    Route::post('/multiOperation', 'UserController@multiOperation');
 });
 /**
  * all of the route about content configration.

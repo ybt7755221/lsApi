@@ -43,6 +43,13 @@ class UserController extends Controller
         $request->session()->flash('success', trans('validation.user.create_success'));
         return Redirect::to('user');
     }
+
+    /**
+     * Edit a user.
+     *
+     * @param Request $request
+     * @return mixed
+     */
     public function edit(Request $request) {
         $current_user_status = Auth::user()->status;
         $user = User::find($request['id']);
@@ -120,7 +127,10 @@ class UserController extends Controller
         }
         return json_encode($record);
     }
-
+    public function multiOperation(){
+        $current_user_status = Auth::user()->status;
+        var_dump($_POST);
+    }
     /**
      * check user powerful for remove.
      *

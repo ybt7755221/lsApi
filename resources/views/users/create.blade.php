@@ -13,7 +13,6 @@
 
             <div class="col-md-6">
               <input type="text" class="form-control" name="name" value="{{ old('name') }}" minlength="4" maxlength="32">
-
               @if ($errors->has('name'))
                 <span class="help-block">
                   <strong>{{ $errors->first('name') }}</strong>
@@ -41,7 +40,6 @@
 
             <div class="col-md-6">
               <input type="password" class="form-control password" name="password" minlength="6" maxlength="20">
-
               @if ($errors->has('password'))
                 <span class="help-block">
                   <strong>{{ $errors->first('password') }}</strong>
@@ -55,7 +53,6 @@
 
             <div class="col-md-6">
               <input type="password" class="form-control password" name="password_confirmation">
-
               @if ($errors->has('password'))
                 <span class="help-block">
                   <strong>{{ $errors->first('password') }}</strong>
