@@ -48,14 +48,23 @@ $(function () {
   $('.select_href').click(function (){
     var currentClass = $(this).attr('id'),
         ids=[],
+        _token=$('input[name=_token]').val();
         url = $(location).attr('href').split("?")[0];
     $.each($('.checkbox:checked'), function(){
       ids.push($(this).val());
     });
-    if (currentClass == 'disable') {
-      sendMsg(url, 'multiOperation', {ids:ids, op:'disable'});
-    } else if (currentClass === 'remove') {
-      sendMsg(url, 'multiOperation', {ids:ids, op:'remove'});
+    if(ids.length > 0){
+      if (currentClass == 'disable') {
+        sendMsg(url, 'multiOperation', {ids:ids, _token: _token, op:'disable'});
+      } else if (currentClass === 'remove') {
+        sendMsg(url, 'multiOperation', {ids:ids, _token: _token, op:'remove'});
+      }
+      setTimeout(function () {
+        window.location.reload()
+      }, 2000);
+    }else{
+      $('#alert-static p').html("You hadn't select anything.");
+      $('#alert-static').attr('class', 'alert alert-warning');
     }
   });
   
@@ -72,7 +81,7 @@ $(function () {
       } else if (res.success === 0){
         $('#alert-static').attr('class', 'alert alert-danger');
       } else if (res.success === -1){
-        $('#alert-static').attr('class', 'alert alert-waring');
+        $('#alert-static').attr('class', 'alert alert-warning');
       }
     });
   };

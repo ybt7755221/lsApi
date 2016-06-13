@@ -87,18 +87,7 @@ class UserController extends Controller
     {
         $current_user_status = Auth::user()->status;
         $id = $request['id'] * 1;
-        $user = User::find($id);
-        $record = $this->Powerful($current_user_status, $user['status'],'remove');
-        if ($record['success'] === 1) {
-            $result = $user->delete();
-            if ( $result && $current_user_status === $user['status'] ) {
-                Redirect::to('login');
-            }elseif ( $result ) {
-                $record['result'] = trans('validation.user.remove_success', ['name' => $user['name']]);
-            }else {
-                $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
-            }
-        }
+        $record = $this->removeData($current_user_status, $id);
         return json_encode($record);
     }
     /**
@@ -110,26 +99,53 @@ class UserController extends Controller
     public function disable(Request $request) {
         $current_user_status = Auth::user()->status;
         $id = $request['id'] * 1;
-        $user = User::find($id);
-        $record = $this->Powerful($current_user_status, $user['status'],'disable');
-        if ($record['success'] === 1) {
-            if($user['status'] === 0) {
-                $record = ['success' => 0, 'result' => trans('validation.user.disabled_again')];
-            } else {
-                $user->status = 0;
-                $result = $user->save();
-                if ( $result ) {
-                    $record['result'] = trans('validation.user.disable_success', ['name' => $user['name']]);
-                }else {
-                    $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
-                }
-            }
-        }
+        $record = $this->disableData($current_user_status, $id);
         return json_encode($record);
     }
     public function multiOperation(){
+        $user_id = Auth::user()->id;
         $current_user_status = Auth::user()->status;
-        var_dump($_POST);
+        $res = ['success' => -2, 'result' => ''];
+        switch ($_POST['op']) {
+            case 'disable' :
+                foreach($_POST['ids'] as $id) {
+                    if ($user_id != $id) {
+                        $record = $this->disableData($current_user_status, $id);
+                        if ($record['success'] !== 1) {
+                            $res['success'] = 0;
+                            $res['result'] .= $record['result'] . "</br>";
+                        }
+                    }else{
+                        $res['success'] = 0;
+                        $res['result'] .= trans('validation.user.operation_self',['op'=>'disable']) . "</br>";
+                    }
+                }
+                if ($res['success'] === -2){
+                    $res = ['success' => 1, 'result' => trans('validation.user.disable_success', ['name' => 'multiple data'])];
+                }
+                break;
+            case 'remove' :
+                foreach($_POST['ids'] as $id) {
+                    if ($user_id != $id) {
+                        $record = $this->removeData($current_user_status, $id);
+                        if ($record['success'] !== 1) {
+                            $res['success'] = 0;
+                            $res['result'] .= $record['result'] . "</br>";
+                        }
+                    }else{
+                        $res['success'] = 0;
+                        $res['result'] .= trans('validation.user.operation_self',['op'=>'remove']) . "</br>";
+                    }
+                }
+                if ($res['success'] === -2){
+                    $res = ['success' => 1, 'result' => trans('validation.user.remove_success', ['name' => 'multiple data'])];
+                }
+                break;
+            default :
+                $res = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
+                break;
+        }
+        return json_encode($res);
     }
     /**
      * check user powerful for remove.
@@ -147,6 +163,55 @@ class UserController extends Controller
             $record = ['success' => 0, 'result' => trans('validation.user.remove_super')];
         } else {
             $record = ['success' => 1];
+        }
+        return $record;
+    }
+
+    /**
+     * the detail function for disable a data.
+     *
+     * @param $current_user_status
+     * @param $id
+     * @return array
+     */
+    private function disableData($current_user_status, $id){
+        $user = User::find($id);
+        $record = $this->Powerful($current_user_status, $user['status'],'disable');
+        if ($record['success'] === 1) {
+            if($user['status'] === 0) {
+                $record = ['success' => 0, 'result' => trans('validation.user.disabled_again')];
+            } else {
+                $user->status = 0;
+                $result = $user->save();
+                if ( $result ) {
+                    $record['result'] = trans('validation.user.disable_success', ['name' => $user['name']]);
+                }else {
+                    $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
+                }
+            }
+        }
+        return $record;
+    }
+
+    /**
+     * the detail function for Delete a data.
+     *
+     * @param $current_user_status
+     * @param $id
+     * @return array
+     */
+    private function removeData($current_user_status, $id){
+        $user = User::find($id);
+        $record = $this->Powerful($current_user_status, $user['status'],'remove');
+        if ($record['success'] === 1) {
+            $result = $user->delete();
+            if ( $result && $current_user_status === $user['status'] ) {
+                Redirect::to('login');
+            }elseif ( $result ) {
+                $record['result'] = trans('validation.user.remove_success', ['name' => $user['name']]);
+            }else {
+                $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
+            }
         }
         return $record;
     }
