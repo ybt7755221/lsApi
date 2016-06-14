@@ -117,7 +117,8 @@ return [
         'disabled_power' => 'Permission denied. You have not enough permission to do ":op" operation.',
         'disabled_level' => 'Permission denied. You can not :op the user that higher level than you.',
         'remove_super' => 'Permission denied. The Super Administrator can not be removed.',
-        'operation_self' => 'Permission denied. You can not :op yourself.'
+        'operation_self' => 'Permission denied. You can not :op yourself.',
+        'successful' => 'The operation had been successfully.'
     ]
 
 ];

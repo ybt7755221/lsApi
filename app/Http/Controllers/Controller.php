@@ -20,4 +20,35 @@ class Controller extends BaseController
     {
         $this->middleware('auth');
     }
+    public function userDisable($level, $op) {
+        $res = false;
+        if ($level == 0){
+            return $res;
+        }
+        switch ($op) {
+            case 'create' :
+                if ($level > 1) {
+                    $res = true;
+                }
+                break;
+            case 'edit' :
+                if ($level > 0) {
+                    $res = true;
+                }
+                break;
+            case 'remove' :
+                if ($level > 1) {
+                    $res = true;
+                }
+                break;
+            case 'display':
+                if ($level > 0) {
+                    $res = true;
+                }
+                break;
+            default :
+                break;
+        }
+        return $res;
+    }
 }

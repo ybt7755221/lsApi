@@ -40,4 +40,5 @@ return [
     'confirm_password' => 'Confirm Password',
     'user_dialog' => 'Dialog - Users',
     'save' => 'Save',
+    'category_dialog' => 'Dialog - Menu',
 ];

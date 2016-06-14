@@ -44,4 +44,5 @@ Route::group(['middleware' => 'auth', 'prefix' => 'content'], function () {
  */
 Route::group(['middleware' => 'auth', 'prefix' => 'menu'], function () {
     Route::get('/', 'CategoryController@index');
+    Route::post('/create', 'CategoryController@create');
 });

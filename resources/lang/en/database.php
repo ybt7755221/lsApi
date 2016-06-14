@@ -59,4 +59,7 @@ return [
     'stateValue' => ['Padding Audit', 'Published', 'Removed'],
     'publishValue' => ['Hidden', 'Show', 'Removed'],
     'statusValue' => ['Forbidden User', 'Editor', 'Manager', 'Administrator', 'Super Administrator'],
+    'categoryTypeValue' => ['local' =>'Location', 'single'=>'Single Page', 'link' => 'OutLink'],
+    'categoryDisplayValue' => ['show' => 'show', 'hidden' => 'hidden'],
+
 ];

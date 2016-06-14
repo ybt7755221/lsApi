@@ -1,4 +1,5 @@
 $(function () {
+/** Start: The all method work on the user view in this area. */
   /**
    * Get all form data when user click the button in the option.
    */
@@ -26,7 +27,13 @@ $(function () {
       $('#status option').eq(status).prop('selected', true);
     }
   });
+/** End: The all method work on the user view in this area. */
+/** Start: The all method work on the menu view in this area. */
 
+/** End: The all method work on the menu view in this area. */
+  /**
+   * click table button can show or hidden table.
+   */
   $('#field_button').click(function (){
     var status = $('#field_table').css('display');
     if ( status === 'block' ) {
@@ -35,21 +42,27 @@ $(function () {
       $('#field_button').html($('#hidden').html());
     }
   });
-
+  /**
+   * This method work for that check all checkbox.
+   */
   $('.check_all').change(function (){
     $(':checkbox').prop("checked",this.checked);
   });
-
+  /**
+   * This function work for close the alert.
+   */
   $('#alert-static-close').click(function (){
     $('#alert-static p').html('');
     $('#alert-static').attr('class', 'alert hidden');
   });
-  
+  /**
+   * check the id and ensure send a post request to corresponding controller according to user click button.
+   */
   $('.select_href').click(function (){
     var currentClass = $(this).attr('id'),
-        ids=[],
-        _token=$('input[name=_token]').val();
-        url = $(location).attr('href').split("?")[0];
+      ids=[],
+      _token=$('input[name=_token]').val();
+    url = $(location).attr('href').split("?")[0];
     $.each($('.checkbox:checked'), function(){
       ids.push($(this).val());
     });
@@ -67,7 +80,13 @@ $(function () {
       $('#alert-static').attr('class', 'alert alert-warning');
     }
   });
-  
+  /**
+   * This function send a post request to backend.
+   *
+   * @param url
+   * @param operation
+   * @param data
+   */
   var sendMsg = function (url, operation, data) {
     $.post(url + '/' + operation, data, function (res, status) {
       var res = $.parseJSON(res);

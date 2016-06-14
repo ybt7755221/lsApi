@@ -13,7 +13,7 @@ class StoreCategoryPostRequest extends Request
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,8 @@ class StoreCategoryPostRequest extends Request
     public function rules()
     {
         return [
-            //
+            'cat_name' => 'required|min:4|max:120|unique:category',
+            'display' => 'required',
         ];
     }
 }
