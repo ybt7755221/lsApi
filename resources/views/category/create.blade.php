@@ -27,7 +27,7 @@
               <select class="form-control" name="fid" id="fid">
                   <option value=0" >{{trans('system.top_menu')}}</option>
                 @foreach( $categoryObj as $category )
-                  <option value="{{$category->id}}" >{{$category->cat_name}}</option>
+                  <option value="{{$category->id}}" >{{$category->cat_name}}<span class="hidden" name="path" readonly="readonly">{{$category->path}}</span></option>
                 @endforeach
               </select>
               @if ($errors->has('fid'))
@@ -85,9 +85,7 @@
               @endif
             </div>
           </div>
-          <input type="hidden" name="path" value="" />
         </div>
-
         <div class="modal-footer bg-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           <button type="submit" class="btn btn-primary">

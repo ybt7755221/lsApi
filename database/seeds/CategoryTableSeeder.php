@@ -17,9 +17,9 @@ class CategoryTableSeeder extends Seeder
             'cat_name' => 'Home',
             'description' => 'None',
             'cat_image' => 'upload/default.jpg',
-            'sort' => 1,
-            'display' => 1,
-            'path' => '0-1',
+            'sort' => 0,
+            'display' => 'show',
+            'path' => '0|1|0',
             'type' => 'local',
         ]);
     }

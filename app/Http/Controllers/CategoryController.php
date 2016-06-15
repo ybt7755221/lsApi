@@ -20,11 +20,18 @@ class CategoryController extends Controller
         $categoryObj = Category::where('fid', 0)->orderBy('path', 'ASC')->orderBy('sort', 'ASC')->get();
         return view('category/index',['categoryObj' => $categoryObj]);
     }
+
+    /**
+     * create a category.
+     *
+     * @param StoreCategoryPostRequest $request
+     * @return mixed
+     */
     public function create(StoreCategoryPostRequest $request) {
         $current_user_status = Auth::user()->status;
         if ($this->userDisable($current_user_status, 'create')) {
             $fid = (int) $request['fid'];
-            $res = Category::create([
+            $res_arr = Category::create([
                 'fid' => $fid,
                 'cat_name' => $request['cat_name'],
                 'description' => 'No Description for'.$request['cat_name'],
@@ -35,10 +42,34 @@ class CategoryController extends Controller
                 'url' => $request['url'],
                 'created_at' => date('Y-m-d H:i:s', time()),
             ]);
+            if ($res_arr['fid'] != 0) {
+                $f_data = Category::select('path')->find($fid);
+                $current_path = substr($f_data['path'], 0, strrpos($f_data['path'], '|')) . '|' . $res_arr['id'] . '|' . $res_arr['sort'];
+            } else
+                $current_path = '0|'.$res_arr['id'].'|'.$res_arr['sort'];
+            Category::where('id',$res_arr['id'])->update(['path' => $current_path]);
             $request->session()->flash('success', trans('validation.user.successful'));
         }else{
             $request->session()->flash('error', trans('validation.user.disabled_power',['op' => 'create']));
         }
         return Redirect::to('/menu');
+    }
+
+    public function disabled() {
+
+    }
+
+    public function removed() {
+
+    }
+
+    private function disableData($id) {
+        $res = Category::where('id',$id)->update(['display' => 'hidden']);
+        if ( $res ) {
+            
+        }
+    }
+    private function removeData($id) {
+
     }
 }
