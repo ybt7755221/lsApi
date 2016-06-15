@@ -55,21 +55,61 @@ class CategoryController extends Controller
         return Redirect::to('/menu');
     }
 
-    public function disabled() {
-
+    public function disabled(Request $request) {
+        $record = $this->ableData($request);
+        return json_encode($record);
     }
 
-    public function removed() {
-
+    public function removed(Request $request) {
+        $record = $this->removeData((int)$request['id']);
+        return json_encode($record);
     }
 
-    private function disableData($id) {
-        $res = Category::where('id',$id)->update(['display' => 'hidden']);
-        if ( $res ) {
-            
+    /**
+     * Disable a category.
+     *
+     * @param $id
+     * @return array
+     */
+    private function ableData($request) {
+        $current_user_status = Auth::user()->status;
+        if ($this->userDisable($current_user_status, 'display')) {
+            if ( $request['op'] === 'disabled')
+                $display_str = 'hidden';
+            else if ( $request['op'] === 'enabled')
+                $display_str = 'show';
+            $res = Category::where('id',(int)$request['id'])->update(['display' => $display_str]);
+            if ($res) {
+                $record['success'] = 1;
+                $record['result'] = trans('validation.user.successful');
+            } else {
+                $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
+            }
+        }else {
+            $record = ['success' => 0, 'result' => trans('validation.user.disabled_power', ['op' => 'disabled'])];
         }
+        return $record;
     }
-    private function removeData($id) {
 
+    /**
+     * Remove a category
+     *
+     * @param $id
+     * @return array
+     */
+    private function removeData($id) {
+        $current_user_status = Auth::user()->status;
+        if ($this->userDisable($current_user_status, 'remove')) {
+            $res = Category::destroy((int)$id);
+            if ($res) {
+                $record['success'] = 1;
+                $record['result'] = trans('validation.user.remove_success', ['name' => 'category']);
+            } else {
+                $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
+            }
+        }else {
+            $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
+        }
+        return $record;
     }
 }

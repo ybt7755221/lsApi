@@ -29,7 +29,33 @@ $(function () {
   });
 /** End: The all method work on the user view in this area. */
 /** Start: The all method work on the menu view in this area. */
-
+  $('.db-href-menu').click(function (){
+    var _token = $(this).parent().parent().parent().children('input[name=_token]').val(),
+        id = $(this).parent().parent().children('td:first').children().val(),
+        url = $(location).attr('href').split("?")[0],
+        currentClass = $(this).attr('class').split(" ")[1].split("-")[1];
+    if ( currentClass === 'removed' ) {
+      if (confirm('Are you sure you want to do this?')) {
+        sendMsg(url, currentClass, {id: id, _token: _token});
+        return false;
+      }
+    }else if ( currentClass === 'disabled' || currentClass === 'enabled' ) {
+      sendMsg(url, currentClass, {id: id, op:currentClass, _token: _token});
+      if(currentClass === 'disabled') {
+        $(this).attr('class', 'db-href-menu db-enabled');
+        $(this).html('Enable');
+        $('#tr_'+id+' .db-display').html('hidden');
+      }
+      if(currentClass === 'enabled') {
+        $(this).attr('class', 'db-href-menu db-disabled');
+        $(this).html('Disable');
+        $('#tr_'+id+' .db-display').html('show');
+      }
+      return false;
+    }else if (currentClass === 'edit') {
+      console.log(id);
+    }
+  });
 /** End: The all method work on the menu view in this area. */
   /**
    * click table button can show or hidden table.

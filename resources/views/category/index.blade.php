@@ -34,19 +34,24 @@
                             </thead>
                             <tbody>
                             <form>
+                                {{ csrf_field() }}
                                 @foreach($categoryObj as $category)
-                                    <tr>
-                                        <td><input type="checkbox" name="id_{{$category->id}}" value="{{$category->id}}"/></td>
+                                    <tr id="tr_{{$category->id}}">
+                                        <td><input type="checkbox" class="checkbox" name="id" value="{{$category->id}}"/></td>
                                         <td>{{trans('system.top_menu')}}</td>
                                         <td>{{$category->cat_name}}</td>
-                                        <td>{{$category->display}}</td>
+                                        <td class="db-display">{{$category->display}}</td>
                                         <td>{{trans('database.categoryTypeValue.'.$category->type)}}</td>
                                         <td>{{$category->url}}</td>
                                         <td>{{$category->sort}}</td>
                                         <td>
-                                            <a href="">{{trans('system.edit')}}</a>&nbsp;|&nbsp;
-                                            <a href="">{{trans('system.disable')}}</a>&nbsp;|&nbsp;
-                                            <a href="">{{trans('system.remove')}}</a></td>&nbsp;
+                                            <a >{{trans('system.edit')}}</a>&nbsp;|&nbsp;
+                                            @if($category->display === 'show')
+                                                <a class="db-href-menu db-disabled">{{trans('system.disable')}}</a>&nbsp;|&nbsp;
+                                            @elseif($category->display === 'hidden')
+                                                <a class="db-href-menu db-enabled">{{trans('system.enable')}}</a>&nbsp;|&nbsp;
+                                            @endif
+                                                <a class="db-href-menu db-removed">{{trans('system.remove')}}</a></td>&nbsp;
                                         </td>
                                         <td><a href="">{{trans('system.sub_menu')}}</a></td>
                                     </tr>
