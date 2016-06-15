@@ -54,12 +54,68 @@ class CategoryController extends Controller
         }
         return Redirect::to('/menu');
     }
-
+    public function multiOperation () {
+        $res = ['success' => -2, 'result' => ''];
+        switch ($_POST['op']) {
+            case 'disabled' :
+                foreach($_POST['ids'] as $id) {
+                    $record = $this->ableData(['id' => $id, 'op'=>$_POST['op']]);
+                    if ($record['success'] !== 1) {
+                        $res['success'] = 0;
+                        $res['result'] .= $_POST['result'] . "</br>";
+                    }
+                }
+                if ($res['success'] === -2){
+                    $res = ['success' => 1, 'result' => trans('validation.user.disable_success', ['name' => 'multiple data'])];
+                }
+                break;
+            case 'enabled' :
+                foreach($_POST['ids'] as $id) {
+                    $record = $this->ableData(['id' => $id, 'op'=>$_POST['op']]);
+                    if ($record['success'] !== 1) {
+                        $res['success'] = 0;
+                        $res['result'] .= $record['result'] . "</br>";
+                    }
+                }
+                if ($res['success'] === -2){
+                    $res = ['success' => 1, 'result' => trans('validation.user.disable_success', ['name' => 'multiple data'])];
+                }
+                break;
+            case 'removed' :
+                foreach($_POST['ids'] as $id) {
+                    $record = $this->removeData($id);
+                    if ($record['success'] !== 1) {
+                        $res['success'] = 0;
+                        $res['result'] .= $record['result'] . "</br>";
+                    }
+                }
+                if ($res['success'] === -2){
+                    $res = ['success' => 1, 'result' => trans('validation.user.disable_success', ['name' => 'multiple data'])];
+                }
+                break;
+            default :
+                $res = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
+                break;
+        }
+        return $res;
+    }
+    /**
+     * disabled and enabled a category
+     *
+     * @param Request $request
+     * @return string
+     */
     public function disabled(Request $request) {
         $record = $this->ableData($request);
         return json_encode($record);
     }
 
+    /**
+     * removed a category
+     *
+     * @param Request $request
+     * @return string
+     */
     public function removed(Request $request) {
         $record = $this->removeData((int)$request['id']);
         return json_encode($record);
@@ -100,8 +156,10 @@ class CategoryController extends Controller
     private function removeData($id) {
         $current_user_status = Auth::user()->status;
         if ($this->userDisable($current_user_status, 'remove')) {
-            $res = Category::destroy((int)$id);
+            $id = (int)$id;
+            $res = Category::destroy($id);
             if ($res) {
+                $result = Category::where('fid', $id)->delete();
                 $record['success'] = 1;
                 $record['result'] = trans('validation.user.remove_success', ['name' => 'category']);
             } else {

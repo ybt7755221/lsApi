@@ -40,7 +40,7 @@ $(function () {
         return false;
       }
     }else if ( currentClass === 'disabled' || currentClass === 'enabled' ) {
-      sendMsg(url, currentClass, {id: id, op:currentClass, _token: _token});
+      sendMsg(url, currentClass, {id: id, op: currentClass, _token: _token});
       if(currentClass === 'disabled') {
         $(this).attr('class', 'db-href-menu db-enabled');
         $(this).html('Enable');
@@ -87,17 +87,13 @@ $(function () {
   $('.select_href').click(function (){
     var currentClass = $(this).attr('id'),
       ids=[],
-      _token=$('input[name=_token]').val();
-    url = $(location).attr('href').split("?")[0];
+      _token=$('input[name=_token]').val(),
+      url = $(location).attr('href').split("?")[0];
     $.each($('.checkbox:checked'), function(){
       ids.push($(this).val());
     });
     if(ids.length > 0){
-      if (currentClass == 'disable') {
-        sendMsg(url, 'multiOperation', {ids:ids, _token: _token, op:'disable'});
-      } else if (currentClass === 'remove') {
-        sendMsg(url, 'multiOperation', {ids:ids, _token: _token, op:'remove'});
-      }
+      sendMsg(url, 'multiOperation', {ids:ids, _token: _token, op: currentClass});
       setTimeout(function () {
         window.location.reload()
       }, 2000);

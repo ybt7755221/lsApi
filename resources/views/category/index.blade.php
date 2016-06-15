@@ -60,8 +60,9 @@
                                     <td><input class="check_all" type="checkbox" value="0"/></td>
                                     <td colspan="8" class="text-center">
                                         ||&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <a class="select_href" id="disable" >{{trans('system.disable_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <a class="select_href" id="remove" >{{trans('system.remove_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <a class="select_href" id="disabled" >{{trans('system.disable_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <a class="select_href" id="enabled" >{{trans('system.enable_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <a class="select_href" id="removed" >{{trans('system.remove_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
                                         <a data-toggle="modal" data-target="#myModal">{{trans('system.create')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||
                                     </td>
                                 </tr>
