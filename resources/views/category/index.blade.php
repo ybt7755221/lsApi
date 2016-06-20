@@ -28,7 +28,6 @@
                                 <th>{{trans('database.category.display')}}</th>
                                 <th>{{trans('database.category.type')}}</th>
                                 <th>{{trans('database.category.url')}}</th>
-                                <th>{{trans('database.category.sort')}}</th>
                                 <th>{{trans('database.option')}}</th>
                             </tr>
                             </thead>
@@ -43,22 +42,22 @@
                                         <td class="db-display">{{$category->display}}</td>
                                         <td>{{trans('database.categoryTypeValue.'.$category->type)}}</td>
                                         <td>{{$category->url}}</td>
-                                        <td>{{$category->sort}}</td>
                                         <td>
-                                            <a >{{trans('system.edit')}}</a>&nbsp;|&nbsp;
-                                            @if($category->display === 'show')
+                                            <input type="hidden" name="all_data" value="{{ base64_encode($category->id.'-'.$category->cat_name.'-'.$category->display.'-'.$category->type.'-'.$category->url.'-'.$category->sort.'-'.$category->fid) }}" readonly>
+                                            <a data-toggle="modal" data-target="#myModal" class="db-href-menu db-edit">{{trans('system.edit')}}</a>&nbsp;|&nbsp;
+                                            @if($category->display == 'show')
                                                 <a class="db-href-menu db-disabled">{{trans('system.disable')}}</a>&nbsp;|&nbsp;
-                                            @elseif($category->display === 'hidden')
+                                            @else
                                                 <a class="db-href-menu db-enabled">{{trans('system.enable')}}</a>&nbsp;|&nbsp;
                                             @endif
-                                                <a class="db-href-menu db-removed">{{trans('system.remove')}}</a></td>&nbsp;
+                                            <a class="db-href-menu db-removed">{{trans('system.remove')}}</a>&nbsp;
                                         </td>
-                                        <td><a href="">{{trans('system.sub_menu')}}</a></td>
+                                        <td><a>{{trans('system.sub_menu')}}</a></td>
                                     </tr>
                                 @endforeach
                                 <tr>
                                     <td><input class="check_all" type="checkbox" value="0"/></td>
-                                    <td colspan="8" class="text-center">
+                                    <td colspan="7" class="text-center">
                                         ||&nbsp;&nbsp;&nbsp;&nbsp;
                                         <a class="select_href" id="disabled" >{{trans('system.disable_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
                                         <a class="select_href" id="enabled" >{{trans('system.enable_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;

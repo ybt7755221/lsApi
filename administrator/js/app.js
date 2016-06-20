@@ -24,13 +24,26 @@ $(function () {
       $('input[name="name"]').val(name);
       $('input[name="email"]').val(email);
       $('input[name="_token"]').val(_token);
-      $('#status option').eq(status).prop('selected', true);
+      if (status == 4) {
+        var info = $('#tr_'+id+' .user_status').html();
+        $('#status').html('<option value=4 selected="true">'+info+'</option>');
+      }else {
+        $('#status option[value=' + status + ']').attr('selected', true);
+      }
     }
   });
 /** End: The all method work on the user view in this area. */
 /** Start: The all method work on the menu view in this area. */
   $('.db-href-menu').click(function (){
-    var _token = $(this).parent().parent().parent().children('input[name=_token]').val(),
+    var all_data = window.atob($(this).parent().children('input[name=all_data]').val()).split("-"),
+        cat_id = all_data[0],
+        cat_name = all_data[1],
+        is_display = all_data[2],
+        type = all_data[3],
+        cat_url = all_data[4],
+        sort = all_data[5],
+        fid = all_data[6],
+        _token = $(this).parent().parent().parent().children('input[name=_token]').val(),
         id = $(this).parent().parent().children('td:first').children().val(),
         url = $(location).attr('href').split("?")[0],
         currentClass = $(this).attr('class').split(" ")[1].split("-")[1];
@@ -53,7 +66,14 @@ $(function () {
       }
       return false;
     }else if (currentClass === 'edit') {
-      console.log(id);
+      $('#user-form').attr('action', url+'/'+currentClass);
+      $('#user-form').append('<input type="hidden" name="id" value="'+cat_id+'" />');
+      $('input[name="cat_name"]').val(cat_name);
+      $('#fid option[value='+fid+']').attr('selected', true);
+      $('#type option[value='+type+']').attr('selected', true);
+      $('#fid option[value='+cat_id+']').remove();
+      $('input[name="url"]').val(cat_url);
+      $('#display option[value='+is_display+']').attr('selected', true);
     }
   });
 /** End: The all method work on the menu view in this area. */

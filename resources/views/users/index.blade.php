@@ -36,7 +36,7 @@
                     <td><input type="checkbox" class="checkbox" name="id_{{$user->id}}" value="{{$user->id}}"/></td>
                     <td>{{$user->name}}</td>
                     <td>{{$user->email}}</td>
-                    <td>{{trans('database.statusValue.'.$user->status)}}</td>
+                    <td class="user_status">{{trans('database.statusValue.'.$user->status)}}</td>
                     <td>{{$user->created_at}}</td>
                     <td>{{$user->updated_at}}</td>
                     <td id="td_operation">
