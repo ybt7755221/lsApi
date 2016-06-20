@@ -50,4 +50,5 @@ Route::group(['middleware' => 'auth', 'prefix' => 'menu'], function () {
     Route::post('/enabled', 'CategoryController@disabled');
     Route::post('/edit', 'CategoryController@edit');
     Route::post('/multiOperation', 'CategoryController@multiOperation');
+    Route::post('/subMenu','CategoryController@subMenu');
 });

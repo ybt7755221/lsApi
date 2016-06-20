@@ -38,7 +38,7 @@
                                     <tr id="tr_{{$category->id}}">
                                         <td><input type="checkbox" class="checkbox" name="id" value="{{$category->id}}"/></td>
                                         <td>{{trans('system.top_menu')}}</td>
-                                        <td>{{$category->cat_name}}</td>
+                                        <td class="cat_name">{{$category->cat_name}}</td>
                                         <td class="db-display">{{$category->display}}</td>
                                         <td>{{trans('database.categoryTypeValue.'.$category->type)}}</td>
                                         <td>{{$category->url}}</td>
@@ -52,7 +52,7 @@
                                             @endif
                                             <a class="db-href-menu db-removed">{{trans('system.remove')}}</a>&nbsp;
                                         </td>
-                                        <td><a>{{trans('system.sub_menu')}}</a></td>
+                                        <td><a class="sub_menu">{{trans('system.sub_menu')}}</a></td>
                                     </tr>
                                 @endforeach
                                 <tr>

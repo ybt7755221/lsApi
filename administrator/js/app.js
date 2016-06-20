@@ -15,7 +15,7 @@ $(function () {
       currentClass = $(this).attr('class').split(" ")[1].split("-")[1];
     if ( currentClass === 'removed' || currentClass === 'disabled' ) {
       if (confirm('Are you sure you want to do this?')) {
-        sendMsg(url, currentClass, {id: id, name: name, email: email, status: status, _token: _token});
+        sendMsg(url, currentClass, {id: id, name: name, email: email, status: status, _token: _token}, false);
         return false;
       }
     }else if (currentClass === 'edit') {
@@ -34,7 +34,7 @@ $(function () {
   });
 /** End: The all method work on the user view in this area. */
 /** Start: The all method work on the menu view in this area. */
-  $('.db-href-menu').click(function (){
+  $(document).on('click', '.db-href-menu', function (){
     var all_data = window.atob($(this).parent().children('input[name=all_data]').val()).split("-"),
         cat_id = all_data[0],
         cat_name = all_data[1],
@@ -49,11 +49,11 @@ $(function () {
         currentClass = $(this).attr('class').split(" ")[1].split("-")[1];
     if ( currentClass === 'removed' ) {
       if (confirm('Are you sure you want to do this?')) {
-        sendMsg(url, currentClass, {id: id, _token: _token});
+        sendMsg(url, currentClass, {id: id, _token: _token}, false);
         return false;
       }
     }else if ( currentClass === 'disabled' || currentClass === 'enabled' ) {
-      sendMsg(url, currentClass, {id: id, op: currentClass, _token: _token});
+      sendMsg(url, currentClass, {id: id, op: currentClass, _token: _token}, false);
       if(currentClass === 'disabled') {
         $(this).attr('class', 'db-href-menu db-enabled');
         $(this).html('Enable');
@@ -76,6 +76,14 @@ $(function () {
       $('#display option[value='+is_display+']').attr('selected', true);
     }
   });
+  $('.sub_menu').click(function (){
+        cat_id = $(this).parent().parent().attr('id').split("_")[1],
+        cat_name = $(this).parent().parent().children('.cat_name').html(),
+        url = $(location).attr('href').split("?")[0],
+        _token = $(this).parent().parent().parent().children('input[name=_token]').val();
+    sendMsg(url, 'subMenu', {id: cat_id, cat_name: cat_name, _token: _token}, true);
+  });
+
 /** End: The all method work on the menu view in this area. */
   /**
    * click table button can show or hidden table.
@@ -113,7 +121,7 @@ $(function () {
       ids.push($(this).val());
     });
     if(ids.length > 0){
-      sendMsg(url, 'multiOperation', {ids:ids, _token: _token, op: currentClass});
+      sendMsg(url, 'multiOperation', {ids:ids, _token: _token, op: currentClass}, false);
       setTimeout(function () {
         window.location.reload()
       }, 2000);
@@ -129,9 +137,26 @@ $(function () {
    * @param operation
    * @param data
    */
-  var sendMsg = function (url, operation, data) {
+  var sendMsg = function (url, operation, data, returnStatus) {
     $.post(url + '/' + operation, data, function (res, status) {
       var res = $.parseJSON(res);
+      if (returnStatus) {
+        if (res.success === 1) {
+          res.result.forEach(function(cv){
+            var html = '<tr id="tr_'+cv.id+'" class="bg-white">';
+            html += '<td><input type="checkbox" class="checkbox" name="id" value="'+cv.id+'"/></td>';
+            html += '<td>'+data.cat_name+'</td>';
+            html += '<td class="cat_name">'+cv.cat_name+'</td>';
+            html += '<td class="db-display">'+cv.display+'</td>';
+            html += '<td>'+cv.type+'</td>';
+            html += '<td>'+cv.url+'</td>';
+            html += '<td><input type="hidden" name="all_data" value="'+window.btoa(cv.id+'-'+cv.cat_name+'-'+cv.display+'-'+cv.type+'-'+cv.url+'-'+cv.sort+'-'+cv.fid)+'" readonly><a data-toggle="modal" data-target="#myModal" class="db-href-menu db-edit">Edit</a>&nbsp;|&nbsp;<a class="db-href-menu db-removed">Remove</a>&nbsp;</td>';
+            html += '<td></td>';
+            $('#tr_'+cv.fid).after(html);
+          });
+          return res;
+        }
+      }
       $('.will-hide').hide();
       $('#alert-static p').html(res.result);
       if (res.success === 1) {
@@ -139,11 +164,12 @@ $(function () {
         if (operation === 'removed') {
           $('#tr_' + data.id).remove();
         }
-      } else if (res.success === 0){
+      } else if (res.success === 0) {
         $('#alert-static').attr('class', 'alert alert-danger');
-      } else if (res.success === -1){
+      } else if (res.success === -1) {
         $('#alert-static').attr('class', 'alert alert-warning');
       }
+      return false;
     });
   };
 });

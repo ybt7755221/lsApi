@@ -148,7 +148,6 @@ class CategoryController extends Controller
         $record = $this->ableData($request);
         return json_encode($record);
     }
-
     /**
      * removed a category
      *
@@ -159,7 +158,20 @@ class CategoryController extends Controller
         $record = $this->removeData((int)$request['id']);
         return json_encode($record);
     }
-
+    public function subMenu(Request $request){
+        $check = $this->userDisable(Auth::user()->status, 'edit');
+        if ($check) {
+            $record['result'] = Category::where('fid',$request['id']*1)->get();
+            if(count($record['result']) > 0) {
+                $record['success'] = 1;
+            } else {
+                $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
+            }
+        }else{
+            $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
+        }
+        return json_encode($record);
+    }
     /**
      * Disable a category.
      *
