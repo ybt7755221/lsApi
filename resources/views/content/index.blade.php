@@ -8,11 +8,6 @@
           <!--the user table header-->
           <div class="panel-heading bg-black text-grey">
             {{trans('system.dashboard')}} -- {{trans('system.content')}}
-            <a id="field_button" class="text-grey position-right" role="button" data-toggle="collapse"
-               href="#field_table" aria-expanded="true"
-               aria-controls="field_table">{{trans('system.hidden')}}</a>
-            <span id="show" class="hidden">{{trans('system.show')}}</span> <span id="hidden"
-                                                                                 class="hidden">{{trans('system.hidden')}}</span>
           </div>
           <!--the Menu table header-->
           <!--the Menu table body-->
@@ -54,7 +49,8 @@
                     ||&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="">{{trans('system.disable_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="">{{trans('system.remove_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="">{{trans('system.create')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||
+                    <a role="button" data-toggle="collapse" href="#create_table" aria-expanded="true"
+                       aria-controls="create_table">{{trans('system.create')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||
                   </td>
                 </tr>
               </form>
@@ -65,6 +61,9 @@
         </div>
       </div>
       <!--the user Menu div-->
+      <div class="row">
+        @include('content.create', ['title' => 'content', 'categoryObj'=>$categoryObj])
+      </div>
     </div>
   </div>
 @endsection

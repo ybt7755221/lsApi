@@ -43,5 +43,6 @@ return [
     'category_dialog' => 'Dialog - Menu',
     'enable' => 'Enable',
     'enable_select' => 'Enable Selected',
-    'NO_DATA' => 'No data that you need.'
+    'NO_DATA' => 'No data that you need.',
+    'cancel' => 'Cancel'
 ];

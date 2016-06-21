@@ -8,5 +8,5 @@ class Category extends Model
 {
     protected $table = 'category';
     public $timestamps = false;
-    protected $fillable =  ['fid', 'cat_name', 'description', 'cat_image', 'sort', 'display', 'type', 'url', 'created_at'];
+    protected $fillable =  ['id', 'fid', 'cat_name', 'description', 'cat_image', 'sort', 'display', 'type', 'url', 'path', 'created_at'];
 }

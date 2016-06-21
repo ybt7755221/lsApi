@@ -2,8 +2,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header bg-black text-grey">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-              aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">{{$title}}</h4>
       </div>
       <form id="user-form" class="form-horizontal" role="form" method="POST" action="{{ url('/menu/create') }}">
@@ -13,8 +12,7 @@
             <label class="col-md-4 control-label">{{trans('database.category.cat_name')}}</label>
 
             <div class="col-md-6">
-              <input type="text" class="form-control" name="cat_name" value="{{ old('cat_name') }}" minlength="4"
-                     maxlength="32">
+              <input type="text" class="form-control" name="cat_name" value="{{ old('cat_name') }}" minlength="4" maxlength="32">
               @if ($errors->has('cat_name'))
                 <span class="help-block">
                   <strong>{{ $errors->first('cat_name') }}</strong>
@@ -27,9 +25,9 @@
             <label class="col-md-4 control-label">{{trans('database.category.fid')}}</label>
             <div class="col-md-6">
               <select class="form-control" name="fid" id="fid">
-                <option value=0">{{trans('system.top_menu')}}</option>
+                  <option value=0" >{{trans('system.top_menu')}}</option>
                 @foreach( $categoryObj as $category )
-                  <option value="{{$category->id}}">{{$category->cat_name}}</option>
+                  <option value="{{$category->id}}" >{{$category->cat_name}}</option>
                 @endforeach
               </select>
               @if ($errors->has('fid'))
@@ -45,7 +43,7 @@
             <div class="col-md-6">
               <select class="form-control" name="type" id="type">
                 @foreach( trans('database.categoryTypeValue') as $key => $val )
-                  <option value="{{$key}}">{{$val}}</option>
+                    <option value="{{$key}}" >{{$val}}</option>
                 @endforeach
               </select>
               @if ($errors->has('type'))
@@ -61,8 +59,8 @@
 
             <div class="col-md-6">
               <div class="input-group">
-                <div class="input-group-addon">http://</div>
-                <input type="text" class="form-control" name="url" value="{{ old('url') }}" maxlength="128">
+              <div class="input-group-addon">http://</div>
+              <input type="text" class="form-control" name="url" value="{{ old('url') }}" maxlength="128">
               </div>
               @if ($errors->has('url'))
                 <span class="help-block">
@@ -77,7 +75,7 @@
             <div class="col-md-6">
               <select class="form-control" name="display" id="display">
                 @foreach( trans('database.categoryDisplayValue') as $key => $val )
-                  <option value="{{$key}}">{{$val}}</option>
+                    <option value="{{$key}}" >{{$val}}</option>
                 @endforeach
               </select>
               @if ($errors->has('display'))

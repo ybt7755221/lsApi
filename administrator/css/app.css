@@ -44,6 +44,10 @@ a.text-grey:hover {
   background: #f9f9f9;
 }
 
+.no-border {
+  border: 0px;
+}
+
 .bg-footer {
   padding-top: 10px !important;
   padding-bottom: 0px !important;
