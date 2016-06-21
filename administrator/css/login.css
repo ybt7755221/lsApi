@@ -1,16 +1,17 @@
 body {
-    font-family: 'Lato';
+  font-family: 'Lato';
 }
 
 .fa-btn {
-    margin-right: 6px;
+  margin-right: 6px;
 }
-.blur{
-    position: fixed;
-    min-width: 100%;
-    min-height: 100%;
-    -webkit-filter: blur(10px);
-    -ms-filter: blur(10px);
-    filter: blur(10px);
-    z-index: -1;
+
+.blur {
+  position: fixed;
+  min-width: 100%;
+  min-height: 100%;
+  -webkit-filter: blur(10px);
+  -ms-filter: blur(10px);
+  filter: blur(10px);
+  z-index: -1;
 }

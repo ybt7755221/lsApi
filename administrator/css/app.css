@@ -1,44 +1,55 @@
 body {
-    font-family: 'Lato';
+  font-family: 'Lato';
 }
 
 .fa-btn {
-    margin-right: 6px;
+  margin-right: 6px;
 }
+
 .bg-black {
-    background: #222 !important;
+  background: #222 !important;
 }
+
 .bg-white {
-    background: #FFFFFF !important;
+  background: #FFFFFF !important;
 }
+
 .bg-black a {
-    color: #aeaeae !important;
+  color: #aeaeae !important;
 }
+
 .bg-black a:hover {
-    color: #222 !important;
+  color: #222 !important;
 }
+
 .text-white {
-    color: #FFFFFF !important;
+  color: #FFFFFF !important;
 }
+
 .text-grey {
-    color: #aeaeae !important;
+  color: #aeaeae !important;
 }
+
 a.text-grey:hover {
-    color: #FFFFFF !important;
-    text-decoration: none;
+  color: #FFFFFF !important;
+  text-decoration: none;
 }
+
 .position-right {
-    position: absolute;
-    right:30px;
+  position: absolute;
+  right: 30px;
 }
+
 .list-group-item-grey {
-    background: #f9f9f9;
+  background: #f9f9f9;
 }
-.bg-footer{
-    padding-top: 10px !important;
-    padding-bottom: 0px !important;
-    margin-bottom: 0px !important;
+
+.bg-footer {
+  padding-top: 10px !important;
+  padding-bottom: 0px !important;
+  margin-bottom: 0px !important;
 }
+
 a {
-    cursor: pointer;
+  cursor: pointer;
 }
