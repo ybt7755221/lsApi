@@ -11,7 +11,8 @@
             {{trans('system.dashboard')}} -- {{trans('system.user_information')}}
             <a id="field_button" class="text-grey position-right" role="button" data-toggle="collapse"
                href="#field_table" aria-expanded="true" aria-controls="field_table">{{trans('system.hidden')}}</a>
-            <span id="show" class="hidden">{{trans('system.show')}}</span> <span id="hidden" class="hidden">{{trans('system.hidden')}}</span>
+            <span id="show" class="hidden">{{trans('system.show')}}</span> <span id="hidden"
+                                                                                 class="hidden">{{trans('system.hidden')}}</span>
           </div>
           <!--the user table header-->
           <!--the user table body-->
@@ -40,7 +41,9 @@
                     <td>{{$user->created_at}}</td>
                     <td>{{$user->updated_at}}</td>
                     <td id="td_operation">
-                      <input type="hidden" name="all_data" value="{{ base64_encode($user->id.'-'.$user->name.'-'.$user->email.'-'.$user->status.'-'.$user->password) }}" readonly>
+                      <input type="hidden" name="all_data"
+                             value="{{ base64_encode($user->id.'-'.$user->name.'-'.$user->email.'-'.$user->status.'-'.$user->password) }}"
+                             readonly>
                       <a data-toggle="modal" data-target="#myModal" class="db-href db-edit">{{trans('system.edit')}}</a>&nbsp;|&nbsp;
                       <a class="db-href db-disabled">{{trans('system.disable')}}</a>&nbsp;|&nbsp;
                       <a class="db-href db-removed">{{trans('system.remove')}}</a>
@@ -51,8 +54,8 @@
                   <td><input class="check_all" type="checkbox" value="0"/></td>
                   <td colspan="6" class="text-center">
                     ||&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a class="select_href" id="disable" >{{trans('system.disable_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a class="select_href" id="remove" >{{trans('system.remove_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="select_href" id="disable">{{trans('system.disable_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="select_href" id="remove">{{trans('system.remove_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
                     <a data-toggle="modal" data-target="#myModal">{{trans('system.create')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||
                   </td>
                 </tr>
@@ -71,7 +74,7 @@
 @if ( count($errors) > 0)
   @push('ls-js')
   <script>
-    $(function() {
+    $(function () {
       $('#myModal').modal('show');
     })
   </script>

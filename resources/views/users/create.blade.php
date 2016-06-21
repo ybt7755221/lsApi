@@ -2,7 +2,8 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header bg-black text-grey">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">{{$title}}</h4>
       </div>
       <form id="user-form" class="form-horizontal" role="form" method="POST" action="{{ url('/user/create') }}">
@@ -12,7 +13,8 @@
             <label class="col-md-4 control-label">{{trans('database.user.name')}}</label>
 
             <div class="col-md-6">
-              <input type="text" class="form-control" name="name" value="{{ old('name') }}" minlength="4" maxlength="32">
+              <input type="text" class="form-control" name="name" value="{{ old('name') }}" minlength="4"
+                     maxlength="32">
               @if ($errors->has('name'))
                 <span class="help-block">
                   <strong>{{ $errors->first('name') }}</strong>
