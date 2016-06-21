@@ -157,10 +157,14 @@ $(function () {
             html += '<td>'+cv.type+'</td>';
             html += '<td>'+cv.url+'</td>';
             html += '<td><input type="hidden" name="all_data" value="'+window.btoa(cv.id+'-'+cv.cat_name+'-'+cv.display+'-'+cv.type+'-'+cv.url+'-'+cv.sort+'-'+cv.fid)+'" readonly><a data-toggle="modal" data-target="#myModal" class="db-href-menu db-edit">Edit</a>&nbsp;|&nbsp;<a class="db-href-menu db-removed">Remove</a>&nbsp;</td>';
-            html += '<td></td>';
+            html += '<td></td></tr>';
             $('#tr_'+cv.fid).after(html);
           });
           $('#sub_menu_'+data.id).attr('class', 'sub_menu_close');
+          return res;
+        }else{
+          $('#alert-static').attr('class', 'alert alert-warning');
+          $('#alert-static').html('<p>'+res.result+'</p>')
           return res;
         }
       }

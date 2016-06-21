@@ -165,7 +165,7 @@ class CategoryController extends Controller
             if(count($record['result']) > 0) {
                 $record['success'] = 1;
             } else {
-                $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
+                $record = ['success' => 0, 'result' => trans('system.NO_DATA')];
             }
         }else{
             $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];

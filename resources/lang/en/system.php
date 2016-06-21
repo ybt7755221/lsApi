@@ -42,5 +42,6 @@ return [
     'save' => 'Save',
     'category_dialog' => 'Dialog - Menu',
     'enable' => 'Enable',
-    'enable_select' => 'Enable Selected'
+    'enable_select' => 'Enable Selected',
+    'NO_DATA' => 'No data that you need.'
 ];
