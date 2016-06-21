@@ -41,4 +41,6 @@ return [
     'user_dialog' => 'Dialog - Users',
     'save' => 'Save',
     'category_dialog' => 'Dialog - Menu',
+    'enable' => 'Enable',
+    'enable_select' => 'Enable Selected'
 ];

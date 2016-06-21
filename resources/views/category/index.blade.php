@@ -28,35 +28,40 @@
                                 <th>{{trans('database.category.display')}}</th>
                                 <th>{{trans('database.category.type')}}</th>
                                 <th>{{trans('database.category.url')}}</th>
-                                <th>{{trans('database.category.sort')}}</th>
                                 <th>{{trans('database.option')}}</th>
                             </tr>
                             </thead>
                             <tbody>
                             <form>
+                                {{ csrf_field() }}
                                 @foreach($categoryObj as $category)
-                                    <tr>
-                                        <td><input type="checkbox" name="id_{{$category->id}}" value="{{$category->id}}"/></td>
+                                    <tr id="tr_{{$category->id}}">
+                                        <td><input type="checkbox" class="checkbox" name="id" value="{{$category->id}}"/></td>
                                         <td>{{trans('system.top_menu')}}</td>
-                                        <td>{{$category->cat_name}}</td>
-                                        <td>{{$category->display}}</td>
+                                        <td class="cat_name">{{$category->cat_name}}</td>
+                                        <td class="db-display">{{$category->display}}</td>
                                         <td>{{trans('database.categoryTypeValue.'.$category->type)}}</td>
                                         <td>{{$category->url}}</td>
-                                        <td>{{$category->sort}}</td>
                                         <td>
-                                            <a href="">{{trans('system.edit')}}</a>&nbsp;|&nbsp;
-                                            <a href="">{{trans('system.disable')}}</a>&nbsp;|&nbsp;
-                                            <a href="">{{trans('system.remove')}}</a></td>&nbsp;
+                                            <input type="hidden" name="all_data" value="{{ base64_encode($category->id.'-'.$category->cat_name.'-'.$category->display.'-'.$category->type.'-'.$category->url.'-'.$category->sort.'-'.$category->fid) }}" readonly>
+                                            <a data-toggle="modal" data-target="#myModal" class="db-href-menu db-edit">{{trans('system.edit')}}</a>&nbsp;|&nbsp;
+                                            @if($category->display == 'show')
+                                                <a class="db-href-menu db-disabled">{{trans('system.disable')}}</a>&nbsp;|&nbsp;
+                                            @else
+                                                <a class="db-href-menu db-enabled">{{trans('system.enable')}}</a>&nbsp;|&nbsp;
+                                            @endif
+                                            <a class="db-href-menu db-removed">{{trans('system.remove')}}</a>&nbsp;
                                         </td>
-                                        <td><a href="">{{trans('system.sub_menu')}}</a></td>
+                                        <td><a class="sub_menu">{{trans('system.sub_menu')}}</a></td>
                                     </tr>
                                 @endforeach
                                 <tr>
                                     <td><input class="check_all" type="checkbox" value="0"/></td>
-                                    <td colspan="8" class="text-center">
+                                    <td colspan="7" class="text-center">
                                         ||&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <a class="select_href" id="disable" >{{trans('system.disable_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <a class="select_href" id="remove" >{{trans('system.remove_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <a class="select_href" id="disabled" >{{trans('system.disable_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <a class="select_href" id="enabled" >{{trans('system.enable_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <a class="select_href" id="removed" >{{trans('system.remove_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
                                         <a data-toggle="modal" data-target="#myModal">{{trans('system.create')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||
                                     </td>
                                 </tr>

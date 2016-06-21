@@ -8,6 +8,9 @@ body {
 .bg-black {
     background: #222 !important;
 }
+.bg-white {
+    background: #FFFFFF !important;
+}
 .bg-black a {
     color: #aeaeae !important;
 }

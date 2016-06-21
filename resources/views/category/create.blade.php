@@ -8,7 +8,7 @@
       <form id="user-form" class="form-horizontal" role="form" method="POST" action="{{ url('/menu/create') }}">
         {{ csrf_field() }}
         <div class="modal-body">
-          <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+          <div class="form-group{{ $errors->has('cat_name') ? ' has-error' : '' }}">
             <label class="col-md-4 control-label">{{trans('database.category.cat_name')}}</label>
 
             <div class="col-md-6">
@@ -27,7 +27,7 @@
               <select class="form-control" name="fid" id="fid">
                   <option value=0" >{{trans('system.top_menu')}}</option>
                 @foreach( $categoryObj as $category )
-                  <option value="{{$category->id}}" >{{$category->cat_name}}<span class="hidden" name="path" readonly="readonly">{{$category->path}}</span></option>
+                  <option value="{{$category->id}}" >{{$category->cat_name}}</option>
                 @endforeach
               </select>
               @if ($errors->has('fid'))

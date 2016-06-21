@@ -67,7 +67,10 @@ class UserController extends Controller
         }
         $user->name = $request['name'];
         $user->email = $request['email'];
-        $user->status = $request['status'] * 1;
+        if ( $user['status'] == 4)
+            $user->status = 4;
+        else
+            $user->status = $request['status'] * 1;
         $user->updated_at = $_SERVER['REQUEST_TIME'];
         $result = $user->save();
         if ( !$result ) {
