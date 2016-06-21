@@ -77,13 +77,19 @@ $(function () {
     }
   });
   $('.sub_menu').click(function (){
-        cat_id = $(this).parent().parent().attr('id').split("_")[1],
-        cat_name = $(this).parent().parent().children('.cat_name').html(),
-        url = $(location).attr('href').split("?")[0],
-        _token = $(this).parent().parent().parent().children('input[name=_token]').val();
-    sendMsg(url, 'subMenu', {id: cat_id, cat_name: cat_name, _token: _token}, true);
+    var class_str = $(this).attr('class');
+    if (class_str == 'sub_menu') {
+      var cat_id = $(this).parent().parent().attr('id').split("_")[1],
+          cat_name = $(this).parent().parent().children('.cat_name').html(),
+          url = $(location).attr('href').split("?")[0],
+          _token = $(this).parent().parent().parent().children('input[name=_token]').val();
+      sendMsg(url, 'subMenu', {id: cat_id, cat_name: cat_name, _token: _token}, true);
+    }else{
+      var id = $(this).attr('id').split('_')[2];
+      $('.tr_fid_'+id).remove();
+      $('#sub_menu_'+id).attr('class', 'sub_menu')
+    }
   });
-
 /** End: The all method work on the menu view in this area. */
   /**
    * click table button can show or hidden table.
@@ -143,7 +149,7 @@ $(function () {
       if (returnStatus) {
         if (res.success === 1) {
           res.result.forEach(function(cv){
-            var html = '<tr id="tr_'+cv.id+'" class="bg-white">';
+            var html = '<tr id="tr_'+cv.id+'" class="bg-white tr_fid_'+cv.fid+'">';
             html += '<td><input type="checkbox" class="checkbox" name="id" value="'+cv.id+'"/></td>';
             html += '<td>'+data.cat_name+'</td>';
             html += '<td class="cat_name">'+cv.cat_name+'</td>';
@@ -154,6 +160,7 @@ $(function () {
             html += '<td></td>';
             $('#tr_'+cv.fid).after(html);
           });
+          $('#sub_menu_'+data.id).attr('class', 'sub_menu_close');
           return res;
         }
       }

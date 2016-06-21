@@ -52,7 +52,7 @@
                                             @endif
                                             <a class="db-href-menu db-removed">{{trans('system.remove')}}</a>&nbsp;
                                         </td>
-                                        <td><a class="sub_menu">{{trans('system.sub_menu')}}</a></td>
+                                        <td><a class="sub_menu" id="sub_menu_{{$category->id}}">{{trans('system.sub_menu')}}</a></td>
                                     </tr>
                                 @endforeach
                                 <tr>
