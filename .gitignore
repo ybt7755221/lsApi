@@ -12,4 +12,5 @@ composer.lock
 /storage/framework/cache/*
 /storage/app/public/*
 /.idea
+/tinymce
 
