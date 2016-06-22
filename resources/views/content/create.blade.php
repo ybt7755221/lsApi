@@ -1,6 +1,7 @@
 <div id="create_table" class="well bg-white collapse col-md-8 col-md-offset-2{{ $errors->has() ? ' in' : '' }}">
   <form id="content-form" class="form-inline" role="form" method="POST" action="{{ url('/content/create') }}">
     {{ csrf_field() }}
+    <input type="hidden" name="id" value=0 />
     <div class="input-group{{ $errors->has('title') ? ' has-error' : '' }} col-md-12">
       <div class="input-group-addon">{{trans('database.content.title')}}</div>
       <input type="text" class="form-control" name="title" value="{{ old('title') }}" minlength="6" max="255"/>
@@ -62,7 +63,7 @@
     <p class="clearfix"></p>
     <p class="text-center">
       <button type="submit" class="btn btn-primary">{{trans('system.save')}}</button>
-      <button type="button" class="btn btn-default" data-toggle="collapse" href="#create_table" aria-expanded="false" aria-controls="create_table">{{trans('system.cancel')}}</button>
+      <button type="button" class="btn btn-default collapse-close">{{trans('system.cancel')}}</button>
     </p>
   </form>
 
@@ -73,7 +74,7 @@
 @push('ls-js')
 <script src="{{url('summernote/summernote.js')}}"></script>
 <script>
-  $(document).ready(function () {
+  $(document).ready(function() {
     $('#summernote').summernote({
       height: 300
     });

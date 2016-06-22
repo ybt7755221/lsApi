@@ -62,4 +62,38 @@ class ContentController extends Controller
         }
         return Redirect::to('/content');
     }
+
+    /**
+     * Remove a data.
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function removed(Request $request) {
+        $current_user_status = Auth::user()->status;
+        if ($this->userDisable($current_user_status, 'remove')) {
+            $id = (int)$request['id'];
+            $res = Content::destroy($id);
+            if ($res) {
+                $record['success'] = 1;
+                $record['result'] = trans('validation.user.remove_success', ['name' => 'category']);
+            } else {
+                $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
+            }
+        }else {
+            $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
+        }
+        return json_encode($record);
+    }
+    public function getOldData(Request $request) {
+        $id = (int)$request['id'];
+        $res = Content::find($id);
+        if ($res) {
+            $record['success'] = 1;
+            $record['result'] = $res;
+        } else {
+            $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
+        }
+        return json_encode($record);
+    }
 }

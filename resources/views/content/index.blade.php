@@ -16,7 +16,7 @@
             <table class="table table-striped table-hover">
               <thead>
               <tr>
-                <th></th>
+                <th><input class="check_all" type="checkbox" value="0"/></th>
                 <th>{{trans('database.content.title')}}</th>
                 <th>{{trans('database.content.thumb')}}</th>
                 <th>{{trans('database.content.user_id')}}</th>
@@ -29,8 +29,8 @@
               <tbody>
               <form>
                 @foreach($contentObj as $content)
-                  <tr>
-                    <td><input type="checkbox" name="id_{{$content->id}}" value="{{$content->id}}"/></td>
+                  <tr id="tr_{{$content->id}}">
+                    <td><input type="checkbox" id="id_{{$content->id}}" name="id" value="{{$content->id}}"/></td>
                     <td>{{$content->title}}</td>
                     <td>{{$content->thumb}}</td>
                     <td>{{$content->users->name}}</td>
@@ -38,18 +38,18 @@
                     <td>{{trans('database.stateValue.'.$content->state)}}</td>
                     <td>{{$content->updated_at}}</td>
                     <td>
-                      <a href="">{{trans('system.edit')}}</a>&nbsp;|&nbsp;
-                      <a href="">{{trans('system.disable')}}</a>&nbsp;|&nbsp;
-                      <a href="">{{trans('system.remove')}}</a></td>
+                      <a class="db-href-content db-edit">{{trans('system.edit')}}</a>&nbsp;|&nbsp;
+                      <a class="db-href-content db-removed">{{trans('system.remove')}}</a></td>
                     &nbsp;
                     </td>
                   </tr>
                 @endforeach
                 <tr>
-                  <td colspan="8" class="text-center">
+                  <td><input class="check_all" type="checkbox" value="0"/></td>
+                  <td colspan="7" class="text-center">
                     ||&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="">{{trans('system.disable_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="">{{trans('system.remove_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="select_href" id="disabled">{{trans('system.disable_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="select_href" id="removed">{{trans('system.remove_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
                     <a role="button" data-toggle="collapse" href="#create_table" aria-expanded="true"
                        aria-controls="create_table">{{trans('system.create')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||
                   </td>

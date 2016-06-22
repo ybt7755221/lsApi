@@ -91,6 +91,42 @@ $(function () {
     }
   });
 /** End: The all method work on the menu view in this area. */
+/** Start: The all method work on the content view in this area. */
+  $('.db-href-content').click(function(){
+    var id = $(this).parent().parent().children('td:first').children().val(),
+        _token=$('input[name=_token]').val(),
+        url = $(location).attr('href').split("?")[0];
+    $('#content-form').attr('action', url+'/edit');
+    $.post(url + '/getOldData', {id:id, _token:_token},
+      function (res) {
+        var res = $.parseJSON(res);
+        if (res.success === 1) {
+          $('input[name=title]').val(res.result.title);
+          $('.note-editable').html(res.result.body);
+          $('input[name=id]').val(id);
+          $('#comment_status option[value=' + res.result.status + ']').attr('selected', true);
+          $('#state option[value=' + res.result.state + ']').attr('selected', true);
+          $('#cat_id option[value=' + res.result.cat_id + ']').attr('selected', true);
+          $('.collapse').collapse('show');
+        } else if (res.success === 0) {
+          $('#alert-static').attr('class', 'alert alert-danger');
+        } else if (res.success === -1) {
+          $('#alert-static').attr('class', 'alert alert-warning');
+        }
+        return false;
+      });
+  });
+  $('.collapse-close').click(function() {
+    var url = $(location).attr('href').split("?")[0];
+    $('#user-form').attr('action', url+'/create');
+    $('#content-form input').val('');
+    $('#content-form option').removeAttr('selected');
+    $('.note-editable').html('');
+    $('input[name=id]').val(0);
+    $('.collapse').collapse('hidden');
+    return false;
+  });
+/** Start: The all method work on the content view in this area. */
   /**
    * click table button can show or hidden table.
    */
