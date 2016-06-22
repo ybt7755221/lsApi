@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use App\Models\Content;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Http\Requests;
+use Illuminate\Support\Facades\Redirect;
 
 class ContentController extends Controller
 {
@@ -22,7 +24,7 @@ class ContentController extends Controller
                         $query->select('id','name');
                     }])
                     ->get();
-        $categoryObj = Category::select('id', 'cat_name', 'path')->orderBy('path')->get();
+        $categoryObj = Category::where('type', '!=', 'link')->select('id', 'cat_name', 'path')->orderBy('path')->get();
         foreach($categoryObj as $category) {
             $count = substr_count($category->path, '|') - 2;
             if ($count > 0) {
@@ -34,5 +36,30 @@ class ContentController extends Controller
             }
         }
         return view('content/index', ['contentObj' => $contentObj, 'categoryObj' => $categoryObj]);
+    }
+
+    /**
+     * Create a data.
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function create(Request $request) {
+        $this->validate($request, ['title'=>'required|min:4|max:120|unique:content', 'body'=>'required']);
+        $record = Content::create([
+            'title' => $request['title'],
+            'user_id' => Auth::user()->id,
+            'body' => $request['body'],
+            'comment_status' => $request['comment_status'],
+            'state' => $request['state'],
+            'cat_id' => $request['cat_id'],
+        ]);
+        if ($record) {
+            //$record = json_encode(['success' => 1, 'result' => $record]);
+            $request->session()->flash('success', trans('validation.user.successful'));
+        } else {
+            $request->session()->flash('error', trans('errors.LS40401_UNKNOWN'));
+        }
+        return Redirect::to('/content');
     }
 }

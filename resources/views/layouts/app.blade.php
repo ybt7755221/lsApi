@@ -14,6 +14,7 @@
   <!-- Styles -->
   <link rel="stylesheet" href="{{url('css/bootstrap.min.css')}}">
   <link rel="stylesheet" href="{{url('css/app.css')}}">
+  @stack('ls-style')
   {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
 </head>

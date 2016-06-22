@@ -1,13 +1,13 @@
-<div id="create_table" class="well bg-white collapse col-md-8 col-md-offset-2" >
-  <form id="content-form" class="form-inline" role="form" method="POST" action="{{ url('/menu/create') }}">
-
+<div id="create_table" class="well bg-white collapse col-md-8 col-md-offset-2{{ $errors->has() ? ' in' : '' }}">
+  <form id="content-form" class="form-inline" role="form" method="POST" action="{{ url('/content/create') }}">
+    {{ csrf_field() }}
     <div class="input-group{{ $errors->has('title') ? ' has-error' : '' }} col-md-12">
       <div class="input-group-addon">{{trans('database.content.title')}}</div>
       <input type="text" class="form-control" name="title" value="{{ old('title') }}" minlength="6" max="255"/>
     </div>
     @if ($errors->has('title'))
-      <div class="col-md-offset-1 help-block">
-        <strong>{{ $errors->first('title') }}</strong>
+      <div class="help-block">
+        <strong class="text-danger">{{ $errors->first('title') }}</strong>
       </div>
     @endif
 
@@ -19,24 +19,14 @@
           <option value="{{$key}}">{{$val}}</option>
         @endforeach
       </select>
-      @if ($errors->has('comment_status'))
-        <span class="help-block">
-          <strong>{{ $errors->first('comment_status') }}</strong>
-        </span>
-      @endif
     </div>
     <div class="form-group{{$errors->has('state') ? 'has-error' : '' }} col-md-4">
       <label class="control-label" for="state">{{trans('database.content.state')}}</label>
       <select class="form-control" name="state" id="state">
         @foreach(trans('database.stateValue') as $key => $val)
-          <option value="{{$key}}">{{$val}}</option>
+          <option value="{{$key}}" {{$key == 1 ? 'selected="selected"' : ''}}>{{$val}}</option>
         @endforeach
       </select>
-      @if ($errors->has('state'))
-        <span class="help-block">
-            <strong>{{ $errors->first('state') }}</strong>
-          </span>
-      @endif
     </div>
     <div class="form-group{{$errors->has('cat_id') ? 'has-error' : '' }} col-md-4">
       <label class="control-label" for="state">{{trans('database.content.cat_id')}}</label>
@@ -45,28 +35,48 @@
           <option value="{{$category->id}}">{{$category->cat_name}}</option>
         @endforeach
       </select>
-      @if ($errors->has('cat_id'))
-        <span class="help-block">
-          <strong>{{ $errors->first('cat_id') }}</strong>
-        </span>
-      @endif
-    </div>
 
+    </div>
+    @if ($errors->has('comment_status'))
+      <div class="help-block">
+        <strong class="text-danger">{{ $errors->first('comment_status') }}</strong>
+      </div>
+    @endif
+    @if ($errors->has('state'))
+      <div class="help-block">
+        <strong class="text-danger">{{ $errors->first('state') }}</strong>
+      </div>
+    @endif
+    @if ($errors->has('cat_id'))
+      <div class="help-block">
+        <strong class="text-danger">{{ $errors->first('cat_id') }}</strong>
+      </div>
+    @endif
     <p class="clearfix"></p>
-    <textarea id="body" name="body" class="form-control" rows="8">{{old('body')}}</textarea>
+    @if ($errors->has('body'))
+      <div class="help-block">
+        <strong class="text-danger">{{ $errors->first('body') }}</strong>
+      </div>
+    @endif
+    <textarea id="summernote" name="body" class="summernote form-control">{{old('body')}}</textarea>
     <p class="clearfix"></p>
     <p class="text-center">
       <button type="submit" class="btn btn-primary">{{trans('system.save')}}</button>
-      <button type="button" class="btn btn-default">{{trans('system.cancel')}}</button>
+      <button type="button" class="btn btn-default" data-toggle="collapse" href="#create_table" aria-expanded="false" aria-controls="create_table">{{trans('system.cancel')}}</button>
     </p>
   </form>
 
 </div>
+@push('ls-style')
+<link href="{{url('summernote/summernote.css')}}" rel="stylesheet">
+@endpush
 @push('ls-js')
-<script src="{{url('tinymce/tinymce.min.js')}}"></script>
+<script src="{{url('summernote/summernote.js')}}"></script>
 <script>
-  tinymce.init({
-    selector: '#body'
+  $(document).ready(function () {
+    $('#summernote').summernote({
+      height: 300
+    });
   });
 </script>
 @endpush
