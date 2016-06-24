@@ -11,18 +11,24 @@ use Illuminate\Support\Facades\Redirect;
 
 class ContentController extends Controller
 {
+    private $thumb = '/images/default.png';
+    private $base_path = '/uploads';
     /**
      * Show the application dashboard.
      *
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $contentObj = Content::where('state', 1)
-                    ->select('id', 'title','thumb','user_id','comment_status','state','updated_at')
+        $contentObj = Content::select('id', 'title', 'cat_id','user_id','comment_status','state','updated_at')
                     ->orderBy('updated_at')
-                    ->with(['users' => function($query){
+                    ->with([
+                    'users' => function($query){
                         $query->select('id','name');
-                    }])
+                    },
+                    'category' => function($query){
+                        $query->select('id', 'cat_name');
+                    }
+                    ])
                     ->get();
         $categoryObj = Category::where('type', '!=', 'link')->select('id', 'cat_name', 'path')->orderBy('path')->get();
         foreach($categoryObj as $category) {
@@ -46,8 +52,17 @@ class ContentController extends Controller
      */
     public function create(Request $request) {
         $this->validate($request, ['title'=>'required|min:4|max:120|unique:content', 'body'=>'required']);
+        if($_FILES['thumb']) {
+            $img_res = $this->uploadImage($this->base_path);
+            if ($img_res['success'] == 0) {
+                $request->session()->flash('error', $img_res['result']);
+                return Redirect::to('/content');
+            }
+            $this->thumb = $img_res['result'];
+        }
         $record = Content::create([
             'title' => $request['title'],
+            'thumb' => $this->thumb,
             'user_id' => Auth::user()->id,
             'body' => $request['body'],
             'comment_status' => $request['comment_status'],
@@ -62,7 +77,41 @@ class ContentController extends Controller
         }
         return Redirect::to('/content');
     }
-
+    public function edit(Request $request) {
+        $this->validate($request, ['id'=>'required', 'title'=>'required|min:4|max:120|unique:content,title,'.$request['id'], 'body'=>'required']);
+        $update_arr = [
+            'title' => $request['title'],
+            'body' => $request['body'],
+            'comment_status' => $request['comment_status'],
+            'state' => $request['state'],
+            'cat_id' => $request['cat_id'],
+        ];
+        if($_FILES['thumb']) {
+            $img_res = $this->uploadImage($this->base_path);
+            if ($img_res['success'] == 0) {
+                $request->session()->flash('error', $img_res['result']);
+                return Redirect::to('/content');
+            }
+            $update_arr['thumb'] = $img_res['result'];
+        }
+        $check = Content::where('id', $request['id'])->update($update_arr);
+        if ($check) {
+            $record = [
+                'success'=>1,
+                'result'=> [
+                    'id' => $request['id'],
+                    'user_id' => $request['user_id'],
+                    'title' => $request['title'],
+                    'comment_status' => $request['comment_status'],
+                    'state' => $request['state'],
+                    'cat_id' => $request['cat_id'],
+                    'updated_at' => $_SERVER['REQUEST_TIME']
+            ]];
+        } else {
+            $record = ['success'=>0, 'result'=>trans('errors.LS40401_UNKNOWN')];
+        }
+        return Redirect::to('/content');
+    }
     /**
      * Remove a data.
      *
@@ -85,6 +134,13 @@ class ContentController extends Controller
         }
         return json_encode($record);
     }
+
+    /**
+     * Get old content.
+     *
+     * @param Request $request
+     * @return string
+     */
     public function getOldData(Request $request) {
         $id = (int)$request['id'];
         $res = Content::find($id);
@@ -95,5 +151,47 @@ class ContentController extends Controller
             $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
         }
         return json_encode($record);
+    }
+
+    /**
+     * Upload a image for content.
+     *
+     * @return array
+     */
+    private function uploadImage($base_path) {
+        $record = ['success' => 1];
+        $time_str = str_replace(',', '_', microtime(true));
+        $filename = explode('.', basename($_FILES["thumb"]["name"]));
+        $target_name = 'LS'.$time_str.'.'.end($filename);
+        $target_dir = $base_path.date('/Y-m/', $time_str);
+        $imageFileType = substr($_FILES['thumb']['type'], stripos($_FILES['thumb']['type'], '/')+1);
+        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
+            if ($record['success'] === 0)
+                $record['result'] += '<br />'.trans('validation.format_error');
+            else
+                $record = ['success' => 0, 'result' => trans('validation.format_error')];
+        }
+        if($_FILES['thumb']['size'] > 5*1000*1000) {
+            if ($record['success'] === 0)
+                $record['result'] += '<br />'.trans('validation.so_big');
+            else
+                $record = ['success' => 0, 'result' => trans('validation.so_big')];
+        }
+        if ($record['success'] === 1) {
+            $mk_res = true;
+            if(!is_dir(base_path('administrator').$target_dir)) {
+               $mk_res = @mkdir(base_path('administrator').$target_dir, 0755, true);
+            }
+            if ($mk_res) {
+                if (move_uploaded_file($_FILES["thumb"]["tmp_name"], base_path('administrator').$target_dir . $target_name)) {
+                    $record['result'] = $target_dir . $target_name;
+                } else {
+                    $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
+                }
+            }else{
+                $record = ['success' => 0, 'result' => trans('errors.LS40301_INFO')];
+            }
+        }
+        return $record;
     }
 }

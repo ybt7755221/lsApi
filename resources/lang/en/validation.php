@@ -118,7 +118,11 @@ return [
         'disabled_level' => 'Permission denied. You can not :op the user that higher level than you.',
         'remove_super' => 'Permission denied. The Super Administrator can not be removed.',
         'operation_self' => 'Permission denied. You can not :op yourself.',
-        'successful' => 'The operation had been successfully.'
+        'successful' => 'The operation had been successfully.',
+        'not_image' => 'File is not a image file.',
+        'upload_success' => 'The file upload successfully!',
+        'so_big' => 'Sorry, your file is too large.',
+        'format_error' => 'Sorry, only JPG, JPEG, PNG & GIF files are allowed.',
     ]
 
 ];

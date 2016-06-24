@@ -25,6 +25,12 @@ class User extends Authenticatable
     ];
     public $timestamps = true;
     protected $table = 'users';
+
+    /**
+     * Relation function for content table.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function content()
     {
         return $this->hasMany('App\Models\content', 'user_id');

@@ -12,14 +12,14 @@
           </div>
           <!--the Menu table header-->
           <!--the Menu table body-->
-          <div id="field_table" class="panel-body table-responsive panel-collapse collapse in">
+          <div id="field_table" class="panel-body table-responsive">
             <table class="table table-striped table-hover">
               <thead>
               <tr>
                 <th><input class="check_all" type="checkbox" value="0"/></th>
                 <th>{{trans('database.content.title')}}</th>
-                <th>{{trans('database.content.thumb')}}</th>
-                <th>{{trans('database.content.user_id')}}</th>
+                <th>{{trans('database.user.name')}}</th>
+                <th>{{trans('database.category.cat_name')}}</th>
                 <th>{{trans('database.content.comment_status')}}</th>
                 <th>{{trans('database.content.state')}}</th>
                 <th>{{trans('database.content.updated_at')}}</th>
@@ -32,13 +32,13 @@
                   <tr id="tr_{{$content->id}}">
                     <td><input type="checkbox" id="id_{{$content->id}}" name="id" value="{{$content->id}}"/></td>
                     <td>{{$content->title}}</td>
-                    <td>{{$content->thumb}}</td>
-                    <td>{{$content->users->name}}</td>
+                    <td class="user_id" id="{{$content->user_id}}">{{$content->users->name}}</td>
+                    <td>{{$content->category->cat_name}}</td>
                     <td>{{trans('database.commentValue.'.$content->comment_status)}}</td>
                     <td>{{trans('database.stateValue.'.$content->state)}}</td>
                     <td>{{$content->updated_at}}</td>
-                    <td>
-                      <a class="db-href-content db-edit">{{trans('system.edit')}}</a>&nbsp;|&nbsp;
+                    <td id="option">
+                      <a class="db-href-content db-edit">{{trans('system.edit')}}</a><span>&nbsp;|&nbsp;</span>
                       <a class="db-href-content db-removed">{{trans('system.remove')}}</a></td>
                     &nbsp;
                     </td>
@@ -61,6 +61,7 @@
           <!--the Menu table body-->
         </div>
       </div>
+        {{isset($error) ? $error : ''}}
       <!--the user Menu div-->
       <div class="row">
         @include('content.create', ['title' => 'content', 'categoryObj'=>$categoryObj])
