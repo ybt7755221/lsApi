@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 
 class ContentController extends Controller
 {
@@ -20,7 +21,7 @@ class ContentController extends Controller
      */
     public function index() {
         $contentObj = Content::select('id', 'title', 'cat_id','user_id','comment_status','state','updated_at')
-                    ->where('state', '!=', 2)
+                    ->where('state', 1)
                     ->orderBy('updated_at')
                     ->with([
                     'users' => function($query){
@@ -73,6 +74,7 @@ class ContentController extends Controller
      * @return string
      */
     public function create(Request $request) {
+        $request->session()->flash('op', 'create');
         $this->validate($request, ['title'=>'required|min:4|max:120|unique:content', 'body'=>'required']);
         if(isset($_FILES['thumb']['name']) && !empty($_FILES['thumb']['name'])) {
             $img_res = $this->uploadImage($this->base_path);
@@ -106,6 +108,8 @@ class ContentController extends Controller
      * @return mixed
      */
     public function edit(Request $request) {
+        $request->session()->flash('op', 'edit');
+        $request->session()->flash('edit_id', $request['id']);
         $this->validate($request, ['id'=>'required', 'title'=>'required|min:4|max:120|unique:content,title,'.$request['id'], 'body'=>'required']);
         $update_arr = [
             'title' => $request['title'],

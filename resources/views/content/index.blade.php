@@ -7,8 +7,21 @@
       <div class="col-md-10 col-md-offset-1">
         <div class="panel panel-default">
           <!--the user table header-->
-          <div class="panel-heading bg-black text-grey">
-            {{trans('system.dashboard')}} -- {{trans('system.content')}}
+          <div class="panel-heading bg-black text-grey col-md-12">
+            <div class="col-md-3">{{trans('system.dashboard')}} -- {{trans('system.content')}}</div>
+            <div class="dropdown col-md-9 text-right">
+              <a href="#" class="dropdown-toggle text-grey" data-toggle="dropdown" role="button" aria-expanded="false">
+                <span id="now_state_0" data-toggle="0" class="now_state hidden">{{trans('database.stateValue.0')}}</span>
+                <span id="now_state_1" data-toggle="1" class="now_state">{{trans('database.stateValue.1')}}</span>
+                <span id="now_state_2" data-toggle="2" class="now_state hidden">{{trans('database.stateValue.2')}}</span>
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-right bg-black" aria-labelledby="dropdownMenu1">
+                @foreach(trans('database.stateValue') as $key => $val)
+                  <li><a id="{{$key}}">{{$val}}</a></li>
+                @endforeach
+              </ul>
+            </div>
           </div>
           <!--the Menu table header-->
           <!--the Menu table body-->
@@ -59,7 +72,6 @@
           <!--the Menu table body-->
         </div>
       </div>
-        {{isset($error) ? $error : ''}}
       <!--the user Menu div-->
       <div class="row">
         @include('content.create', ['title' => 'content', 'categoryObj'=>$categoryObj])

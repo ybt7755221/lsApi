@@ -119,7 +119,8 @@ $(function () {
             $('#content-form input[name=title]').val(res.result.title);
             $('.note-editable').html(res.result.body);
             $('#summernote').html(res.result.body);
-            $('#content-form').append('<input type="hidden" name="id" value='+id+' readonly />');
+            $('#content-form').append('<input type="hidden" name="id" value='+id+' readonly="true" />');
+            $('#content-form').append('<input type="hidden" name="user_id" value='+user_id+' readonly="true" />');
             $('#comment_status option[value=' + res.result.status + ']').attr('selected', true);
             $('#state option[value=' + res.result.state + ']').attr('selected', true);
             $('#cat_id option[value=' + res.result.cat_id + ']').attr('selected', true);
@@ -153,7 +154,7 @@ $(function () {
     $('#content-form option').removeAttr('selected');
     $('.note-editable').html('');
     $('#content-form input[name=id]').remove();
-    $('#content-form input[name=user_id]').val(0);
+    $('#content-form input[name=user_id]').remove();
     $('.collapse').collapse('hide');
     $('tr[id!="tr_' + id + '"]').attr('class', '');
     var old_e_class = $('#tr_'+id+' .db-edit').attr('class');

@@ -1,7 +1,13 @@
-<div id="create_table" class="well bg-white collapse col-md-8 col-md-offset-2">
-  <form id="content-form" enctype="multipart/form-data" class="form-horizontal" role="form" method="POST" action="{{ url('/content/create') }}">
+<div id="create_table" class="well bg-white collapse col-md-8 col-md-offset-2{{$errors->has() ? ' in' : ''}}">
+  @if ($errors->has() && Session::has('op'))
+    <form id="content-form" enctype="multipart/form-data" class="form-horizontal" role="form" method="POST" action="{{url('/content/'.Session::get('op'))}}">
+    @if (Session::has('edit_id'))
+      <input type="hidden" name="id" value="{{Session::get('edit_id')}}" readonly="true">
+    @endif
+  @else
+    <form id="content-form" enctype="multipart/form-data" class="form-horizontal" role="form" method="POST" action="{{url('/content/create')}}">
+  @endif
     {{ csrf_field() }}
-    <input type="hidden" name="user_id" value=0 readonly />
     <div class="input-group{{ $errors->has('title') ? ' has-error' : '' }} col-md-12">
       <div class="input-group-addon">{{trans('database.content.title')}}</div>
       <input type="text" class="form-control" name="title" value="{{ old('title') }}" minlength="6" max="255"/>

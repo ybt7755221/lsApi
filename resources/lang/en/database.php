@@ -56,7 +56,7 @@ return [
         'status' => 'Status',
     ],
     'commentValue' => ['Disable', 'Enable'],
-    'stateValue' => ['Padding Audit', 'Published', 'Removed'],
+    'stateValue' => ['Hidden', 'Published', 'Removed'],
     'publishValue' => ['Hidden', 'Show', 'Removed'],
     'statusValue' => ['Forbidden User', 'Editor', 'Manager', 'Administrator', 'Super Administrator'],
     'categoryTypeValue' => ['local' =>'Location', 'single'=>'Single Page', 'link' => 'OutLink'],
