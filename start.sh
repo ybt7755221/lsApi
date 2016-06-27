@@ -19,6 +19,9 @@ fi
 echo "Modifying the file Competence..."
 chmod -R 777 storage/
 chmod -R 777 bootstrap/cache/
+mkdir storage/uploads
+chmod -R 777 storage/uploads/
+cp administrator/images/default.png storage/uploads/default.png
 echo "Modify the file Competence is done."
 
 # Install vendor folder
