@@ -4,7 +4,7 @@ $(function () {
    * Get all form data when user click the button in the option.
    */
   $('.db-href').click(function (){
-    var all_data = window.atob($(this).parent().children('input[name=all_data]').val()).split("-");
+    var all_data = window.atob($(this).parent().children('input[name=all_data]').val()).split("||");
     var _token = $(this).parent().parent().parent().children('input[name=_token]').val(),
       id = all_data[0],
       name = all_data[1],
@@ -23,6 +23,9 @@ $(function () {
       $('#user-form').append('<input type="hidden" name="id" value="'+id+'" />');
       $('input[name="name"]').val(name);
       $('input[name="email"]').val(email);
+      if ( status < 3) {
+        $('input[name="email"]').attr('readonly', 'true');
+      }
       $('input[name="_token"]').val(_token);
       if (status == 4) {
         var info = $('#tr_'+id+' .user_status').html();
@@ -35,7 +38,7 @@ $(function () {
 /** End: The all method work on the user view in this area. */
 /** Start: The all method work on the menu view in this area. */
   $(document).on('click', '.db-href-menu', function (){
-    var all_data = window.atob($(this).parent().children('input[name=all_data]').val()).split("-"),
+    var all_data = window.atob($(this).parent().children('input[name=all_data]').val()).split("||"),
         cat_id = all_data[0],
         cat_name = all_data[1],
         is_display = all_data[2],

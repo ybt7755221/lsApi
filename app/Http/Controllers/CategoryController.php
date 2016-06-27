@@ -31,10 +31,11 @@ class CategoryController extends Controller
         $current_user_status = Auth::user()->status;
         if ($this->userDisable($current_user_status, 'create')) {
             $fid = (int) $request['fid'];
-            if ($request['type'] ===  'link')
-                $url = $request['url'];
-            else
+            if ($request['type'] ===  'local')
                 $url = '';
+            else {
+                $url = $request['url'];
+            }
             $res_arr = Category::create([
                 'fid' => $fid,
                 'cat_name' => $request['cat_name'],
@@ -62,6 +63,11 @@ class CategoryController extends Controller
         $this->validate($request, ['cat_name' => 'required|max:255|unique:category,cat_name,'.$request['id'].',id']);
         $check = $this->userDisable(Auth::user()->status, 'edit');
         if($check) {
+            if ($request['type'] ===  'local')
+                $url = '';
+            else {
+                $url = $request['url'];
+            }
             $category = Category::find($request['id']);
             if ($request['fid'] !== $category['fid']) {
                 if($category['fid'] != 0) {
@@ -74,8 +80,7 @@ class CategoryController extends Controller
             $category->cat_name = $request['cat_name'];
             $category->fid = $request['fid'];
             $category->type = $request['type'];
-            if ($request['type'] == 'link')
-                $category->url = $request['url'];
+            $category->url = $url;
             $category->display = $request['display'];
             if (isset($new_path)) {
                 $category->path = $new_path;

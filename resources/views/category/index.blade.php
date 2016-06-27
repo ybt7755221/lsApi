@@ -44,7 +44,7 @@
                     <td>{{$category->url}}</td>
                     <td>
                       <input type="hidden" name="all_data"
-                             value="{{ base64_encode($category->id.'-'.$category->cat_name.'-'.$category->display.'-'.$category->type.'-'.$category->url.'-'.$category->sort.'-'.$category->fid) }}"
+                             value="{{ base64_encode($category->id.'||'.$category->cat_name.'||'.$category->display.'||'.$category->type.'||'.$category->url.'||'.$category->sort.'||'.$category->fid) }}"
                              readonly>
                       <a data-toggle="modal" data-target="#myModal"
                          class="db-href-menu db-edit">{{trans('system.edit')}}</a>&nbsp;|&nbsp;

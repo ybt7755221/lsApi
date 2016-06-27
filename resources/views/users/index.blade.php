@@ -42,7 +42,7 @@
                     <td>{{$user->updated_at}}</td>
                     <td id="td_operation">
                       <input type="hidden" name="all_data"
-                             value="{{ base64_encode($user->id.'-'.$user->name.'-'.$user->email.'-'.$user->status.'-'.$user->password) }}"
+                             value="{{ base64_encode($user->id.'||'.$user->name.'||'.$user->email.'||'.$user->status.'||'.$user->password) }}"
                              readonly>
                       <a data-toggle="modal" data-target="#myModal" class="db-href db-edit">{{trans('system.edit')}}</a>&nbsp;|&nbsp;
                       <a class="db-href db-disabled">{{trans('system.disable')}}</a>&nbsp;|&nbsp;

@@ -25,10 +25,8 @@
 
           <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
             <label class="col-md-4 control-label">{{trans('database.user.email')}}</label>
-
             <div class="col-md-6">
               <input type="email" class="form-control" name="email" value="{{ old('email') }}" maxlength="128">
-
               @if ($errors->has('email'))
                 <span class="help-block">
                   <strong>{{ $errors->first('email') }}</strong>

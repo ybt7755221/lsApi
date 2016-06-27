@@ -58,10 +58,7 @@
             <label class="col-md-4 control-label">{{trans('database.category.url')}}</label>
 
             <div class="col-md-6">
-              <div class="input-group">
-              <div class="input-group-addon">http://</div>
               <input type="text" class="form-control" name="url" value="{{ old('url') }}" maxlength="128">
-              </div>
               @if ($errors->has('url'))
                 <span class="help-block">
                   <strong>{{ $errors->first('url') }}</strong>
