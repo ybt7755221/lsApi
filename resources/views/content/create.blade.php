@@ -12,18 +12,19 @@
       </div>
     @endif
     <p></p>
-    <div class="form-group{{$errors->has('thumb') ? 'has-error' : '' }} col-md-6 text-center">
+    <div class="form-group{{$errors->has('thumb') ? 'has-error' : '' }} col-md-5 text-center">
         <label for="thumb">{{trans('database.content.thumb')}}</label><br />
         <img id="thumbnail" src="{{url('/images/default.png')}}" width="180px" />
         <div class="clearfix" style="min-height:5px;"></div>
         <input class="form-control" type="file" name="thumb" id="thumb">
+        <span id="helpBlock" class="help-block">{{trans('validation.user.format_error')}}</span>
       @if ($errors->has('thumb'))
         <div class="help-block">
           <strong class="text-danger">{{ $errors->first('thumb') }}</strong>
         </div>
       @endif
     </div>
-    <p></p>
+    <div class="col-md-1"></div>
     <div class="col-md-6">
       <div class="form-group{{$errors->has('comment_status') ? 'has-error' : '' }}">
         <label class="control-label" for="comment_status">{{trans('database.content.comment_status')}}</label>

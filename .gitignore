@@ -11,6 +11,6 @@ composer.lock
 /storage/framework/sessions/*
 /storage/framework/cache/*
 /storage/app/public/*
+/storage/uploads/*
 /.idea
-/administrator/tinymce
 

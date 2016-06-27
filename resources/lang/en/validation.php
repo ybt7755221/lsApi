@@ -123,6 +123,7 @@ return [
         'upload_success' => 'The file upload successfully!',
         'so_big' => 'Sorry, your file is too large.',
         'format_error' => 'Sorry, only JPG, JPEG, PNG & GIF files are allowed.',
+        'image_format' => 'The system only support upload JPG, JPEG, PNG & GIF image.',
     ]
 
 ];

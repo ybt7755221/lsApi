@@ -93,40 +93,77 @@ $(function () {
 /** End: The all method work on the menu view in this area. */
 /** Start: The all method work on the content view in this area. */
   $('.db-href-content').click(function(){
+    var check = $('#create_table').attr('class').indexOf('in');
+    if(check !== -1) {
+      return false;
+    }
     var id = $(this).parent().parent().children('td:first').children().val(),
+        user_id = $(this).parent().parent().children('td.user_id').attr('id'),
         _token=$('input[name=_token]').val(),
+        currentClass = $(this).attr('class').split(" ")[1].split("-")[1];
         url = $(location).attr('href').split("?")[0];
-    $('#content-form').attr('action', url+'/edit');
-    $.post(url + '/getOldData', {id:id, _token:_token},
-      function (res) {
-        var res = $.parseJSON(res);
-        if (res.success === 1) {
-          $('input[name=title]').val(res.result.title);
-          $('.note-editable').html(res.result.body);
-          $('input[name=id]').val(id);
-          $('#comment_status option[value=' + res.result.status + ']').attr('selected', true);
-          $('#state option[value=' + res.result.state + ']').attr('selected', true);
-          $('#cat_id option[value=' + res.result.cat_id + ']').attr('selected', true);
-          $('.collapse').collapse('show');
-        } else if (res.success === 0) {
-          $('#alert-static').attr('class', 'alert alert-danger');
-        } else if (res.success === -1) {
-          $('#alert-static').attr('class', 'alert alert-warning');
-        }
+    if (currentClass == 'edit') {
+      $('#content-form').attr('action', url + '/edit');
+      $.post(url + '/getOldData', {id: id, _token: _token},
+        function (res) {
+          var res = $.parseJSON(res);
+          if (res.success === 1) {
+            var url_arr = url.split('/');
+            url_arr.pop();
+            var url_final = url_arr.join("/");
+            var thumbnail = url_final + '/..' + res.result.thumb;
+            $('#thumbnail').attr('src', thumbnail);
+            $('#content-form input[name=title]').val(res.result.title);
+            $('.note-editable').html(res.result.body);
+            $('#summernote').html(res.result.body);
+            $('#content-form').append('<input type="hidden" name="id" value='+id+' readonly />');
+            $('#comment_status option[value=' + res.result.status + ']').attr('selected', true);
+            $('#state option[value=' + res.result.state + ']').attr('selected', true);
+            $('#cat_id option[value=' + res.result.cat_id + ']').attr('selected', true);
+            $('tr[id!="tr_' + id + '"]').attr('class', 'hidden');
+            var old_e_class = $('#tr_'+id+' .db-edit').attr('class');
+            $('#tr_'+id+' .db-edit').attr('class', old_e_class+' hidden');
+            var old_class = $('#tr_'+id+' .db-removed').attr('class');
+            $('#tr_'+id+' .db-removed').attr('class', old_class+' hidden');
+            $('#tr_'+id+' span').attr('class', 'hidden');
+            $('#tr_'+id+' #option').append('<a class="collapse-close">Close</a>');
+            $('.collapse').collapse('show');
+          } else if (res.success === 0) {
+            $('#alert-static').attr('class', 'alert alert-danger');
+          } else if (res.success === -1) {
+            $('#alert-static').attr('class', 'alert alert-warning');
+          }
+          return false;
+        });
+    } else if (currentClass == 'removed') {
+      if (confirm('Are you sure you want to do this?')) {
+        sendMsg(url, currentClass, {id: id, _token: _token}, false);
         return false;
-      });
+      }
+    }
   });
-  $('.collapse-close').click(function() {
-    var url = $(location).attr('href').split("?")[0];
+  $(document).on('click', '.collapse-close', function() {
+    var url = $(location).attr('href').split("?")[0],
+        id = $('#content-form input[name=id]').val();
     $('#user-form').attr('action', url+'/create');
-    $('#content-form input').val('');
+    $('#content-form input[name!=_token]').val('');
     $('#content-form option').removeAttr('selected');
     $('.note-editable').html('');
-    $('input[name=id]').val(0);
-    $('.collapse').collapse('hidden');
+    $('#content-form input[name=id]').remove();
+    $('#content-form input[name=user_id]').val(0);
+    $('.collapse').collapse('hide');
+    $('tr[id!="tr_' + id + '"]').attr('class', '');
+    var old_e_class = $('#tr_'+id+' .db-edit').attr('class');
+    var raw_e_class = old_e_class.substring(0, old_e_class.indexOf('hidden'));
+    $('#tr_'+id+' .db-edit').attr('class', raw_e_class);
+    var old_class = $('#tr_'+id+' .db-removed').attr('class');
+    var raw_class = old_class.substring(0, old_class.indexOf('hidden'));
+    $('#tr_'+id+' .db-removed').attr('class', raw_class);
+    $('#tr_'+id+' span').attr('class', '');
+    $('#tr_'+id+' #option .collapse-close').remove();
     return false;
   });
-/** Start: The all method work on the content view in this area. */
+/** End: The all method work on the content view in this area. */
   /**
    * click table button can show or hidden table.
    */

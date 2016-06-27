@@ -45,6 +45,27 @@ class ContentController extends Controller
     }
 
     /**
+     * Delete a record
+     *
+     * @param Request $request
+     */
+    public function remove(Request $request){
+        $current_user_status = Auth::user()->status;
+        if ($this->userDisable($current_user_status, 'remove')) {
+            $id = (int) $request['id'];
+            $res = Content::destroy($id);
+            if ($res) {
+                $record['success'] = 1;
+                $record['result'] = trans('validation.user.remove_success', ['name' => 'content']);
+            } else {
+                $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
+            }
+        }else {
+            $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
+        }
+        return $record;
+    }
+    /**
      * Create a data.
      *
      * @param Request $request
@@ -77,6 +98,13 @@ class ContentController extends Controller
         }
         return Redirect::to('/content');
     }
+
+    /**
+     * Edit a record.
+     *
+     * @param Request $request
+     * @return mixed
+     */
     public function edit(Request $request) {
         $this->validate($request, ['id'=>'required', 'title'=>'required|min:4|max:120|unique:content,title,'.$request['id'], 'body'=>'required']);
         $update_arr = [
@@ -96,17 +124,10 @@ class ContentController extends Controller
         }
         $check = Content::where('id', $request['id'])->update($update_arr);
         if ($check) {
-            $record = [
-                'success'=>1,
-                'result'=> [
-                    'id' => $request['id'],
-                    'user_id' => $request['user_id'],
-                    'title' => $request['title'],
-                    'comment_status' => $request['comment_status'],
-                    'state' => $request['state'],
-                    'cat_id' => $request['cat_id'],
-                    'updated_at' => $_SERVER['REQUEST_TIME']
-            ]];
+            $record['success'] = 1;
+            $record['result'] = $update_arr;
+            $record['result']['user_id'] = $request['user_id'];
+            $record['result']['updated_at'] = $_SERVER['REQUEST_TIME'];
         } else {
             $record = ['success'=>0, 'result'=>trans('errors.LS40401_UNKNOWN')];
         }
@@ -160,10 +181,10 @@ class ContentController extends Controller
      */
     private function uploadImage($base_path) {
         $record = ['success' => 1];
-        $time_str = str_replace(',', '_', microtime(true));
+        $microtime = microtime(true);
+        $target_dir = $base_path.date('/Y-m/', $microtime);
         $filename = explode('.', basename($_FILES["thumb"]["name"]));
-        $target_name = 'LS'.$time_str.'.'.end($filename);
-        $target_dir = $base_path.date('/Y-m/', $time_str);
+        $target_name = 'LS'.str_replace('.', '_', $microtime).'.'.end($filename);
         $imageFileType = substr($_FILES['thumb']['type'], stripos($_FILES['thumb']['type'], '/')+1);
         if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
             if ($record['success'] === 0)
@@ -179,12 +200,12 @@ class ContentController extends Controller
         }
         if ($record['success'] === 1) {
             $mk_res = true;
-            if(!is_dir(base_path('administrator').$target_dir)) {
-               $mk_res = @mkdir(base_path('administrator').$target_dir, 0755, true);
+            if(!is_dir(storage_path().$target_dir)) {
+               $mk_res = @mkdir(storage_path().$target_dir, 0755, true);
             }
             if ($mk_res) {
-                if (move_uploaded_file($_FILES["thumb"]["tmp_name"], base_path('administrator').$target_dir . $target_name)) {
-                    $record['result'] = $target_dir . $target_name;
+                if (move_uploaded_file($_FILES["thumb"]["tmp_name"], storage_path().$target_dir . $target_name)) {
+                    $record['result'] = '/storage' . $target_dir . $target_name;
                 } else {
                     $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
                 }
