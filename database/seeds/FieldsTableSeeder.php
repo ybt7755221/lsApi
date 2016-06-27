@@ -12,7 +12,7 @@ class FieldsTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('fields')->insert([
+        DB::table('fields')->insert([[
             'label' => 'Title',
             'key' => 'title',
             'params' => 'LsAPI Platform',
@@ -60,6 +60,6 @@ class FieldsTableSeeder extends Seeder
             'field_type' => 'TEXT',
             'user_id' => 1,
             'hits' => 0,
-        ]);
+        ]]);
     }
 }
