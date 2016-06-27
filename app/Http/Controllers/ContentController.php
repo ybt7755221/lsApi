@@ -20,6 +20,7 @@ class ContentController extends Controller
      */
     public function index() {
         $contentObj = Content::select('id', 'title', 'cat_id','user_id','comment_status','state','updated_at')
+                    ->where('state', '!=', 2)
                     ->orderBy('updated_at')
                     ->with([
                     'users' => function($query){
@@ -53,7 +54,7 @@ class ContentController extends Controller
         $current_user_status = Auth::user()->status;
         if ($this->userDisable($current_user_status, 'remove')) {
             $id = (int) $request['id'];
-            $res = Content::destroy($id);
+            $res = Content::find($id)->update(['state'=>2]);
             if ($res) {
                 $record['success'] = 1;
                 $record['result'] = trans('validation.user.remove_success', ['name' => 'content']);
@@ -63,7 +64,7 @@ class ContentController extends Controller
         }else {
             $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
         }
-        return $record;
+        return json_encode($record);
     }
     /**
      * Create a data.
@@ -73,7 +74,7 @@ class ContentController extends Controller
      */
     public function create(Request $request) {
         $this->validate($request, ['title'=>'required|min:4|max:120|unique:content', 'body'=>'required']);
-        if($_FILES['thumb']) {
+        if(isset($_FILES['thumb']['name']) && !empty($_FILES['thumb']['name'])) {
             $img_res = $this->uploadImage($this->base_path);
             if ($img_res['success'] == 0) {
                 $request->session()->flash('error', $img_res['result']);
@@ -98,7 +99,6 @@ class ContentController extends Controller
         }
         return Redirect::to('/content');
     }
-
     /**
      * Edit a record.
      *
@@ -114,7 +114,7 @@ class ContentController extends Controller
             'state' => $request['state'],
             'cat_id' => $request['cat_id'],
         ];
-        if($_FILES['thumb']) {
+        if(isset($_FILES['thumb']['name']) && !empty($_FILES['thumb']['name'])) {
             $img_res = $this->uploadImage($this->base_path);
             if ($img_res['success'] == 0) {
                 $request->session()->flash('error', $img_res['result']);
@@ -132,28 +132,6 @@ class ContentController extends Controller
             $record = ['success'=>0, 'result'=>trans('errors.LS40401_UNKNOWN')];
         }
         return Redirect::to('/content');
-    }
-    /**
-     * Remove a data.
-     *
-     * @param Request $request
-     * @return string
-     */
-    public function removed(Request $request) {
-        $current_user_status = Auth::user()->status;
-        if ($this->userDisable($current_user_status, 'remove')) {
-            $id = (int)$request['id'];
-            $res = Content::destroy($id);
-            if ($res) {
-                $record['success'] = 1;
-                $record['result'] = trans('validation.user.remove_success', ['name' => 'category']);
-            } else {
-                $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
-            }
-        }else {
-            $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
-        }
-        return json_encode($record);
     }
 
     /**

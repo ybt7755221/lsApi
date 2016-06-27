@@ -248,7 +248,7 @@ $(function () {
       $('#alert-static p').html(res.result);
       if (res.success === 1) {
         $('#alert-static').attr('class', 'alert alert-success');
-        if (operation === 'removed') {
+        if (operation == 'removed') {
           $('#tr_' + data.id).remove();
         }
       } else if (res.success === 0) {

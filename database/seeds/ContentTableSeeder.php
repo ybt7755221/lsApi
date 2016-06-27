@@ -20,6 +20,8 @@ class ContentTableSeeder extends Seeder
             'comment_status' => 1,
             'state' => 1,
             'cat_id' => 1,
+            'created_at' => time(),
+            'updated_at' => time()
         ]);
     }
 }

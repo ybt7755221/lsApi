@@ -59,6 +59,13 @@ class CategoryController extends Controller
         }
         return Redirect::to('/menu');
     }
+
+    /**
+     * Update a record.
+     *
+     * @param Request $request
+     * @return mixed
+     */
     public function edit(Request $request) {
         $this->validate($request, ['cat_name' => 'required|max:255|unique:category,cat_name,'.$request['id'].',id']);
         $check = $this->userDisable(Auth::user()->status, 'edit');

@@ -43,6 +43,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'content'], function () {
     Route::post('/edit', 'ContentController@edit');
     Route::post('/getOldData', 'ContentController@getOldData');
     Route::post('/removed', 'ContentController@remove');
+    Route::post('/multiOperation', 'ContentController@multiOperation');
 });
 /**
  * all of the route about menus configration.

@@ -30,7 +30,7 @@
               <form>
                 @foreach($contentObj as $content)
                   <tr id="tr_{{$content->id}}">
-                    <td><input type="checkbox" id="id_{{$content->id}}" name="id" value="{{$content->id}}"/></td>
+                    <td><input type="checkbox" class="checkbox" id="id_{{$content->id}}" name="id" value="{{$content->id}}"/></td>
                     <td>{{$content->title}}</td>
                     <td class="user_id" id="{{$content->user_id}}">{{$content->users->name}}</td>
                     <td>{{$content->category->cat_name}}</td>
@@ -48,8 +48,6 @@
                   <td><input class="check_all" type="checkbox" value="0"/></td>
                   <td colspan="7" class="text-center">
                     ||&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a class="select_href" id="disabled">{{trans('system.disable_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a class="select_href" id="removed">{{trans('system.remove_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
                     <a role="button" data-toggle="collapse" href="#create_table" aria-expanded="true"
                        aria-controls="create_table">{{trans('system.create')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||
                   </td>
