@@ -20,18 +20,19 @@ class ContentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $contentObj = Content::select('id', 'title', 'cat_id','user_id','comment_status','state','updated_at')
-                    ->where('state', 1)
-                    ->orderBy('updated_at')
-                    ->with([
-                    'users' => function($query){
-                        $query->select('id','name');
-                    },
-                    'category' => function($query){
+        if (isset($_GET['state']) && $_GET['state'] != '' && $_GET['state'] != -1 ){
+            $contentObj = Content::select('id', 'title', 'cat_id', 'user_id', 'comment_status', 'state', 'updated_at')->where('state', (int)$_GET['state'])->orderBy('updated_at')->with(['users' => function ($query) {
+                $query->select('id', 'name');
+            }, 'category' => function ($query) {
+                $query->select('id', 'cat_name');
+            }])->limit($this->pagination_number)->get();
+        } else {
+            $contentObj = Content::select('id', 'title', 'cat_id', 'user_id', 'comment_status', 'state', 'updated_at')->orderBy('updated_at')->with(['users' => function ($query) {
+                        $query->select('id', 'name');
+                    }, 'category' => function ($query) {
                         $query->select('id', 'cat_name');
-                    }
-                    ])
-                    ->get();
+                    }])->limit($this->pagination_number)->get();
+        }
         $categoryObj = Category::where('type', '!=', 'link')->select('id', 'cat_name', 'path')->orderBy('path')->get();
         foreach($categoryObj as $category) {
             $count = substr_count($category->path, '|') - 2;
@@ -42,6 +43,13 @@ class ContentController extends Controller
                 }
                 $category->cat_name = $symbol.$category->cat_name;
             }
+        }
+        if(isset($_GET['state'])) {
+            if( ($_GET['state'] == 0 || !empty($_GET['state'])) ){
+                Session::put('content_state', $_GET['state']);
+            }
+        }else{
+            Session::forget('content_state');
         }
         return view('content/index', ['contentObj' => $contentObj, 'categoryObj' => $categoryObj]);
     }
@@ -155,7 +163,6 @@ class ContentController extends Controller
         }
         return json_encode($record);
     }
-
     /**
      * Upload a image for content.
      *

@@ -1,16 +1,21 @@
 $(function () {
+  /**
+   * Public variable.
+   *
+   * @type {*}
+   */
+  var url = $(location).attr('href').split("?")[0],
+      _token=$('input[name=_token]').val();
 /** Start: The all method work on the user view in this area. */
   /**
    * Get all form data when user click the button in the option.
    */
   $('.db-href').click(function (){
     var all_data = window.atob($(this).parent().children('input[name=all_data]').val()).split("||");
-    var _token = $(this).parent().parent().parent().children('input[name=_token]').val(),
       id = all_data[0],
       name = all_data[1],
       email = all_data[2],
       _token = _token,
-      url = $(location).attr('href').split("?")[0],
       status = all_data[3],
       currentClass = $(this).attr('class').split(" ")[1].split("-")[1];
     if ( currentClass === 'removed' || currentClass === 'disabled' ) {
@@ -46,9 +51,7 @@ $(function () {
         cat_url = all_data[4],
         sort = all_data[5],
         fid = all_data[6],
-        _token = $(this).parent().parent().parent().children('input[name=_token]').val(),
         id = $(this).parent().parent().children('td:first').children().val(),
-        url = $(location).attr('href').split("?")[0],
         currentClass = $(this).attr('class').split(" ")[1].split("-")[1];
     if ( currentClass === 'removed' ) {
       if (confirm('Are you sure you want to do this?')) {
@@ -83,9 +86,7 @@ $(function () {
     var class_str = $(this).attr('class');
     if (class_str == 'sub_menu') {
       var cat_id = $(this).parent().parent().attr('id').split("_")[1],
-          cat_name = $(this).parent().parent().children('.cat_name').html(),
-          url = $(location).attr('href').split("?")[0],
-          _token = $(this).parent().parent().parent().children('input[name=_token]').val();
+          cat_name = $(this).parent().parent().children('.cat_name').html();
       sendMsg(url, 'subMenu', {id: cat_id, cat_name: cat_name, _token: _token}, true);
     }else{
       var id = $(this).attr('id').split('_')[2];
@@ -102,9 +103,7 @@ $(function () {
     }
     var id = $(this).parent().parent().children('td:first').children().val(),
         user_id = $(this).parent().parent().children('td.user_id').attr('id'),
-        _token=$('input[name=_token]').val(),
         currentClass = $(this).attr('class').split(" ")[1].split("-")[1];
-        url = $(location).attr('href').split("?")[0];
     if (currentClass == 'edit') {
       $('#content-form').attr('action', url + '/edit');
       $.post(url + '/getOldData', {id: id, _token: _token},
@@ -147,8 +146,7 @@ $(function () {
     }
   });
   $(document).on('click', '.collapse-close', function() {
-    var url = $(location).attr('href').split("?")[0],
-        id = $('#content-form input[name=id]').val();
+    var id = $('#content-form input[name=id]').val();
     $('#user-form').attr('action', url+'/create');
     $('#content-form input[name!=_token]').val('');
     $('#content-form option').removeAttr('selected');
@@ -166,6 +164,13 @@ $(function () {
     $('#tr_'+id+' span').attr('class', '');
     $('#tr_'+id+' #option .collapse-close').remove();
     return false;
+  });
+  $('#now_state').change(function() {
+    var state = $(this).children('option:selected').val();
+    if( state == -1 )
+      window.location.href = url;
+    else
+      window.location.href = url+'?state='+state;
   });
 /** End: The all method work on the content view in this area. */
   /**
@@ -197,9 +202,7 @@ $(function () {
    */
   $('.select_href').click(function (){
     var currentClass = $(this).attr('id'),
-      ids=[],
-      _token=$('input[name=_token]').val(),
-      url = $(location).attr('href').split("?")[0];
+      ids=[];
     $.each($('.checkbox:checked'), function(){
       ids.push($(this).val());
     });

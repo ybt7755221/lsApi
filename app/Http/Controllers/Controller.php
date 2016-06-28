@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesResources;
 class Controller extends BaseController
 {
     use AuthorizesRequests, AuthorizesResources, DispatchesJobs, ValidatesRequests;
+    protected $pagination_number;
     /**
      * Create a new controller instance.
      *
@@ -18,6 +19,7 @@ class Controller extends BaseController
      */
     public function __construct()
     {
+        $this->pagination_number = 25;
         $this->middleware('auth');
     }
     public function userDisable($level, $op) {
