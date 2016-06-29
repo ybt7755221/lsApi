@@ -82,29 +82,25 @@ class ContentController extends Controller
      * @return string
      */
     public function create(Request $request) {
-        $request->session()->flash('op', 'create');
-        $this->validate($request, ['title'=>'required|min:4|max:120|unique:content', 'body'=>'required']);
-        if(isset($_FILES['thumb']['name']) && !empty($_FILES['thumb']['name'])) {
-            $img_res = $this->uploadImage($this->base_path);
-            if ($img_res['success'] == 0) {
-                $request->session()->flash('error', $img_res['result']);
-                return Redirect::to('/content');
+        if ( $this->userDisable(Auth::user()->status, 'create') ) {
+            $request->session()->flash('op', 'create');
+            $this->validate($request, ['title' => 'required|min:4|max:120|unique:content', 'body' => 'required']);
+            if (isset($_FILES['thumb']['name']) && !empty($_FILES['thumb']['name'])) {
+                $img_res = $this->uploadImage($this->base_path);
+                if ($img_res['success'] == 0) {
+                    $request->session()->flash('error', $img_res['result']);
+                    return Redirect::to('/content');
+                }
+                $this->thumb = $img_res['result'];
             }
-            $this->thumb = $img_res['result'];
-        }
-        $record = Content::create([
-            'title' => $request['title'],
-            'thumb' => $this->thumb,
-            'user_id' => Auth::user()->id,
-            'body' => $request['body'],
-            'comment_status' => $request['comment_status'],
-            'state' => $request['state'],
-            'cat_id' => $request['cat_id'],
-        ]);
-        if ($record) {
-            //$record = json_encode(['success' => 1, 'result' => $record]);
-            $request->session()->flash('success', trans('validation.user.successful'));
-        } else {
+            $record = Content::create(['title' => $request['title'], 'thumb' => $this->thumb, 'user_id' => Auth::user()->id, 'body' => $request['body'], 'comment_status' => $request['comment_status'], 'state' => $request['state'], 'cat_id' => $request['cat_id'],]);
+            if ($record) {
+                //$record = json_encode(['success' => 1, 'result' => $record]);
+                $request->session()->flash('success', trans('validation.user.successful'));
+            } else {
+                $request->session()->flash('error', trans('errors.LS40401_UNKNOWN'));
+            }
+        }else {
             $request->session()->flash('error', trans('errors.LS40401_UNKNOWN'));
         }
         return Redirect::to('/content');
@@ -116,32 +112,31 @@ class ContentController extends Controller
      * @return mixed
      */
     public function edit(Request $request) {
-        $request->session()->flash('op', 'edit');
-        $request->session()->flash('edit_id', $request['id']);
-        $this->validate($request, ['id'=>'required', 'title'=>'required|min:4|max:120|unique:content,title,'.$request['id'], 'body'=>'required']);
-        $update_arr = [
-            'title' => $request['title'],
-            'body' => $request['body'],
-            'comment_status' => $request['comment_status'],
-            'state' => $request['state'],
-            'cat_id' => $request['cat_id'],
-        ];
-        if(isset($_FILES['thumb']['name']) && !empty($_FILES['thumb']['name'])) {
-            $img_res = $this->uploadImage($this->base_path);
-            if ($img_res['success'] == 0) {
-                $request->session()->flash('error', $img_res['result']);
-                return Redirect::to('/content');
+        $check = $this->userDisable(Auth::user()->status, 'edit');
+        if($check) {
+            $request->session()->flash('op', 'edit');
+            $request->session()->flash('edit_id', $request['id']);
+            $this->validate($request, ['id' => 'required', 'title' => 'required|min:4|max:120|unique:content,title,' . $request['id'], 'body' => 'required']);
+            $update_arr = ['title' => $request['title'], 'body' => $request['body'], 'comment_status' => $request['comment_status'], 'state' => $request['state'], 'cat_id' => $request['cat_id'],];
+            if (isset($_FILES['thumb']['name']) && !empty($_FILES['thumb']['name'])) {
+                $img_res = $this->uploadImage($this->base_path);
+                if ($img_res['success'] == 0) {
+                    $request->session()->flash('error', $img_res['result']);
+                    return Redirect::to('/content');
+                }
+                $update_arr['thumb'] = $img_res['result'];
             }
-            $update_arr['thumb'] = $img_res['result'];
-        }
-        $check = Content::where('id', $request['id'])->update($update_arr);
-        if ($check) {
-            $record['success'] = 1;
-            $record['result'] = $update_arr;
-            $record['result']['user_id'] = $request['user_id'];
-            $record['result']['updated_at'] = $_SERVER['REQUEST_TIME'];
-        } else {
-            $record = ['success'=>0, 'result'=>trans('errors.LS40401_UNKNOWN')];
+            $check = Content::where('id', $request['id'])->update($update_arr);
+            if ($check) {
+                $record['success'] = 1;
+                $record['result'] = $update_arr;
+                $record['result']['user_id'] = $request['user_id'];
+                $record['result']['updated_at'] = $_SERVER['REQUEST_TIME'];
+            } else {
+                $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
+            }
+        }else{
+            $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
         }
         return Redirect::to('/content');
     }

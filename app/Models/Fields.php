@@ -8,4 +8,7 @@ class Fields extends Model
 {
     protected $table = 'fields';
     public $timestamps = false;
+    protected $fillable = ['id', 'label', 'key', 'params', 'publish', 'field_type', 'user_id'];
+    protected $hidden = ['hits'];
+    
 }

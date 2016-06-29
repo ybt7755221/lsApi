@@ -22,6 +22,7 @@
                 <th></th>
                 <th>{{trans('database.id')}}</th>
                 <th>{{trans('database.field.label')}}</th>
+                <th>{{trans('database.field.key')}}</th>
                 <th>{{trans('database.field.params')}}</th>
                 <th>{{trans('database.field.publish')}}</th>
                 <th>{{trans('database.field.field_type')}}</th>
@@ -35,6 +36,7 @@
                     <td><input type="checkbox" name="id_{{$field->id}}" value="{{$field->id}}"/></td>
                     <td>{{$field->id}}</td>
                     <td>{{$field->label}}</td>
+                    <td>{{$field->key}}</td>
                     <td>{{$field->params}}</td>
                     <td>{{trans('database.publishValue.'.$field->publish)}}</td>
                     <td>{{$field->field_type}}</td>

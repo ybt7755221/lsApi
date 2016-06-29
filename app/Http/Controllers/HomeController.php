@@ -17,7 +17,7 @@ class HomeController extends Controller
     public function index()
     {
         $linkObj = Link::all(['id', 'title', 'status']);
-        $fieldsObj = Fields::all(['id', 'label', 'params', 'publish', 'field_type']);
+        $fieldsObj = Fields::all(['id', 'label', 'key', 'params', 'publish', 'field_type']);
         $serverArr = [
             'db_info' => $_SERVER['DB_CONNECTION'].' / '.$_SERVER['DB_COLLATION'],
             'cache_session_driver' => $_SERVER['CACHE_DRIVER'].' / '.$_SERVER['SESSION_DRIVER'],
