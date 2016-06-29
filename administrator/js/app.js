@@ -173,6 +173,16 @@ $(function () {
       window.location.href = url+'?state='+state;
   });
 /** End: The all method work on the content view in this area. */
+
+/** Start: The all method work on the fields view in this area. */
+  $('.db-href-fields').click(function(){
+    var id = $(this).parent().parent().children('td:first').children().val(),
+        html_id = $(this).parent().parent().attr('id');
+        currentClass = $(this).attr('class').split(" ")[1].split("-")[1];
+    sendMsg(url, currentClass, {id: id, _token: _token, html_id: html_id}, false);
+  });
+/** End: The all method work on the fields view in this area. */
+
   /**
    * click table button can show or hidden table.
    */
@@ -253,7 +263,11 @@ $(function () {
       if (res.success === 1) {
         $('#alert-static').attr('class', 'alert alert-success');
         if (operation == 'removed') {
-          $('#tr_' + data.id).remove();
+          if(data.html_id){
+            $('#' + data.html_id).remove();
+          }else{
+            $('#tr_' + data.id).remove();
+          }
         }
       } else if (res.success === 0) {
         $('#alert-static').attr('class', 'alert alert-danger');

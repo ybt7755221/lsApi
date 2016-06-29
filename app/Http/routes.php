@@ -20,7 +20,9 @@ Route::auth();
 Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/', 'HomeController@index');
-    Route::get('home', 'HomeController@index');
+    Route::get('/home', 'HomeController@index');
+    Route::post('/home/removed', array( 'uses'=>isset($_POST['html_id']) && stripos($_POST['html_id'], 'link') > 0 ? 'LinkController@removed' : 'FieldsController@removed' ));
+    Route::post('/home/edit', 'FieldsController@edit');
 });
 /**
  * all of the route about users configration.

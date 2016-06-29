@@ -2,6 +2,7 @@
 @section('content')
   <div class="container">
     <div class="row">
+    @include('alert')
       <!--the field table div-->
       <div class="col-md-10 col-md-offset-1">
         <div class="panel panel-default">
@@ -30,9 +31,10 @@
               </tr>
               </thead>
               <tbody>
-              <form>
+              <form id="field_form">
+                {{ csrf_field() }}
                 @foreach($fieldsObj as $field)
-                  <tr>
+                  <tr id="tr_{{$field->id}}">
                     <td><input type="checkbox" name="id_{{$field->id}}" value="{{$field->id}}"/></td>
                     <td>{{$field->id}}</td>
                     <td>{{$field->label}}</td>
@@ -40,8 +42,7 @@
                     <td>{{$field->params}}</td>
                     <td>{{trans('database.publishValue.'.$field->publish)}}</td>
                     <td>{{$field->field_type}}</td>
-                    <td><a href="">{{trans('system.edit')}}</a>&nbsp;|&nbsp;<a href="">{{trans('system.hidden')}}</a>&nbsp;|&nbsp;<a
-                          href="">{{trans('system.remove')}}</a></td>
+                    <td><a >{{trans('system.edit')}}</a>&nbsp;|&nbsp;<a class="db-href-fields db-removed">{{trans('system.remove')}}</a></td>
                   </tr>
                 @endforeach
                 <tr>
@@ -79,19 +80,18 @@
               </tr>
               </thead>
               <tbody>
-              <form>
+              <form id="link_form">
                 @foreach($linkObj as $link)
-                  <tr>
+                  <tr id="tr_link_{{$link->id}}">
                     <td><input type="checkbox" name="id_{{$link->id}}" value="{{$link->id}}"/></td>
                     <td>{{$link->id}}</td>
                     <td>{{$link->title}}</td>
                     <td>{{$link->status}}</td>
-                    <td><a href="">{{trans('system.edit')}}</a>&nbsp;|&nbsp;<a href="">{{trans('system.hidden')}}</a>&nbsp;|&nbsp;<a
-                          href="">{{trans('system.remove')}}</a></td>
+                    <td><a >{{trans('system.edit')}}</a>&nbsp;|&nbsp;<a class="db-href-fields db-removed">{{trans('system.remove')}}</a></td>
                   </tr>
                 @endforeach
                 <tr>
-                  <td colspan="7" class="text-center">
+                  <td colspan="8" class="text-center">
                     ||&nbsp;&nbsp;&nbsp;&nbsp;<a href="">{{trans('system.hidden_all')}}
                     </a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="">{{trans('system.hidden_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;

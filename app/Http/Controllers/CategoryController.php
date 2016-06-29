@@ -96,7 +96,7 @@ class CategoryController extends Controller
             }
             $category->save();
         }else{
-
+            $request->session()->flash('error', trans('validation.user.disabled_power',['op' => 'eidt']));
         }
         return Redirect::to('/menu');
     }
@@ -173,7 +173,7 @@ class CategoryController extends Controller
     public function subMenu(Request $request){
         $check = $this->userDisable(Auth::user()->status, 'edit');
         if ($check) {
-            $record['result'] = Category::where('fid',$request['id']*1)->get();
+           $record['result']  = Category::where('fid',$request['id']*1)->get();
             if(count($record['result']) > 0) {
                 $record['success'] = 1;
             } else {
