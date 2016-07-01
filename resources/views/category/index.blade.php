@@ -47,7 +47,7 @@
                              value="{{ base64_encode($category->id.'||'.$category->cat_name.'||'.$category->display.'||'.$category->type.'||'.$category->url.'||'.$category->sort.'||'.$category->fid) }}"
                              readonly>
                       <a data-toggle="modal" data-target="#myModal"
-                         class="db-href-menu db-edit">{{trans('system.edit')}}</a>&nbsp;|&nbsp;
+                         class="db-href-fields db-edit">{{trans('system.edit')}}</a>&nbsp;|&nbsp;
                       @if($category->display == 'show')
                         <a class="db-href-menu db-disabled">{{trans('system.disable')}}</a>&nbsp;|&nbsp;
                       @else
@@ -79,7 +79,7 @@
     </div>
   </div>
 @endsection
-@include('category.create', ['title' => trans('system.category_dialog'), 'categoryObj' => $categoryObj, 'error' => $errors])
+@include('category.create', ['title' => trans('system.category_dialog'), 'categoryObj' => $categoryObj])
 @if ( count($errors) > 0)
   @push('ls-js')
   <script>

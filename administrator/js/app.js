@@ -175,11 +175,46 @@ $(function () {
 /** End: The all method work on the content view in this area. */
 
 /** Start: The all method work on the fields view in this area. */
-  $('.db-href-fields').click(function(){
+  $('.db-href-fields').click(function() {
     var id = $(this).parent().parent().children('td:first').children().val(),
-        html_id = $(this).parent().parent().attr('id');
-        currentClass = $(this).attr('class').split(" ")[1].split("-")[1];
-    sendMsg(url, currentClass, {id: id, _token: _token, html_id: html_id}, false);
+      html_id = $(this).parent().parent().attr('id');
+    currentClass = $(this).attr('class').split(" ")[1].split("-")[1];
+    if (currentClass == 'removed') {
+      sendMsg(url, currentClass, {id: id, _token: _token, html_id: html_id}, false);
+    } else if (currentClass == 'edit') {
+      var all_data = window.atob($(this).parent().children('input[name=all_data]').val()).split("||"),
+        field_label = all_data[0],
+        field_key = all_data[1],
+        field_params = all_data[2],
+        field_publish = all_data[3],
+        field_type = all_data[4];
+      $('#field-form').append('<input type="hidden" name="id" value="'+id+'" readonly="true" />');
+      $('#field-form input[name=label]').val(field_label);
+      $('#field-form input[name=key]').val(field_key);
+      $('#field-form input[name=params]').val(field_params);
+      $('#field-form input[name=publish]').val(field_publish);
+      $('#field-form input[name=field_type]').val(field_type);
+      $('#field-form #publish option[value=' + field_publish + ']').attr('selected', true);
+      $('#field-form #field_type option[value=' + field_type + ']').attr('selected', true);
+    }
+  });
+  $('.db-link-edit').click(function() {
+    var id = $(this).parent().parent().children('td:first').children().val(),
+      all_data = window.atob($(this).parent().children('input[name=all_data]').val()).split("||"),
+      link_title = all_data[0],
+      link_url = all_data[1],
+      link_status = all_data[2],
+      link_description = all_data[3],
+      link_image = all_data[4];
+      $('#link-form').append('<input type="hidden" name="id" value="'+id+'" readonly="true" />');
+      $('#link-form input[name=title]').val(link_title);
+      $('#link-form input[name=url]').val(link_url);
+      $('#link-form input[name=status]').val(link_status);
+      $('#link-form #description').html(link_description);
+      var url_arr = url.split('/');
+      url_arr.pop();
+      var url_final = url_arr.join("/");
+      $('#thumb').attr('src', link_image);
   });
 /** End: The all method work on the fields view in this area. */
 
@@ -193,6 +228,14 @@ $(function () {
     } else {
       $('#field_button').html($('#hidden').html());
     }
+  });
+  $('.links_checkbox').change(function (){
+    $('.links_checkbox').prop("checked",this.checked);
+    $('.link_checkbox').prop("checked",this.checked);
+  });
+  $('.fields_checkbox').change(function (){
+    $('.fields_checkbox').prop("checked",this.checked);
+    $('.field_checkbox').prop("checked",this.checked);
   });
   /**
    * This method work for that check all checkbox.

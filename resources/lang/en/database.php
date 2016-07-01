@@ -60,6 +60,6 @@ return [
     'publishValue' => ['Hidden', 'Show', 'Removed'],
     'statusValue' => ['Forbidden User', 'Editor', 'Manager', 'Administrator', 'Super Administrator'],
     'categoryTypeValue' => ['local' =>'Location', 'single'=>'Single Page', 'link' => 'OutLink'],
-    'categoryDisplayValue' => ['show' => 'show', 'hidden' => 'hidden'],
-
+    'categoryDisplayValue' => ['show' => 'Show', 'hidden' => 'Hidden'],
+    'field_type_value' => ['TEXT', 'CHECKBOX', 'PASSWOED', 'FILE', 'HIDDEN', 'BUTTON', 'RADIO', 'TEXTAREA'],
 ];

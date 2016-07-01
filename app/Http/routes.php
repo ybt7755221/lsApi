@@ -22,6 +22,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/', 'HomeController@index');
     Route::get('/home', 'HomeController@index');
     Route::post('/home/removed', array( 'uses'=>isset($_POST['html_id']) && stripos($_POST['html_id'], 'link') > 0 ? 'LinkController@removed' : 'FieldsController@removed' ));
+    Route::post('/home/create', array( 'uses'=>isset($_POST['table_name']) && $_POST['table_name'] == 'link' ? 'LinkController@create' : 'FieldsController@create' ));
     Route::post('/home/edit', 'FieldsController@edit');
 });
 /**

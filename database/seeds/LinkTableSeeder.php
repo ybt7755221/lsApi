@@ -15,7 +15,7 @@ class LinkTableSeeder extends Seeder
         DB::table('link')->insert([
             'url' => 'http://www.burtyu.com',
             'title' => 'Burt Yu Private Website',
-            'thumb' => 'upload/link/default.jpg',
+            'thumb' => '/storage/uploads/default.png',
             'description' => 'Burt Yu Private Website',
             'status' => 'show',
         ]);

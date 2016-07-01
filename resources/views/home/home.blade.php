@@ -20,7 +20,7 @@
             <table class="table table-striped table-hover">
               <thead>
               <tr>
-                <th></th>
+                <th><input class="fields_checkbox" type="checkbox" value="0"/></th>
                 <th>{{trans('database.id')}}</th>
                 <th>{{trans('database.field.label')}}</th>
                 <th>{{trans('database.field.key')}}</th>
@@ -35,23 +35,29 @@
                 {{ csrf_field() }}
                 @foreach($fieldsObj as $field)
                   <tr id="tr_{{$field->id}}">
-                    <td><input type="checkbox" name="id_{{$field->id}}" value="{{$field->id}}"/></td>
+                    <td><input type="checkbox" class="field_checkbox" name="id_{{$field->id}}" value="{{$field->id}}"/></td>
                     <td>{{$field->id}}</td>
                     <td>{{$field->label}}</td>
                     <td>{{$field->key}}</td>
                     <td>{{$field->params}}</td>
                     <td>{{trans('database.publishValue.'.$field->publish)}}</td>
                     <td>{{$field->field_type}}</td>
-                    <td><a >{{trans('system.edit')}}</a>&nbsp;|&nbsp;<a class="db-href-fields db-removed">{{trans('system.remove')}}</a></td>
+                    <td>
+                      <input type="hidden" name="all_data"
+                             value="{{ base64_encode($field->label.'||'.$field->key.'||'.$field->params.'||'.$field->publish.'||'.$field->field_type) }}"
+                             readonly>
+                      <a data-toggle="modal" data-target="#myModal_field"
+                           class="db-href-fields db-edit">{{trans('system.edit')}}</a>&nbsp;|&nbsp;<a class="db-href-fields db-removed">{{trans('system.remove')}}</a></td>
                   </tr>
                 @endforeach
                 <tr>
+                  <td><input class="fields_checkbox" type="checkbox" value="0"/></td>
                   <td colspan="7" class="text-center">
                     ||&nbsp;&nbsp;&nbsp;&nbsp;<a href="">{{trans('system.hidden_all')}}
                     </a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="">{{trans('system.hidden_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="">{{trans('system.remove_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="">{{trans('system.refresh')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||
+                    <a data-toggle="modal" data-target="#myModal_field">{{trans('system.create')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||
                   </td>
                 </tr>
               </form>
@@ -72,7 +78,7 @@
             <table class="table table-striped table-hover">
               <thead>
               <tr>
-                <th></th>
+                <th><input class="links_checkbox" type="checkbox" value="0"/></th>
                 <th>{{trans('database.id')}}</th>
                 <th>{{trans('database.link.title')}}</th>
                 <th>{{trans('database.link.status')}}</th>
@@ -83,20 +89,26 @@
               <form id="link_form">
                 @foreach($linkObj as $link)
                   <tr id="tr_link_{{$link->id}}">
-                    <td><input type="checkbox" name="id_{{$link->id}}" value="{{$link->id}}"/></td>
+                    <td><input type="checkbox" class="link_checkbox" name="id_{{$link->id}}" value="{{$link->id}}"/></td>
                     <td>{{$link->id}}</td>
                     <td>{{$link->title}}</td>
                     <td>{{$link->status}}</td>
-                    <td><a >{{trans('system.edit')}}</a>&nbsp;|&nbsp;<a class="db-href-fields db-removed">{{trans('system.remove')}}</a></td>
+                    <td>
+                      <input type="hidden" name="all_data"
+                             value="{{ base64_encode($link->title.'||'.$link->url.'||'.$link->status.'||'.$link->description.'||'.url('/..'.$link->thumb) ) }}"
+                             readonly>
+                      <a data-toggle="modal" data-target="#myModal_link"
+                           class="db-link-edit">{{trans('system.edit')}}</a>&nbsp;|&nbsp;<a class="db-href-link db-removed">{{trans('system.remove')}}</a></td>
                   </tr>
                 @endforeach
                 <tr>
-                  <td colspan="8" class="text-center">
+                  <td><input class="links_checkbox" type="checkbox" value="0"/></td>
+                  <td colspan="4" class="text-center">
                     ||&nbsp;&nbsp;&nbsp;&nbsp;<a href="">{{trans('system.hidden_all')}}
                     </a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="">{{trans('system.hidden_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="">{{trans('system.remove_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="">{{trans('system.refresh')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||
+                    <a data-toggle="modal" data-target="#myModal_link">{{trans('system.create')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||
                   </td>
                 </tr>
               </form>
@@ -137,3 +149,5 @@
     </div>
   </div>
 @endsection
+@include('home.create_field', ['title' => trans('system.create')])
+@include('home.create_link', ['title' => trans('system.create')])
