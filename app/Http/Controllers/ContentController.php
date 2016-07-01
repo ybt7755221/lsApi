@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Session;
 class ContentController extends Controller
 {
     private $thumb = '/images/default.png';
-    private $base_path = '/uploads';
     /**
      * Show the application dashboard.
      *
@@ -157,46 +156,5 @@ class ContentController extends Controller
             $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
         }
         return json_encode($record);
-    }
-    /**
-     * Upload a image for content.
-     *
-     * @return array
-     */
-    private function uploadImage($base_path) {
-        $record = ['success' => 1];
-        $microtime = microtime(true);
-        $target_dir = $base_path.date('/Y-m/', $microtime);
-        $filename = explode('.', basename($_FILES["thumb"]["name"]));
-        $target_name = 'LS'.str_replace('.', '_', $microtime).'.'.end($filename);
-        $imageFileType = substr($_FILES['thumb']['type'], stripos($_FILES['thumb']['type'], '/')+1);
-        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
-            if ($record['success'] === 0)
-                $record['result'] += '<br />'.trans('validation.format_error');
-            else
-                $record = ['success' => 0, 'result' => trans('validation.format_error')];
-        }
-        if($_FILES['thumb']['size'] > 5*1000*1000) {
-            if ($record['success'] === 0)
-                $record['result'] += '<br />'.trans('validation.so_big');
-            else
-                $record = ['success' => 0, 'result' => trans('validation.so_big')];
-        }
-        if ($record['success'] === 1) {
-            $mk_res = true;
-            if(!is_dir(storage_path().$target_dir)) {
-               $mk_res = @mkdir(storage_path().$target_dir, 0755, true);
-            }
-            if ($mk_res) {
-                if (move_uploaded_file($_FILES["thumb"]["tmp_name"], storage_path().$target_dir . $target_name)) {
-                    $record['result'] = '/storage' . $target_dir . $target_name;
-                } else {
-                    $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
-                }
-            }else{
-                $record = ['success' => 0, 'result' => trans('errors.LS40301_INFO')];
-            }
-        }
-        return $record;
     }
 }

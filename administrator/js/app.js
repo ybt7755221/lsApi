@@ -177,8 +177,8 @@ $(function () {
 /** Start: The all method work on the fields view in this area. */
   $('.db-href-fields').click(function() {
     var id = $(this).parent().parent().children('td:first').children().val(),
-      html_id = $(this).parent().parent().attr('id');
-    currentClass = $(this).attr('class').split(" ")[1].split("-")[1];
+      html_id = $(this).parent().parent().attr('id'),
+      currentClass = $(this).attr('class').split(" ")[1].split("-")[1];
     if (currentClass == 'removed') {
       sendMsg(url, currentClass, {id: id, _token: _token, html_id: html_id}, false);
     } else if (currentClass == 'edit') {
@@ -188,6 +188,9 @@ $(function () {
         field_params = all_data[2],
         field_publish = all_data[3],
         field_type = all_data[4];
+      if (url.substr(url.length-1, 1) !== '/')
+        url = url + '/'
+      $('#field-form').attr('action', url+'edit')
       $('#field-form').append('<input type="hidden" name="id" value="'+id+'" readonly="true" />');
       $('#field-form input[name=label]').val(field_label);
       $('#field-form input[name=key]').val(field_key);
@@ -206,16 +209,22 @@ $(function () {
       link_status = all_data[2],
       link_description = all_data[3],
       link_image = all_data[4];
-      $('#link-form').append('<input type="hidden" name="id" value="'+id+'" readonly="true" />');
-      $('#link-form input[name=title]').val(link_title);
-      $('#link-form input[name=url]').val(link_url);
-      $('#link-form input[name=status]').val(link_status);
-      $('#link-form #description').html(link_description);
-      var url_arr = url.split('/');
-      url_arr.pop();
-      var url_final = url_arr.join("/");
-      $('#thumb').attr('src', link_image);
+    if (url.substr(url.length-1, 1) !== '/')
+      url = url + '/'
+    $('#link-form').attr('action', url+'edit');
+    $('#link-form').append('<input type="hidden" name="id" value="'+id+'" readonly="true" />');
+    $('#link-form input[name=title]').val(link_title);
+    $('#link-form input[name=url]').val(link_url);
+    $('#link-form input[name=status]').val(link_status);
+    $('#link-form #description').html(link_description);
+    $('#thumb').attr('src', link_image);
   });
+  $('.click_create').click(function (){
+    $('input').val('');
+    $('textarea').html('');
+    var url_img = getImgUrl(false);
+    $('#thumb').attr('src', url_img);
+  })
 /** End: The all method work on the fields view in this area. */
 
   /**
@@ -319,5 +328,27 @@ $(function () {
       }
       return false;
     });
+  };
+  var getImgUrl = function ( showDefImg ) {
+    var str = url.substring(url.length-1, url.length);
+    if (str !== '/') {
+      var url_arr = url.split('/');
+      url_arr.pop();
+      url_arr.pop();
+      var url_str = url_arr.join('/');
+      if (showDefImg) {
+        url_str = url_str+'/storage/uploads/default.png';
+      }
+    }else{
+      if (showDefImg){
+        url_str = url+'../storage/uploads/default.png';
+      }else{
+        var url_arr = url.split('/');
+        url_arr.pop();
+        url_arr.pop();
+        var url_str = url_arr.join('/');
+      }
+    }
+    return url_str;
   };
 });

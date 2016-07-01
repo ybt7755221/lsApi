@@ -19,28 +19,19 @@ class FieldsController extends Controller
      */
     public function create(StoreFieldsPostRequest $request) {
         $current_user_status = Auth::user()->status;
-        if ($this->userDisable($current_user_status, 'create_Field')) {
-            $fid = (int) $request['fid'];
-            if ($request['type'] ===  'local') {
-                $url = '';
-            } else {
-                $url = $request['url'];
-            }
+        if ($this->userDisable($current_user_status, 'create_field')) {
             $res_arr = Fields::create([
                     'label' => $request['label'],
                     'key' => $request['key'],
                     'params' => $request['params'],
                     'publish' => $request['publish'],
                     'field_type' => strtoupper($request['field_type']),
-                    'user_id' => Auth::user()->id(),
             ]);
-            if ($res_arr['fid'] != 0) {
-                $f_data = Fields::select('path')->find($fid);
-                $current_path = substr($f_data['path'], 0, strrpos($f_data['path'], '|')) . '|' . $res_arr['id'] . '|' . $res_arr['sort'];
-            } else
-                $current_path = '0|'.$res_arr['id'].'|'.$res_arr['sort'];
-            Fields::where('id',$res_arr['id'])->update(['path' => $current_path]);
-            $request->session()->flash('success', trans('validation.user.successful'));
+            if($res_arr) {
+                $request->session()->flash('success', trans('validation.user.successful'));
+            }else{
+                $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
+            }
         }else{
             $request->session()->flash('error', trans('validation.user.disabled_power',['op' => 'create']));
         }
@@ -53,15 +44,33 @@ class FieldsController extends Controller
      * @return mixed
      */
     public function edit(Request $request) {
-        $this->validate($request, ['key' => 'required|max:255|unique:fields,key,'.$request['key'].',id']);
-        $check = $this->userDisable(Auth::user()->status, 'edit');
-        if($check) {
-
+        if ( $this->userDisable(Auth::user()->status, 'edit') ) {
+            $create_data = [
+                    'label' => $request['label'],
+                    'key' => $request['key'],
+                    'params' => $request['params'],
+                    'publish' => $request['publish'],
+                    'field_type' => strtoupper($request['field_type']),
+            ];
+            $result = Fields::find((int)$request['id'])->update($create_data);
+            if ( $result ) {
+                $record = ['success' => 1, 'result' => trans('validation.user.successful',['name' => 'Data'])];
+            }else{
+                $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
+            }
         }else{
-
+            $record = ['success' => 0, 'result' => trans('validation.user.disabled_power'),['op' => 'Edit']];
         }
-        return Redirect::to('/menu');
+        $request->session()->flash($record['success'] == 1 ? 'success' : 'error', $record['result']);
+        return Redirect::to('/');
     }
+
+    /**
+     * Remove a record.
+     *
+     * @param Request $request
+     * @return string
+     */
     public function removed(Request $request) {
         if ( $this->userDisable(Auth::user()->status, 'remove') ) {
             $result = Fields::destroy((int)$request['id']);

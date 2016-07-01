@@ -11,8 +11,7 @@
             {{trans('system.dashboard')}} -- {{trans('system.field_description')}}
             <a id="field_button" class="text-grey position-right" role="button" data-toggle="collapse"
                href="#field_table" aria-expanded="true" aria-controls="field_table">{{trans('system.hidden')}}</a>
-            <span id="show" class="hidden">{{trans('system.show')}}</span> <span id="hidden"
-                                                                                 class="hidden">{{trans('system.hidden')}}</span>
+            <span id="show" class="hidden">{{trans('system.show')}}</span> <span id="hidden" class="hidden">{{trans('system.hidden')}}</span>
           </div>
           <!--the field table header-->
           <!--the field table body-->
@@ -53,11 +52,8 @@
                 <tr>
                   <td><input class="fields_checkbox" type="checkbox" value="0"/></td>
                   <td colspan="7" class="text-center">
-                    ||&nbsp;&nbsp;&nbsp;&nbsp;<a href="">{{trans('system.hidden_all')}}
-                    </a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="">{{trans('system.hidden_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="">{{trans('system.remove_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a data-toggle="modal" data-target="#myModal_field">{{trans('system.create')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||
+                    ||&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="click_create" data-toggle="modal" data-target="#myModal_field">{{trans('system.create')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||
                   </td>
                 </tr>
               </form>
@@ -104,11 +100,8 @@
                 <tr>
                   <td><input class="links_checkbox" type="checkbox" value="0"/></td>
                   <td colspan="4" class="text-center">
-                    ||&nbsp;&nbsp;&nbsp;&nbsp;<a href="">{{trans('system.hidden_all')}}
-                    </a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="">{{trans('system.hidden_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="">{{trans('system.remove_select')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a data-toggle="modal" data-target="#myModal_link">{{trans('system.create')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||
+                    ||&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="click_create" data-toggle="modal" data-target="#myModal_link">{{trans('system.create')}}</a>&nbsp;&nbsp;&nbsp;&nbsp;||
                   </td>
                 </tr>
               </form>
