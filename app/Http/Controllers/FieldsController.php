@@ -19,7 +19,7 @@ class FieldsController extends Controller
      * @return mixed
      */
     public function create(StoreFieldsPostRequest $request) {
-        if ( !$this->checkHTML($request['html_id']) ) {
+        if ( !$this->checkHTML($request['table_name']) ) {
             Session::flash('errors', trans('errors.LS40401_UNKNOWN'));
             return Redirect::to('/');
         }
@@ -49,7 +49,7 @@ class FieldsController extends Controller
      * @return mixed
      */
     public function edit(Request $request) {
-        if ( !$this->checkHTML($request['html_id']) ) {
+        if ( !$this->checkHTML($request['table_name']) ) {
             Session::flash('success', trans('errors.LS40401_UNKNOWN'));
             return Redirect::to('/');
         }

@@ -19,8 +19,8 @@ class LinkController extends Controller
      * @return mixed
      */
     public function create(Request $request) {
-        if ( !$this->checkHTML($request['html_id']) ) {
-            Session::flash('success', trans('errors.LS40401_UNKNOWN'));
+        if ( !$this->checkHTML($request['table_name']) ) {
+            Session::flash('error', trans('errors.LS40401_UNKNOWN'));
             return Redirect::to('/');
         }
         if ( $this->userDisable(Auth::user()->status, 'edit') ) {
@@ -50,8 +50,8 @@ class LinkController extends Controller
      * @return mixed
      */
     public function edit(Request $request) {
-        if ( !$this->checkHTML($request['html_id']) ) {
-            Session::flash('success', trans('errors.LS40401_UNKNOWN'));
+        if ( !$this->checkHTML($request['table_name']) ) {
+            Session::flash('error', trans('errors.LS40401_UNKNOWN'));
             return Redirect::to('/');
         }
         if ( $this->userDisable(Auth::user()->status, 'edit') ) {
