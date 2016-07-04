@@ -8,6 +8,7 @@ use App\Models\Fields;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\StoreFieldsPostRequest;
 use Auth;
+use Illuminate\Support\Facades\Session;
 
 class FieldsController extends Controller
 {
@@ -18,6 +19,10 @@ class FieldsController extends Controller
      * @return mixed
      */
     public function create(StoreFieldsPostRequest $request) {
+        if ( !$this->checkHTML($request['html_id']) ) {
+            Session::flash('errors', trans('errors.LS40401_UNKNOWN'));
+            return Redirect::to('/');
+        }
         $current_user_status = Auth::user()->status;
         if ($this->userDisable($current_user_status, 'create_field')) {
             $res_arr = Fields::create([
@@ -44,6 +49,10 @@ class FieldsController extends Controller
      * @return mixed
      */
     public function edit(Request $request) {
+        if ( !$this->checkHTML($request['html_id']) ) {
+            Session::flash('success', trans('errors.LS40401_UNKNOWN'));
+            return Redirect::to('/');
+        }
         if ( $this->userDisable(Auth::user()->status, 'edit') ) {
             $create_data = [
                     'label' => $request['label'],
@@ -72,6 +81,10 @@ class FieldsController extends Controller
      * @return string
      */
     public function removed(Request $request) {
+        if ( !$this->checkHTML($request['html_id']) ) {
+            $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
+            return json_encode($record);
+        }
         if ( $this->userDisable(Auth::user()->status, 'remove') ) {
             $result = Fields::destroy((int)$request['id']);
             if ( $result ) {
@@ -83,5 +96,17 @@ class FieldsController extends Controller
             $record = ['success' => 0, 'result' => trans('validation.user.disabled_power'),['op' => 'Remove']];
         }
         return json_encode($record);
+    }
+    /**
+     * Ensure can through this function.
+     *
+     * @param $html
+     * @return bool
+     */
+    private function checkHTML($html) {
+        if(!empty($html) && $html == 'link'){
+            return false;
+        }
+        return true;
     }
 }

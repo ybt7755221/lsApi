@@ -6,13 +6,13 @@
         <h4 class="modal-title">{{$title}}</h4>
       </div>
       <form id="field-form" class="form-horizontal" role="form" method="POST" action="{{ url('/home/create') }}">
-        {{ csrf_field() }}
+        {{csrf_field()}}
         <div class="modal-body col-md-10 col-md-offset-1">
           <input type="hidden" name="table_name" value="fields" readonly="true"/>
           <div class="form-group{{ $errors->has('label') ? ' has-error' : '' }}">
             <label>{{trans('database.field.label')}}</label>
             <div class="">
-              <input type="text" class="form-control" name="label" value="{{ old('label') }}">
+              <input type="text" class="form-control can_be_clear" name="label" value="{{ old('label') }}">
               @if ($errors->has('label'))
                 <span class="help-block">
                   <strong>{{ $errors->first('label') }}</strong>
@@ -23,7 +23,7 @@
 
           <div class="form-group{{ $errors->has('key') ? ' has-error' : '' }}">
             <label>{{trans('database.field.key')}}</label>
-              <input type="text" class="form-control" name="key" value="{{ old('key') }}">
+              <input type="text" class="form-control can_be_clear" name="key" value="{{ old('key') }}">
               @if ($errors->has('key'))
                 <span class="help-block">
                   <strong>{{ $errors->first('key') }}</strong>
@@ -33,7 +33,7 @@
 
           <div class="form-group{{ $errors->has('params') ? ' has-error' : '' }}">
             <label>{{trans('database.field.params')}}</label>
-              <input type="text" class="form-control" name="params" value="{{ old('params') }}">
+              <input type="text" class="form-control can_be_clear" name="params" value="{{ old('params') }}">
               @if ($errors->has('params'))
                 <span class="help-block">
                   <strong>{{ $errors->first('params') }}</strong>

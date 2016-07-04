@@ -84,7 +84,7 @@
               <tbody>
               <form id="link_form">
                 @foreach($linkObj as $link)
-                  <tr id="tr_link_{{$link->id}}">
+                  <tr id="link_{{$link->id}}">
                     <td><input type="checkbox" class="link_checkbox" name="id_{{$link->id}}" value="{{$link->id}}"/></td>
                     <td>{{$link->id}}</td>
                     <td>{{$link->title}}</td>
@@ -94,7 +94,7 @@
                              value="{{ base64_encode($link->title.'||'.$link->url.'||'.$link->status.'||'.$link->description.'||'.url('/..'.$link->thumb) ) }}"
                              readonly>
                       <a data-toggle="modal" data-target="#myModal_link"
-                           class="db-link-edit">{{trans('system.edit')}}</a>&nbsp;|&nbsp;<a class="db-href-link db-removed">{{trans('system.remove')}}</a></td>
+                           class="db-link-edit">{{trans('system.edit')}}</a>&nbsp;|&nbsp;<a class="db-link-delete db-removed">{{trans('system.remove')}}</a></td>
                   </tr>
                 @endforeach
                 <tr>

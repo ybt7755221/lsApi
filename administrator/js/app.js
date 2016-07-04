@@ -219,11 +219,13 @@ $(function () {
     $('#link-form #description').html(link_description);
     $('#thumb').attr('src', link_image);
   });
+  $('.db-link-delete').click(function() {
+    var id = $(this).parent().parent().children('td:first').children().val();
+    sendMsg(url , 'removed', {id: id, _token: _token, html_id: 'link'}, false);
+  });
   $('.click_create').click(function (){
-    $('input').val('');
+    $('.can_be_clear').val('');
     $('textarea').html('');
-    var url_img = getImgUrl(false);
-    $('#thumb').attr('src', url_img);
   })
 /** End: The all method work on the fields view in this area. */
 
@@ -298,7 +300,7 @@ $(function () {
             html += '<td class="db-display">'+cv.display+'</td>';
             html += '<td>'+cv.type+'</td>';
             html += '<td>'+cv.url+'</td>';
-            html += '<td><input type="hidden" name="all_data" value="'+window.btoa(cv.id+'-'+cv.cat_name+'-'+cv.display+'-'+cv.type+'-'+cv.url+'-'+cv.sort+'-'+cv.fid)+'" readonly><a data-toggle="modal" data-target="#myModal" class="db-href-menu db-edit">Edit</a>&nbsp;|&nbsp;<a class="db-href-menu db-removed">Remove</a>&nbsp;</td>';
+            html += '<td><input type="hidden" name="all_data" value="'+window.btoa(cv.id+'||'+cv.cat_name+'||'+cv.display+'||'+cv.type+'||'+cv.url+'||'+cv.sort+'||'+cv.fid)+'" readonly><a data-toggle="modal" data-target="#myModal" class="db-href-menu db-edit">Edit</a>&nbsp;|&nbsp;<a class="db-href-menu db-removed">Remove</a>&nbsp;</td>';
             html += '<td></td></tr>';
             $('#tr_'+cv.fid).after(html);
           });
@@ -316,7 +318,7 @@ $(function () {
         $('#alert-static').attr('class', 'alert alert-success');
         if (operation == 'removed') {
           if(data.html_id){
-            $('#' + data.html_id).remove();
+            $('#' + data.html_id + '_' + data.id).remove();
           }else{
             $('#tr_' + data.id).remove();
           }

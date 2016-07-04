@@ -12,12 +12,12 @@
           <div class="col-md-6">
             <label>{{trans('database.link.thumb')}}</label>
             <img id="thumb" src={{url('/../storage/uploads/default.png')}} width="180px" />
-            <input type="file" name="thumb" value="{{old('thumb')}}" />
+            <input class="can_be_clear" type="file" name="thumb" value="{{old('thumb')}}" />
           </div>
           <div class="col-md-6">
-            <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
+          <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
             <label>{{trans('database.link.title')}}</label>
-            <input type="text" class="form-control" name="title" value="{{ old('title') }}">
+            <input type="text" class="form-control can_be_clear" name="title" value="{{ old('title') }}">
             @if ($errors->has('title'))
               <span class="help-block">
                 <strong>{{ $errors->first('title') }}</strong>
@@ -25,9 +25,9 @@
             @endif
           </div>
 
-            <div class="form-group{{ $errors->has('url') ? ' has-error' : '' }}">
+          <div class="form-group{{ $errors->has('url') ? ' has-error' : '' }}">
             <label>{{trans('database.link.url')}}</label>
-            <input type="text" class="form-control" name="url" value="{{ old('url') }}">
+            <input type="text" class="form-control can_be_clear" name="url" value="{{ old('url') }}">
             @if ($errors->has('url'))
               <span class="help-block">
                   <strong>{{ $errors->first('url') }}</strong>
@@ -35,7 +35,7 @@
             @endif
           </div>
 
-            <div class="form-group{{$errors->has('status') ? ' has-error' : '' }}">
+          <div class="form-group{{$errors->has('status') ? ' has-error' : '' }}">
               <label>{{trans('database.link.status')}}</label>
               <select class="form-control" name="status" id="status">
                 @foreach( trans('database.categoryDisplayValue') as $key => $val )
@@ -49,7 +49,7 @@
               @endif
           </div>
 
-            <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
+          <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
               <label>{{trans('database.link.description')}}</label><br />
               <textarea id="description" name="description"  class="form-control" rows="2"></textarea>
               @if ($errors->has('description'))

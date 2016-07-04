@@ -20,12 +20,12 @@ Route::auth();
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', 'HomeController@index');
     Route::get('/home', 'HomeController@index');
-    Route::post('/removed', array( 'uses'=>isset($_POST['html_id']) && stripos($_POST['html_id'], 'link') > 0 ? 'LinkController@removed' : 'FieldsController@removed' ));
-    Route::post('/create', array( 'uses'=>isset($_POST['table_name']) && $_POST['table_name'] == 'link' ? 'LinkController@create' : 'FieldsController@create' ));
-    Route::post('/edit', array( 'uses'=>isset($_POST['table_name']) && $_POST['table_name'] == 'link' ? 'LinkController@edit' : 'FieldsController@edit' ));
-    Route::post('/home/removed', array( 'uses'=>isset($_POST['html_id']) && stripos($_POST['html_id'], 'link') > 0 ? 'LinkController@removed' : 'FieldsController@removed' ));
-    Route::post('/home/create', array( 'uses'=>isset($_POST['table_name']) && $_POST['table_name'] == 'link' ? 'LinkController@create' : 'FieldsController@create' ));
-    Route::post('/home/edit', array( 'uses'=>isset($_POST['table_name']) && $_POST['table_name'] == 'link' ? 'LinkController@edit' : 'FieldsController@edit' ));
+    Route::post('/removed', array( 'uses'=>isset($_POST['html_id']) && strtolower($_POST['html_id']) == 'link' ? 'LinkController@removed' : 'FieldsController@removed' ));
+    Route::post('/create', array( 'uses'=>isset($_POST['table_name']) && strtolower($_POST['table_name']) == 'link' ? 'LinkController@create' : 'FieldsController@create' ));
+    Route::post('/edit', array( 'uses'=>isset($_POST['table_name']) && strtolower($_POST['table_name']) == 'link' ? 'LinkController@edit' : 'FieldsController@edit' ));
+    Route::post('/home/removed', array( 'uses'=>isset($_POST['html_id']) && strtolower($_POST['html_id']) == 'link' ? 'LinkController@removed' : 'FieldsController@removed' ));
+    Route::post('/home/create', array( 'uses'=>isset($_POST['table_name']) && strtolower($_POST['table_name']) == 'link' ? 'LinkController@create' : 'FieldsController@create' ));
+    Route::post('/home/edit', array( 'uses'=>isset($_POST['table_name']) && strtolower($_POST['table_name']) == 'link' ? 'LinkController@edit' : 'FieldsController@edit' ));
 });
 /**
  * all of the route about users configration.
