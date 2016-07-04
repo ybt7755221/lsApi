@@ -177,10 +177,9 @@ $(function () {
 /** Start: The all method work on the fields view in this area. */
   $('.db-href-fields').click(function() {
     var id = $(this).parent().parent().children('td:first').children().val(),
-      html_id = $(this).parent().parent().attr('id'),
       currentClass = $(this).attr('class').split(" ")[1].split("-")[1];
     if (currentClass == 'removed') {
-      sendMsg(url, currentClass, {id: id, _token: _token, html_id: html_id}, false);
+      sendMsg(url, currentClass, {id: id, _token: _token, html_id: 'tr'}, false);
     } else if (currentClass == 'edit') {
       var all_data = window.atob($(this).parent().children('input[name=all_data]').val()).split("||"),
         field_label = all_data[0],

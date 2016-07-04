@@ -25,6 +25,7 @@ class HomeController extends Controller
             'server_software' => $_SERVER['SERVER_SOFTWARE'],
             'request_time' => date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME']),
         ];
+        
         return view('home/home',['fieldsObj' => $fieldsObj, 'serverArr' => $serverArr, 'linkObj' => $linkObj, 'n' => 0]);
     }
 
