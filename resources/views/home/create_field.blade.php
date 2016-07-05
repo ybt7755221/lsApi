@@ -5,7 +5,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">{{$title}}</h4>
       </div>
-      <form id="field-form" class="form-horizontal" role="form" method="POST" action="{{ url('/home/create') }}">
+      <form id="field-form" class="form-horizontal" role="form" method="POST" action="{{ url('/fields') }}">
         {{csrf_field()}}
         <div class="modal-body col-md-10 col-md-offset-1">
           <input type="hidden" name="table_name" value="fields" readonly="true"/>

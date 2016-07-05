@@ -18,14 +18,21 @@ Route::auth();
  * all of the route about system configration.
  */
 Route::group(['middleware' => 'auth'], function () {
+    Route::get('/error', 'HomeController@error');
     Route::get('/', 'HomeController@index');
     Route::get('/home', 'HomeController@index');
-    Route::post('/removed', array( 'uses'=>isset($_POST['html_id']) && strtolower($_POST['html_id']) == 'link' ? 'LinkController@removed' : 'FieldsController@removed' ));
-    Route::post('/create', array( 'uses'=>isset($_POST['table_name']) && strtolower($_POST['table_name']) == 'link' ? 'LinkController@create' : 'FieldsController@create' ));
-    Route::post('/edit', array( 'uses'=>isset($_POST['table_name']) && strtolower($_POST['table_name']) == 'link' ? 'LinkController@edit' : 'FieldsController@edit' ));
-    Route::post('/home/removed', array( 'uses'=>isset($_POST['html_id']) && strtolower($_POST['html_id']) == 'link' ? 'LinkController@removed' : 'FieldsController@removed' ));
-    Route::post('/home/create', array( 'uses'=>isset($_POST['table_name']) && strtolower($_POST['table_name']) == 'link' ? 'LinkController@create' : 'FieldsController@create' ));
-    Route::post('/home/edit', array( 'uses'=>isset($_POST['table_name']) && strtolower($_POST['table_name']) == 'link' ? 'LinkController@edit' : 'FieldsController@edit' ));
+    Route::post('/fields', 'FieldsController@create');
+    Route::post('/link', 'LinkController@create');
+    Route::post('/home/fields', 'FieldsController@create');
+    Route::post('/home/link', 'LinkController@create');
+    Route::delete('/fields', 'FieldsController@removed');
+    Route::delete('/link', 'LinkController@removed');
+    Route::delete('/home/fields', 'FieldsController@removed');
+    Route::delete('/home/link', 'LinkController@removed');
+    Route::put('/home/fields', 'FieldsController@edit');
+    Route::put('/home/link', 'LinkController@edit');
+    Route::put('/fields', 'FieldsController@edit');
+    Route::put('/link', 'LinkController@edit');
 });
 /**
  * all of the route about users configration.

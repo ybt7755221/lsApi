@@ -20,7 +20,7 @@ $(function () {
       currentClass = $(this).attr('class').split(" ")[1].split("-")[1];
     if ( currentClass === 'removed' || currentClass === 'disabled' ) {
       if (confirm('Are you sure you want to do this?')) {
-        sendMsg(url, currentClass, {id: id, name: name, email: email, status: status, _token: _token}, false);
+        sendMsg(url, currentClass, {id: id, name: name, email: email, status: status, _token: _token}, 'post', false);
         return false;
       }
     }else if (currentClass === 'edit') {
@@ -55,11 +55,11 @@ $(function () {
         currentClass = $(this).attr('class').split(" ")[1].split("-")[1];
     if ( currentClass === 'removed' ) {
       if (confirm('Are you sure you want to do this?')) {
-        sendMsg(url, currentClass, {id: id, _token: _token}, false);
+        sendMsg(url, currentClass, {id: id, _token: _token}, 'post', false);
         return false;
       }
     }else if ( currentClass === 'disabled' || currentClass === 'enabled' ) {
-      sendMsg(url, currentClass, {id: id, op: currentClass, _token: _token}, false);
+      sendMsg(url, currentClass, {id: id, op: currentClass, _token: _token}, 'post', false);
       if(currentClass === 'disabled') {
         $(this).attr('class', 'db-href-menu db-enabled');
         $(this).html('Enable');
@@ -87,7 +87,7 @@ $(function () {
     if (class_str == 'sub_menu') {
       var cat_id = $(this).parent().parent().attr('id').split("_")[1],
           cat_name = $(this).parent().parent().children('.cat_name').html();
-      sendMsg(url, 'subMenu', {id: cat_id, cat_name: cat_name, _token: _token}, true);
+      sendMsg(url, 'subMenu', {id: cat_id, cat_name: cat_name, _token: _token}, 'post', true);
     }else{
       var id = $(this).attr('id').split('_')[2];
       $('.tr_fid_'+id).remove();
@@ -140,7 +140,7 @@ $(function () {
         });
     } else if (currentClass == 'removed') {
       if (confirm('Are you sure you want to do this?')) {
-        sendMsg(url, currentClass, {id: id, _token: _token}, false);
+        sendMsg(url, currentClass, {id: id, _token: _token}, 'post', false);
         return false;
       }
     }
@@ -179,7 +179,7 @@ $(function () {
     var id = $(this).parent().parent().children('td:first').children().val(),
       currentClass = $(this).attr('class').split(" ")[1].split("-")[1];
     if (currentClass == 'removed') {
-      sendMsg(url, currentClass, {id: id, _token: _token, html_id: 'tr'}, false);
+      sendMsg(url, 'fields', {id: id, _token: _token, html_id: 'tr', isRemove:true}, 'delete', false);
     } else if (currentClass == 'edit') {
       var all_data = window.atob($(this).parent().children('input[name=all_data]').val()).split("||"),
         field_label = all_data[0],
@@ -188,9 +188,8 @@ $(function () {
         field_publish = all_data[3],
         field_type = all_data[4];
       if (url.substr(url.length-1, 1) !== '/')
-        url = url + '/'
-      $('#field-form').attr('action', url+'edit')
-      $('#field-form').append('<input type="hidden" name="id" value="'+id+'" readonly="true" />');
+        url = url + '/';
+      $('#field-form').append('<input type="hidden" name="_method" value="put" /><input type="hidden" name="id" value="'+id+'" readonly="true" />');
       $('#field-form input[name=label]').val(field_label);
       $('#field-form input[name=key]').val(field_key);
       $('#field-form input[name=params]').val(field_params);
@@ -209,9 +208,8 @@ $(function () {
       link_description = all_data[3],
       link_image = all_data[4];
     if (url.substr(url.length-1, 1) !== '/')
-      url = url + '/'
-    $('#link-form').attr('action', url+'edit');
-    $('#link-form').append('<input type="hidden" name="id" value="'+id+'" readonly="true" />');
+      url = url + '/';
+    $('#link-form').append('<input type="hidden" name="_method" value="put" /><input type="hidden" name="id" value="'+id+'" readonly="true" />');
     $('#link-form input[name=title]').val(link_title);
     $('#link-form input[name=url]').val(link_url);
     $('#link-form input[name=status]').val(link_status);
@@ -220,10 +218,11 @@ $(function () {
   });
   $('.db-link-delete').click(function() {
     var id = $(this).parent().parent().children('td:first').children().val();
-    sendMsg(url , 'removed', {id: id, _token: _token, html_id: 'link'}, false);
+    sendMsg(url , 'link', {id: id, _token: _token, html_id: 'link',isRemove:true}, 'delete', false);
   });
   $('.click_create').click(function (){
     $('.can_be_clear').val('');
+    $('input[name=_method]').remove();
     $('textarea').html('');
   })
 /** End: The all method work on the fields view in this area. */
@@ -270,7 +269,7 @@ $(function () {
       ids.push($(this).val());
     });
     if(ids.length > 0){
-      sendMsg(url, 'multiOperation', {ids:ids, _token: _token, op: currentClass}, false);
+      sendMsg(url, 'multiOperation', {ids:ids, _token: _token, op: currentClass}, 'post', false);
       setTimeout(function () {
         window.location.reload()
       }, 2000);
@@ -286,50 +285,59 @@ $(function () {
    * @param operation
    * @param data
    */
-  var sendMsg = function (url, operation, data, returnStatus) {
-    $.post(url + '/' + operation, data, function (res, status) {
-      var res = $.parseJSON(res);
-      if (returnStatus) {
-        if (res.success === 1) {
-          res.result.forEach(function(cv){
-            var html = '<tr id="tr_'+cv.id+'" class="bg-white tr_fid_'+cv.fid+'">';
-            html += '<td><input type="checkbox" class="checkbox" name="id" value="'+cv.id+'"/></td>';
-            html += '<td>'+data.cat_name+'</td>';
-            html += '<td class="cat_name">'+cv.cat_name+'</td>';
-            html += '<td class="db-display">'+cv.display+'</td>';
-            html += '<td>'+cv.type+'</td>';
-            html += '<td>'+cv.url+'</td>';
-            html += '<td><input type="hidden" name="all_data" value="'+window.btoa(cv.id+'||'+cv.cat_name+'||'+cv.display+'||'+cv.type+'||'+cv.url+'||'+cv.sort+'||'+cv.fid)+'" readonly><a data-toggle="modal" data-target="#myModal" class="db-href-menu db-edit">Edit</a>&nbsp;|&nbsp;<a class="db-href-menu db-removed">Remove</a>&nbsp;</td>';
-            html += '<td></td></tr>';
-            $('#tr_'+cv.fid).after(html);
-          });
-          $('#sub_menu_'+data.id).attr('class', 'sub_menu_close');
-          return res;
-        }else{
-          $('#alert-static').attr('class', 'alert alert-warning');
-          $('#alert-static').html('<p>'+res.result+'</p>')
-          return res;
-        }
-      }
-      $('.will-hide').hide();
-      $('#alert-static p').html(res.result);
-      if (res.success === 1) {
-        $('#alert-static').attr('class', 'alert alert-success');
-        if (operation == 'removed') {
-          if(data.html_id){
-            $('#' + data.html_id + '_' + data.id).remove();
+  var sendMsg = function (url, operation, data, request_type, returnStatus) {
+    $.ajax({
+      url: url+'/'+operation,
+      dataType: 'json',
+      data: data,
+      type: request_type,
+      success: function(res){
+        if(returnStatus) {
+          if (res.success === 1) {
+            res.result.forEach(function(cv){
+              var html = '<tr id="tr_'+cv.id+'" class="bg-white tr_fid_'+cv.fid+'">';
+              html += '<td><input type="checkbox" class="checkbox" name="id" value="'+cv.id+'"/></td>';
+              html += '<td>'+data.cat_name+'</td>';
+              html += '<td class="cat_name">'+cv.cat_name+'</td>';
+              html += '<td class="db-display">'+cv.display+'</td>';
+              html += '<td>'+cv.type+'</td>';
+              html += '<td>'+cv.url+'</td>';
+              html += '<td><input type="hidden" name="all_data" value="'+window.btoa(cv.id+'||'+cv.cat_name+'||'+cv.display+'||'+cv.type+'||'+cv.url+'||'+cv.sort+'||'+cv.fid)+'" readonly><a data-toggle="modal" data-target="#myModal" class="db-href-menu db-edit">Edit</a>&nbsp;|&nbsp;<a class="db-href-menu db-removed">Remove</a>&nbsp;</td>';
+              html += '<td></td></tr>';
+              $('#tr_'+cv.fid).after(html);
+            });
+            $('#sub_menu_'+data.id).attr('class', 'sub_menu_close');
+            return res;
           }else{
-            $('#tr_' + data.id).remove();
+            $('#alert-static').attr('class', 'alert alert-warning');
+            $('#alert-static').html('<p>'+res.result+'</p>')
+            return res;
           }
         }
-      } else if (res.success === 0) {
-        $('#alert-static').attr('class', 'alert alert-danger');
-      } else if (res.success === -1) {
-        $('#alert-static').attr('class', 'alert alert-warning');
+        $('.will-hide').hide();
+        $('#alert-static p').html(res.result);
+        if (res.success === 1) {
+          $('#alert-static').attr('class', 'alert alert-success');
+          if (data.isRemove) {
+            if(data.html_id){
+              $('#' + data.html_id + '_' + data.id).remove();
+            }else{
+              $('#tr_' + data.id).remove();
+            }
+          }
+        } else if (res.success === 0) {
+          $('#alert-static').attr('class', 'alert alert-danger');
+        } else if (res.success === -1) {
+          $('#alert-static').attr('class', 'alert alert-warning');
+        }
+        return false;
+      },
+      error: function(err){
+        console.log(err);
+        window.location.href = url + '/error';
       }
-      return false;
     });
-  };
+  }
   var getImgUrl = function ( showDefImg ) {
     var str = url.substring(url.length-1, url.length);
     if (str !== '/') {

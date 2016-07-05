@@ -19,10 +19,6 @@ class LinkController extends Controller
      * @return mixed
      */
     public function create(Request $request) {
-        if ( !$this->checkHTML($request['table_name']) ) {
-            Session::flash('error', trans('errors.LS40401_UNKNOWN'));
-            return Redirect::to('/');
-        }
         if ( $this->userDisable(Auth::user()->status, 'edit') ) {
             $create_data = ['title' => $request['title'], 'url' => $request['url'], 'status' => $request['status'], 'description' => $request['description'], 'thumb' => '/storage/uploads/default.png'];
             if(!empty($_FILES['thumb']['name'])){
@@ -50,10 +46,6 @@ class LinkController extends Controller
      * @return mixed
      */
     public function edit(Request $request) {
-        if ( !$this->checkHTML($request['table_name']) ) {
-            Session::flash('error', trans('errors.LS40401_UNKNOWN'));
-            return Redirect::to('/');
-        }
         if ( $this->userDisable(Auth::user()->status, 'edit') ) {
             $update_data = ['title' => $request['title'], 'url' => $request['url'], 'status' => $request['status'], 'description' => $request['description']];
             if(!empty($_FILES['thumb']['name'])){
@@ -81,10 +73,6 @@ class LinkController extends Controller
      * @return string
      */
     public function removed(Request $request) {
-        if ( !$this->checkHTML($request['html_id']) ) {
-            $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
-            return json_encode($record);
-        }
         if ( $this->userDisable(Auth::user()->status, 'remove') ) {
             $result = Link::destroy((int)$request['id']);
             if ( $result ) {
@@ -96,16 +84,5 @@ class LinkController extends Controller
             $record = ['success' => 0, 'result' => trans('validation.user.disabled_power'),['op' => 'Remove']];
         }
         return json_encode($record);
-    }
-    /**
-     * Ensure can through this function.
-     *
-     * @param $html
-     * @return bool
-     */
-    private function checkHTML($html) {
-        if(!empty($html) && $html == 'link')
-            return true;
-        return false;
     }
 }
