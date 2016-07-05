@@ -50,11 +50,10 @@ Route::group(['middleware' => 'auth', 'prefix' => 'user'], function () {
  */
 Route::group(['middleware' => 'auth', 'prefix' => 'content'], function () {
     Route::get('/', 'ContentController@index');
-    Route::post('/create', 'ContentController@create');
-    Route::post('/removed', 'ContentController@remove');
-    Route::post('/edit', 'ContentController@edit');
+    Route::post('/', 'ContentController@create');
+    Route::put('/', 'ContentController@edit');
+    Route::delete('/', 'ContentController@remove');
     Route::post('/getOldData', 'ContentController@getOldData');
-    Route::post('/removed', 'ContentController@remove');
     Route::post('/multiOperation', 'ContentController@multiOperation');
 });
 /**
@@ -62,11 +61,11 @@ Route::group(['middleware' => 'auth', 'prefix' => 'content'], function () {
  */
 Route::group(['middleware' => 'auth', 'prefix' => 'menu'], function () {
     Route::get('/', 'CategoryController@index');
-    Route::post('/create', 'CategoryController@create');
-    Route::post('/removed', 'CategoryController@removed');
-    Route::post('/disabled', 'CategoryController@disabled');
-    Route::post('/enabled', 'CategoryController@disabled');
-    Route::post('/edit', 'CategoryController@edit');
-    Route::post('/multiOperation', 'CategoryController@multiOperation');
+    Route::post('/', 'CategoryController@create');
+    Route::delete('/', 'CategoryController@removed');
+    Route::put('/disabled', 'CategoryController@disabled');
+    Route::put('/enabled', 'CategoryController@disabled');
+    Route::put('/', 'CategoryController@edit');
+    Route::delete('/multiOperation', 'CategoryController@multiOperation');
     Route::post('/subMenu','CategoryController@subMenu');
 });

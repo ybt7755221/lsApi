@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Session;
 
 class ContentController extends Controller
 {
-    private $thumb = '/images/default.png';
+    private $thumb = '/storage/uploads/default.png';
     /**
      * Show the application dashboard.
      *
@@ -116,7 +116,7 @@ class ContentController extends Controller
             $request->session()->flash('op', 'edit');
             $request->session()->flash('edit_id', $request['id']);
             $this->validate($request, ['id' => 'required', 'title' => 'required|min:4|max:120|unique:content,title,' . $request['id'], 'body' => 'required']);
-            $update_arr = ['title' => $request['title'], 'body' => $request['body'], 'comment_status' => $request['comment_status'], 'state' => $request['state'], 'cat_id' => $request['cat_id'],];
+            $update_arr = ['title' => $request['title'], 'body' => $request['body'], 'comment_status' => $request['comment_status'], 'state' => $request['state'], 'cat_id' => $request['cat_id']];
             if (isset($_FILES['thumb']['name']) && !empty($_FILES['thumb']['name'])) {
                 $img_res = $this->uploadImage($this->base_path);
                 if ($img_res['success'] == 0) {

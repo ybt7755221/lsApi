@@ -54,11 +54,11 @@ $(function () {
         currentClass = $(this).attr('class').split(" ")[1].split("-")[1];
     if ( currentClass === 'removed' ) {
       if (confirm('Are you sure you want to do this?')) {
-        sendMsg(url, currentClass, {id: id, _token: _token}, 'post', false);
+        sendMsg(url, '', {id: id, _token: _token}, 'delete', false);
         return false;
       }
     }else if ( currentClass === 'disabled' || currentClass === 'enabled' ) {
-      sendMsg(url, currentClass, {id: id, op: currentClass, _token: _token}, 'post', false);
+      sendMsg(url, currentClass, {id: id, op: currentClass, _token: _token}, 'put', false);
       if(currentClass === 'disabled') {
         $(this).attr('class', 'db-href-menu db-enabled');
         $(this).html('Enable');
@@ -71,8 +71,7 @@ $(function () {
       }
       return false;
     }else if (currentClass === 'edit') {
-      $('#user-form').attr('action', url+'/'+currentClass);
-      $('#user-form').append('<input type="hidden" name="id" value="'+cat_id+'" />');
+      $('#user-form').append('<input type="hidden" name="_method" value="put" /><input type="hidden" name="id" value="'+cat_id+'" />');
       $('input[name="cat_name"]').val(cat_name);
       $('#fid option[value='+fid+']').attr('selected', true);
       $('#type option[value='+type+']').attr('selected', true);
@@ -104,7 +103,6 @@ $(function () {
         user_id = $(this).parent().parent().children('td.user_id').attr('id'),
         currentClass = $(this).attr('class').split(" ")[1].split("-")[1];
     if (currentClass == 'edit') {
-      $('#content-form').attr('action', url + '/edit');
       $.post(url + '/getOldData', {id: id, _token: _token},
         function (res) {
           var res = $.parseJSON(res);
@@ -117,8 +115,7 @@ $(function () {
             $('#content-form input[name=title]').val(res.result.title);
             $('.note-editable').html(res.result.body);
             $('#summernote').html(res.result.body);
-            $('#content-form').append('<input type="hidden" name="id" value='+id+' readonly="true" />');
-            $('#content-form').append('<input type="hidden" name="user_id" value='+user_id+' readonly="true" />');
+            $('#content-form').append('<input type="hidden" name="_method" value="put" /><input type="hidden" name="id" value='+id+' readonly="true" /><input type="hidden" name="user_id" value='+user_id+' readonly="true" />');
             $('#comment_status option[value=' + res.result.status + ']').attr('selected', true);
             $('#state option[value=' + res.result.state + ']').attr('selected', true);
             $('#cat_id option[value=' + res.result.cat_id + ']').attr('selected', true);
@@ -139,7 +136,7 @@ $(function () {
         });
     } else if (currentClass == 'removed') {
       if (confirm('Are you sure you want to do this?')) {
-        sendMsg(url, currentClass, {id: id, _token: _token}, 'post', false);
+        sendMsg(url, '', {id: id, _token: _token}, 'delete', false);
         return false;
       }
     }
@@ -148,6 +145,7 @@ $(function () {
     var id = $('#content-form input[name=id]').val();
     $('#user-form').attr('action', url+'/create');
     $('#content-form input[name!=_token]').val('');
+    $('#content-form input[name=_method]').remove();
     $('#content-form option').removeAttr('selected');
     $('.note-editable').html('');
     $('#content-form input[name=id]').remove();

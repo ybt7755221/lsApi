@@ -5,7 +5,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">{{$title}}</h4>
       </div>
-      <form id="user-form" class="form-horizontal" role="form" method="POST" action="{{ url('/menu/create') }}">
+      <form id="user-form" class="form-horizontal" role="form" method="POST" action="{{ url('/menu') }}">
         {{ csrf_field() }}
         <div class="modal-body">
           <div class="form-group{{ $errors->has('cat_name') ? ' has-error' : '' }}">
