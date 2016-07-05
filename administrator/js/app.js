@@ -20,17 +20,16 @@ $(function () {
       currentClass = $(this).attr('class').split(" ")[1].split("-")[1];
     if ( currentClass === 'removed' || currentClass === 'disabled' ) {
       if (confirm('Are you sure you want to do this?')) {
-        sendMsg(url, currentClass, {id: id, name: name, email: email, status: status, _token: _token}, 'post', false);
+        if (currentClass === 'removed')
+          sendMsg(url, '', {id: id, status: status, _token: _token}, 'delete', false);
+        else if (currentClass === 'disabled')
+          sendMsg(url, 'disabled', {id: id, status: status, _token: _token}, 'put', false);
         return false;
       }
     }else if (currentClass === 'edit') {
-      $('#user-form').attr('action', url+'/'+currentClass);
-      $('#user-form').append('<input type="hidden" name="id" value="'+id+'" />');
+      $('#user-form').append('<input type="hidden" name="_method" value="put" /><input type="hidden" name="id" value="'+id+'" />');
       $('input[name="name"]').val(name);
       $('input[name="email"]').val(email);
-      if ( status < 3) {
-        $('input[name="email"]').attr('readonly', 'true');
-      }
       $('input[name="_token"]').val(_token);
       if (status == 4) {
         var info = $('#tr_'+id+' .user_status').html();
@@ -179,7 +178,7 @@ $(function () {
     var id = $(this).parent().parent().children('td:first').children().val(),
       currentClass = $(this).attr('class').split(" ")[1].split("-")[1];
     if (currentClass == 'removed') {
-      sendMsg(url, 'fields', {id: id, _token: _token, html_id: 'tr', isRemove:true}, 'delete', false);
+      sendMsg(url, 'fields', {id: id, _token: _token, html_id: 'tr'}, 'delete', false);
     } else if (currentClass == 'edit') {
       var all_data = window.atob($(this).parent().children('input[name=all_data]').val()).split("||"),
         field_label = all_data[0],
@@ -218,7 +217,7 @@ $(function () {
   });
   $('.db-link-delete').click(function() {
     var id = $(this).parent().parent().children('td:first').children().val();
-    sendMsg(url , 'link', {id: id, _token: _token, html_id: 'link',isRemove:true}, 'delete', false);
+    sendMsg(url , 'link', {id: id, _token: _token, html_id: 'link'}, 'delete', false);
   });
   $('.click_create').click(function (){
     $('.can_be_clear').val('');
@@ -269,7 +268,7 @@ $(function () {
       ids.push($(this).val());
     });
     if(ids.length > 0){
-      sendMsg(url, 'multiOperation', {ids:ids, _token: _token, op: currentClass}, 'post', false);
+      sendMsg(url, 'multiOperation', {ids:ids, _token: _token, op: currentClass}, 'delete', false);
       setTimeout(function () {
         window.location.reload()
       }, 2000);
@@ -286,8 +285,10 @@ $(function () {
    * @param data
    */
   var sendMsg = function (url, operation, data, request_type, returnStatus) {
+    if (operation.length > 0)
+      url = url+'/'+operation;
     $.ajax({
-      url: url+'/'+operation,
+      url: url,
       dataType: 'json',
       data: data,
       type: request_type,
@@ -318,7 +319,7 @@ $(function () {
         $('#alert-static p').html(res.result);
         if (res.success === 1) {
           $('#alert-static').attr('class', 'alert alert-success');
-          if (data.isRemove) {
+          if (request_type === 'delete') {
             if(data.html_id){
               $('#' + data.html_id + '_' + data.id).remove();
             }else{

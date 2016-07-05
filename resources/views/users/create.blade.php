@@ -6,14 +6,14 @@
               aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">{{$title}}</h4>
       </div>
-      <form id="user-form" class="form-horizontal" role="form" method="POST" action="{{ url('/user/create') }}">
+      <form id="user-form" class="form-horizontal" role="form" method="POST" action="{{ url('/user') }}">
         {{ csrf_field() }}
         <div class="modal-body">
           <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
             <label class="col-md-4 control-label">{{trans('database.user.name')}}</label>
 
             <div class="col-md-6">
-              <input type="text" class="form-control" name="name" value="{{ old('name') }}" minlength="4"
+              <input type="text" class="form-control can_be_clear" name="name" value="{{ old('name') }}" minlength="4"
                      maxlength="32">
               @if ($errors->has('name'))
                 <span class="help-block">
@@ -26,7 +26,7 @@
           <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
             <label class="col-md-4 control-label">{{trans('database.user.email')}}</label>
             <div class="col-md-6">
-              <input type="email" class="form-control" name="email" value="{{ old('email') }}" maxlength="128">
+              <input type="email" class="form-control can_be_clear" name="email" value="{{ old('email') }}" maxlength="128">
               @if ($errors->has('email'))
                 <span class="help-block">
                   <strong>{{ $errors->first('email') }}</strong>
@@ -39,7 +39,7 @@
             <label class="col-md-4 control-label">{{trans('database.user.password')}}</label>
 
             <div class="col-md-6">
-              <input type="password" class="form-control password" name="password" minlength="6" maxlength="20">
+              <input type="password" class="form-control can_be_clear password" name="password" minlength="6" maxlength="20">
               @if ($errors->has('password'))
                 <span class="help-block">
                   <strong>{{ $errors->first('password') }}</strong>
@@ -52,7 +52,7 @@
             <label class="col-md-4 control-label">{{trans('system.confirm_password')}}</label>
 
             <div class="col-md-6">
-              <input type="password" class="form-control password" name="password_confirmation">
+              <input type="password" class="form-control can_be_clear password" name="password_confirmation">
               @if ($errors->has('password'))
                 <span class="help-block">
                   <strong>{{ $errors->first('password') }}</strong>

@@ -39,11 +39,11 @@ Route::group(['middleware' => 'auth'], function () {
  */
 Route::group(['middleware' => 'auth', 'prefix' => 'user'], function () {
     Route::get('/', 'UserController@index');
-    Route::post('/create', 'UserController@create');
-    Route::post('/removed', 'UserController@remove');
-    Route::post('/disabled', 'UserController@disable');
-    Route::post('/edit', 'UserController@edit');
-    Route::post('/multiOperation', 'UserController@multiOperation');
+    Route::post('/', 'UserController@create');
+    Route::delete('/', 'UserController@remove');
+    Route::delete('/multiOperation', 'UserController@multiOperation');
+    Route::put('/disabled', 'UserController@disable');
+    Route::put('/', 'UserController@edit');
 });
 /**
  * all of the route about content configration.
