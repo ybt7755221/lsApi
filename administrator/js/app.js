@@ -116,9 +116,9 @@ $(function () {
             $('.note-editable').html(res.result.body);
             $('#summernote').html(res.result.body);
             $('#content-form').append('<input type="hidden" name="_method" value="put" /><input type="hidden" name="id" value='+id+' readonly="true" /><input type="hidden" name="user_id" value='+user_id+' readonly="true" />');
-            $('#comment_status option[value=' + res.result.status + ']').attr('selected', true);
-            $('#state option[value=' + res.result.state + ']').attr('selected', true);
-            $('#cat_id option[value=' + res.result.cat_id + ']').attr('selected', true);
+            $('#comment_status option[value="' + res.result.status + '"]').attr('selected', true);
+            $('#state option[value="' + res.result.state + '"]').attr('selected', true);
+            $('#cat_id option[value="' + res.result.cat_id + '"]').attr('selected', true);
             $('tr[id!="tr_' + id + '"]').attr('class', 'hidden');
             var old_e_class = $('#tr_'+id+' .db-edit').attr('class');
             $('#tr_'+id+' .db-edit').attr('class', old_e_class+' hidden');
@@ -192,8 +192,8 @@ $(function () {
       $('#field-form input[name=params]').val(field_params);
       $('#field-form input[name=publish]').val(field_publish);
       $('#field-form input[name=field_type]').val(field_type);
-      $('#field-form #publish option[value=' + field_publish + ']').attr('selected', true);
-      $('#field-form #field_type option[value=' + field_type + ']').attr('selected', true);
+      $('#field-form #publish option[value="' + field_publish + '"]').attr('selected', true);
+      $('#field-form #field_type option[value="' + field_type + '"]').attr('selected', true);
     }
   });
   $('.db-link-edit').click(function() {

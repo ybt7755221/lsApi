@@ -46,8 +46,8 @@
                   <tr id="tr_{{$content->id}}">
                     <td><input type="checkbox" class="checkbox" id="id_{{$content->id}}" name="id" value="{{$content->id}}"/></td>
                     <td>{{$content->title}}</td>
-                    <td class="user_id" id="{{$content->user_id}}">{{$content->users->name}}</td>
-                    <td>{{$content->category->cat_name}}</td>
+                    <td class="user_id" id="{{$content->user_id}}">{{isset($content->users->name) ? $content->users->name : 'Unknown'}}</td>
+                    <td>{{isset($content->category->cat_name) ? $content->category->cat_name : 'Unknown'}}</td>
                     <td>{{trans('database.commentValue.'.$content->comment_status)}}</td>
                     <td>{{trans('database.stateValue.'.$content->state)}}</td>
                     <td>{{$content->updated_at}}</td>
