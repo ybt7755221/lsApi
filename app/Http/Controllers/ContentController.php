@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use Auth;
 use App\Models\Content;
 use Illuminate\Http\Request;
@@ -52,7 +53,37 @@ class ContentController extends Controller
         }
         return view('content/index', ['contentObj' => $contentObj, 'categoryObj' => $categoryObj]);
     }
-
+    public function pagination() {
+        $result = ['success' => 0];
+        if($_GET['paging']){
+            switch ($_GET['paging']) {
+                case 'next' :
+                    $id = isset($_GET['start_id']) && !empty($_GET['start_id']) ? (int)$_GET['start_id'] : 0;
+                    $symbol = '>';
+                    break;
+                case 'prev' :
+                    $id = isset($_GET['last_id']) && !empty($_GET['last_id']) ? (int)$_GET['last_id'] : 0;
+                    $symbol = '<';
+                    break;
+                default :
+                    break;
+            }
+            if($id && $symbol) {
+                $result['success'] = 1;
+                $result['result'] = DB::table('content')
+                        ->where('content.id', $symbol, $id)
+                        ->leftJoin('users', 'users.id', '=', 'content.user_id')
+                        ->leftJoin('category', 'category.id', '=', 'content.cat_id')
+                        ->select('content.id', 'content.title', 'content.cat_id', 'content.user_id', 'content.comment_status', 'content.state', 'content.updated_at', 'category.cat_name', 'users.name')
+                        ->orderBy('content.id','ASC')
+                        ->limit($this->pagination_number)
+                        ->get();
+            }else{
+                $result['result'] = trans('validator.user.lost_fields');
+            }
+        }
+        return json_encode($result);
+    }
     /**
      * Delete a record
      *
