@@ -125,7 +125,6 @@ class ContentController extends Controller
             }
             $record = Content::create(['title' => $request['title'], 'thumb' => $this->thumb, 'user_id' => Auth::user()->id, 'body' => $request['body'], 'comment_status' => $request['comment_status'], 'state' => $request['state'], 'cat_id' => $request['cat_id'],]);
             if ($record) {
-                //$record = json_encode(['success' => 1, 'result' => $record]);
                 $request->session()->flash('success', trans('validation.user.successful'));
             } else {
                 $request->session()->flash('error', trans('errors.LS40401_UNKNOWN'));
