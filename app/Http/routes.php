@@ -16,6 +16,7 @@ Route::group(['prefix' => 'api/v1'], function (){
 /**
  * The route authentication function
  */
+Route::auth();
 /**
  * all of the route about system configration.
  */
