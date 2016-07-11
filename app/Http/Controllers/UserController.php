@@ -19,6 +19,9 @@ class UserController extends Controller
     public function index()
     {
         $userObj = User::limit(20)->orderBy('id', 'desc')->get(['id', 'name', 'email', 'password', 'status', 'created_at', 'updated_at']);
+        if ( $this->isRestApi() ) {
+            return response()->json(['success'=>1, 'result'=>$userObj]);
+        }
         return view('users/index', ['userObj' => $userObj]);
     }
     /**
@@ -50,32 +53,56 @@ class UserController extends Controller
      * @param Request $request
      * @return mixed
      */
-    public function edit(Request $request) {
-        $current_user_status = Auth::user()->status;
-        $user = User::find($request['id']);
+    public function update(Request $request,  $id=-1) {
+        $current_user_status = $this->isRestApi() ? (int) $request['self_status'] : Auth::user()->status ;
+        if( $id == -1 )
+            $id = $request['id'];
+        $user = User::find($id);
         if ($current_user_status === 0) {
+            if ($this->isRestApi()){
+                return response()->json(['success'=>0, 'result'=>trans('validation.user.disabled_power',['op' => 'edit'])]);
+            }
             $request->session()->flash('waring', trans('validation.user.disabled_power',['op' => 'edit']));
             return Redirect::to('user');
         }
         if ($current_user_status < $user['status']) {
+            if ($this->isRestApi()){
+                return response()->json(['success'=>0, 'result'=>111]);
+            }
             $request->session()->flash('waring', trans('validation.user.disabled_level'));
             return Redirect::to('user');
         }
-        $this->validate($request, ['name' => 'required|max:255', 'email' => 'required|email|max:255|unique:users,email,'.$user->id, 'password' => 'min:6|confirmed']);
+        if(!$this->isRestApi()) {
+            $this->validate($request, ['name' => 'required|max:255', 'email' => 'required|email|max:255|unique:users,email,' . $user->id, 'password' => 'min:6|confirmed']);
+        }
         if (!empty($request['password'])) {
             $user->password = bcrypt($request['password']);
         }
-        $user->name = $request['name'];
-        $user->email = $request['email'];
+        if (!empty($request['name']))
+            $user->name = $request['name'];
+        if (!empty($request['email']))
+            $user->email = $request['email'];
         if ( $user['status'] == 4)
             $user->status = 4;
-        else
-            $user->status = $request['status'] * 1;
+        else{
+            if($request['status'] == 4){
+                if ($this->isRestApi()){
+                    return response()->json(['success'=>0, 'result'=>trans('validation.user.disabled_power',['op' => 'edit'])]);
+                }
+                $request->session()->flash('waring', trans('validation.user.disabled_power',['op' => 'edit']));
+                return Redirect::to('user');
+            }
+            $user->status = (int) $request['status'];
+        }
         $user->updated_at = $_SERVER['REQUEST_TIME'];
         $result = $user->save();
         if ( !$result ) {
+            if($this->isRestApi())
+                return response()->json(['success'=>0, 'result'=>trans('errors.LS40401_UNKNOWN')]);
             $request->session()->flash('error', trans('errors.LS40401_UNKNOWN'));
         } else {
+            if($this->isRestApi())
+                return response()->json(['success'=>1, 'result'=>['id'=>$id, 'name'=>$user['name'], 'email'=>$user['email'], 'status' => $user['status'], 'created_at'=>$user['created_at'], 'updated-at'=>$user['updated_at'] ]]);
             $request->session()->flash('success', trans('validation.user.edit_success'));
         }
         return Redirect::to('user');
@@ -105,6 +132,7 @@ class UserController extends Controller
         $record = $this->disableData($current_user_status, $id);
         return json_encode($record);
     }
+
     public function multiOperation(){
         $user_id = Auth::user()->id;
         $current_user_status = Auth::user()->status;
@@ -149,6 +177,50 @@ class UserController extends Controller
                 break;
         }
         return json_encode($res);
+    }
+    /**
+     * RESTFUL API FUNCTIOIN - Create a new user instance after a valid registration.
+     *
+     * @param  array $data
+     * @return User
+     */
+    public function store(Request $request)
+    {
+        $current_user_status = (int) $request['self_status'];
+        if ($current_user_status === 0) {
+            if ( $this->isRestApi() ) {
+                return response()->json(['success'=> 0, 'result'=>trans('validation.user.disabled_power',['op' => 'create'])]);
+            }
+            $request->session()->flash('waring', trans('validation.user.disabled_power',['op' => 'create']));
+            return Redirect::to('user');
+        }
+        if ($request['status'] == 4) {
+            $status = 0;
+        } else {
+            $status = $request['status'];
+        }
+        $result_data = User::create(['name' => $request['name'], 'email' => $request['email'], 'password' => bcrypt($request['password']), 'status' => $status]);
+        if ( $this->isRestApi() ) {
+            return response()->json(['success'=> 1, 'result'=>$result_data]);
+        }
+        $request->session()->flash('success', trans('validation.user.create_success'));
+        return Redirect::to('user');
+    }
+    /**
+     * Restful Api Function - remove a user.
+     *
+     * @param Request $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy(Request $request, $id = -1) {
+        if(!$this->isRestApi()){
+            return response()->json(['success'=>0, 'result'=>trans('errors.LS40401_UNKNOWN')]);
+        }
+        $current_user_status = (int) $request['self_status'] ? (int) $request['self_status'] : 0 ;
+        $id = $id == -1 ? $id : (int) $request['id'];
+        $record = $this->removeData($current_user_status, $id);
+        return response()->json(['success'=>1, 'result'=>trans('validation.user.successful')]);
     }
     /**
      * check user powerful for remove.

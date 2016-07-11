@@ -15,7 +15,7 @@ class Controller extends BaseController
     use AuthorizesRequests, AuthorizesResources, DispatchesJobs, ValidatesRequests;
     protected $pagination_number;
     protected $base_path = '/uploads';
-    protected $rest_name = 'api';
+    protected $rest_name = '/api';
     /**
      * Create a new controller instance.
      *
@@ -24,13 +24,20 @@ class Controller extends BaseController
     public function __construct()
     {
         $this->pagination_number = 25;
-        $this->middleware('auth');
-    }
-    public function isRestApi($data) {
-        if(stripos($_SERVER['REDIRECT_URL'], $this->rest_name) > 0){
-            return response()->json($data);
+        if(!$this->isRestApi()) {
+            $this->middleware('auth');
         }
-        return true;
+    }
+    /**
+     * Judge a request weather is restful api.
+     *
+     * @return bool
+     */
+    protected function isRestApi(){
+        if( stripos($_SERVER['REQUEST_URI'], $this->rest_name) > 0 ) {
+            return true;
+        }
+        return false;
     }
     /**
      * check user allow.

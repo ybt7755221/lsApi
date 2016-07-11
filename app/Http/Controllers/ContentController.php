@@ -51,7 +51,7 @@ class ContentController extends Controller
         }else{
             Session::forget('content_state');
         }
-        $this->isRestApi($contentObj);
+        //$this->isRestApi($contentObj);
         return view('content/index', ['contentObj' => $contentObj, 'categoryObj' => $categoryObj]);
     }
     public function pagination() {

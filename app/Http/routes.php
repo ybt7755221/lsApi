@@ -10,8 +10,8 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-Route::group(['prefix' => 'api/v1'], function (){
-    Route::resource('/content', 'ContentController');
+Route::group(['prefix' => 'api/v1'], function () {
+    Route::resource('/users', 'UserController');
 });
 /**
  * The route authentication function
@@ -46,7 +46,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'user'], function () {
     Route::delete('/', 'UserController@remove');
     Route::delete('/multiOperation', 'UserController@multiOperation');
     Route::put('/disabled', 'UserController@disable');
-    Route::put('/', 'UserController@edit');
+    Route::put('/', 'UserController@update');
 });
 /**
  * all of the route about content configration.
