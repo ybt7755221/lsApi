@@ -15,6 +15,7 @@ class Controller extends BaseController
     use AuthorizesRequests, AuthorizesResources, DispatchesJobs, ValidatesRequests;
     protected $pagination_number;
     protected $base_path = '/uploads';
+    protected $rest_name = 'api';
     /**
      * Create a new controller instance.
      *
@@ -25,7 +26,12 @@ class Controller extends BaseController
         $this->pagination_number = 25;
         $this->middleware('auth');
     }
-
+    public function isRestApi($data) {
+        if(stripos($_SERVER['REDIRECT_URL'], $this->rest_name) > 0){
+            return response()->json($data);
+        }
+        return true;
+    }
     /**
      * check user allow.
      *

@@ -10,10 +10,12 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+Route::group(['prefix' => 'api/v1'], function (){
+    Route::resource('/content', 'ContentController');
+});
 /**
  * The route authentication function
  */
-Route::auth();
 /**
  * all of the route about system configration.
  */

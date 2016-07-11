@@ -51,6 +51,7 @@ class ContentController extends Controller
         }else{
             Session::forget('content_state');
         }
+        $this->isRestApi($contentObj);
         return view('content/index', ['contentObj' => $contentObj, 'categoryObj' => $categoryObj]);
     }
     public function pagination() {
@@ -82,7 +83,8 @@ class ContentController extends Controller
                 $result['result'] = trans('validator.user.lost_fields');
             }
         }
-        return json_encode($result);
+        return response()->json($result);
+
     }
     /**
      * Delete a record
@@ -90,6 +92,7 @@ class ContentController extends Controller
      * @param Request $request
      */
     public function remove(Request $request){
+        $http = $_SERVER['HTTP_REFERER'];
         $current_user_status = Auth::user()->status;
         if ($this->userDisable($current_user_status, 'remove')) {
             $id = (int) $request['id'];
@@ -103,7 +106,7 @@ class ContentController extends Controller
         }else {
             $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
         }
-        return json_encode($record);
+        return response()->json($record);
     }
     /**
      * Create a data.
@@ -132,6 +135,7 @@ class ContentController extends Controller
         }else {
             $request->session()->flash('error', trans('errors.LS40401_UNKNOWN'));
         }
+        response()->json(['success' => 1, 'result' => trans('validation.user.successful')]);
         return Redirect::to('/content');
     }
     /**
