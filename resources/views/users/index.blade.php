@@ -2,7 +2,7 @@
 @section('content')
   <div class="container">
     <div class="row">
-      @include('alert');
+      @include('alert')
       <!--the user table div-->
       <div class="col-md-10 col-md-offset-1">
         <div class="panel panel-default">

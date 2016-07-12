@@ -12,6 +12,10 @@
 */
 Route::group(['prefix' => 'api/v1'], function () {
     Route::resource('/users', 'UserController');
+    Route::resource('/menu', 'CategoryController');
+    Route::resource('/content', 'ContentController');
+    Route::resource('/fields', 'FieldsController');
+    Route::resource('/link', 'LinkController');
 });
 /**
  * The route authentication function

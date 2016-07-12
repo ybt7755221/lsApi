@@ -18,6 +18,9 @@ class CategoryController extends Controller
      */
     public function index() {
         $categoryObj = Category::where('fid', 0)->orderBy('id', 'DESC')->get();
+        if($this->isRestApi()){
+            return $this->successRes($categoryObj);
+        }
         return view('category/index',['categoryObj' => $categoryObj]);
     }
 

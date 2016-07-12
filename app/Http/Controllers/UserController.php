@@ -20,7 +20,7 @@ class UserController extends Controller
     {
         $userObj = User::limit(20)->orderBy('id', 'desc')->get(['id', 'name', 'email', 'password', 'status', 'created_at', 'updated_at']);
         if ( $this->isRestApi() ) {
-            return response()->json(['success'=>1, 'result'=>$userObj]);
+            return $this->successRes($userObj);
         }
         return view('users/index', ['userObj' => $userObj]);
     }
@@ -60,14 +60,14 @@ class UserController extends Controller
         $user = User::find($id);
         if ($current_user_status === 0) {
             if ($this->isRestApi()){
-                return response()->json(['success'=>0, 'result'=>trans('validation.user.disabled_power',['op' => 'edit'])]);
+                return $this->errorRes(trans('validation.user.disabled_power',['op' => 'edit']));
             }
             $request->session()->flash('waring', trans('validation.user.disabled_power',['op' => 'edit']));
             return Redirect::to('user');
         }
         if ($current_user_status < $user['status']) {
             if ($this->isRestApi()){
-                return response()->json(['success'=>0, 'result'=>111]);
+                return $this->errorRes(trans('validation.user.disabled_level'));
             }
             $request->session()->flash('waring', trans('validation.user.disabled_level'));
             return Redirect::to('user');
@@ -87,7 +87,7 @@ class UserController extends Controller
         else{
             if($request['status'] == 4){
                 if ($this->isRestApi()){
-                    return response()->json(['success'=>0, 'result'=>trans('validation.user.disabled_power',['op' => 'edit'])]);
+                    return $this->errorRes(trans('validation.user.disabled_power',['op' => 'edit']));
                 }
                 $request->session()->flash('waring', trans('validation.user.disabled_power',['op' => 'edit']));
                 return Redirect::to('user');
@@ -98,11 +98,11 @@ class UserController extends Controller
         $result = $user->save();
         if ( !$result ) {
             if($this->isRestApi())
-                return response()->json(['success'=>0, 'result'=>trans('errors.LS40401_UNKNOWN')]);
+                return $this->errorRes(trans('errors.LS40401_UNKNOWN'));
             $request->session()->flash('error', trans('errors.LS40401_UNKNOWN'));
         } else {
             if($this->isRestApi())
-                return response()->json(['success'=>1, 'result'=>['id'=>$id, 'name'=>$user['name'], 'email'=>$user['email'], 'status' => $user['status'], 'created_at'=>$user['created_at'], 'updated-at'=>$user['updated_at'] ]]);
+                return $this->successRes(['id'=>$id, 'name'=>$user['name'], 'email'=>$user['email'], 'status' => $user['status'], 'created_at'=>$user['created_at'], 'updated-at'=>$user['updated_at'] ]);
             $request->session()->flash('success', trans('validation.user.edit_success'));
         }
         return Redirect::to('user');
@@ -189,7 +189,7 @@ class UserController extends Controller
         $current_user_status = (int) $request['self_status'];
         if ($current_user_status === 0) {
             if ( $this->isRestApi() ) {
-                return response()->json(['success'=> 0, 'result'=>trans('validation.user.disabled_power',['op' => 'create'])]);
+                return $this->errorRes(trans('validation.user.disabled_power',['op' => 'create']));
             }
             $request->session()->flash('waring', trans('validation.user.disabled_power',['op' => 'create']));
             return Redirect::to('user');
@@ -201,7 +201,7 @@ class UserController extends Controller
         }
         $result_data = User::create(['name' => $request['name'], 'email' => $request['email'], 'password' => bcrypt($request['password']), 'status' => $status]);
         if ( $this->isRestApi() ) {
-            return response()->json(['success'=> 1, 'result'=>$result_data]);
+            return $this->successRes($result_data);
         }
         $request->session()->flash('success', trans('validation.user.create_success'));
         return Redirect::to('user');
@@ -215,12 +215,15 @@ class UserController extends Controller
      */
     public function destroy(Request $request, $id = -1) {
         if(!$this->isRestApi()){
-            return response()->json(['success'=>0, 'result'=>trans('errors.LS40401_UNKNOWN')]);
+            return $this->errorRes(trans('errors.LS40401_UNKNOWN'));
         }
         $current_user_status = (int) $request['self_status'] ? (int) $request['self_status'] : 0 ;
         $id = $id == -1 ? $id : (int) $request['id'];
         $record = $this->removeData($current_user_status, $id);
-        return response()->json(['success'=>1, 'result'=>trans('validation.user.successful')]);
+        if(empty($record)){
+            return $this->errorRes(trans('errors.LS40401_UNKNOWN'));
+        }
+        return $this->successRes(trans('validation.user.successful'));
     }
     /**
      * check user powerful for remove.
@@ -277,6 +280,9 @@ class UserController extends Controller
      */
     private function removeData($current_user_status, $id){
         $user = User::find($id);
+        if(empty($user)){
+            return [];
+        }
         $record = $this->Powerful($current_user_status, $user['status'],'remove');
         if ($record['success'] === 1) {
             $result = $user->delete();

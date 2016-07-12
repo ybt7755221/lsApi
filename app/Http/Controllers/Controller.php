@@ -39,6 +39,15 @@ class Controller extends BaseController
         }
         return false;
     }
+    protected function successRes($data) {
+        return $this->ResponseJson(1, $data);
+    }
+    protected function errorRes($data) {
+        return $this->ResponseJson(0, $data);
+    }
+    private function ResponseJson($success, $data){
+        return response()->json(['success'=>$success,'result'=>$data]);
+    }
     /**
      * check user allow.
      *
