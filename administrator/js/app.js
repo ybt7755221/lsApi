@@ -294,7 +294,7 @@ $(function () {
         if(returnStatus) {
           if (res.success === 1) {
             res.result.forEach(function(cv){
-              var html = '<tr id="tr_'+cv.id+'" class="bg-white tr_fid_'+cv.fid+'">';
+              var html = '<tr id="tr_'+cv.id+'" class="bg-white tr_fid_'+cv.fid+' child_category">';
               html += '<td><input type="checkbox" class="checkbox" name="id" value="'+cv.id+'"/></td>';
               html += '<td>'+data.cat_name+'</td>';
               html += '<td class="cat_name">'+cv.cat_name+'</td>';
@@ -302,7 +302,7 @@ $(function () {
               html += '<td>'+cv.type+'</td>';
               html += '<td>'+cv.url+'</td>';
               html += '<td><input type="hidden" name="all_data" value="'+window.btoa(cv.id+'||'+cv.cat_name+'||'+cv.display+'||'+cv.type+'||'+cv.url+'||'+cv.sort+'||'+cv.fid)+'" readonly><a data-toggle="modal" data-target="#myModal" class="db-href-menu db-edit">Edit</a>&nbsp;|&nbsp;<a class="db-href-menu db-removed">Remove</a>&nbsp;</td>';
-              html += '<td></td></tr>';
+              html += '<td>sub menu</td></tr>';
               $('#tr_'+cv.fid).after(html);
             });
             $('#sub_menu_'+data.id).attr('class', 'sub_menu_close');

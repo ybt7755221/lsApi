@@ -54,6 +54,9 @@ a.text-grey:hover {
   margin-bottom: 0px !important;
 }
 
+.child_category{
+  background-color: #F5FFFA !important;
+}
 a {
   cursor: pointer;
 }

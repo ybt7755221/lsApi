@@ -27,7 +27,7 @@ class UserController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array $data
+     * @param  StoreUserPostRequest $request
      * @return User
      */
     public function create(StoreUserPostRequest $request)
@@ -179,9 +179,9 @@ class UserController extends Controller
         return json_encode($res);
     }
     /**
-     * RESTFUL API FUNCTIOIN - Create a new user instance after a valid registration.
+     * Restful Api Function - Create a new user instance after a valid registration.
      *
-     * @param  array $data
+     * @param Request $request
      * @return User
      */
     public function store(Request $request)
