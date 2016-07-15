@@ -55,6 +55,11 @@ return [
         'content' => 'Content',
         'status' => 'Status',
     ],
+    'oauth' => [
+      'id' => 'Client ID',
+      'secret' => 'Client Sercet',
+      'name' => 'Client Name',
+    ],
     'commentValue' => ['Disable', 'Enable'],
     'stateValue' => ['Hidden', 'Published', 'Removed'],
     'publishValue' => ['Hidden', 'Show', 'Removed'],

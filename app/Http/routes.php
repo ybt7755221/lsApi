@@ -45,6 +45,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('/link', 'LinkController@edit');
 });
 /**
+ * all of the route about oauth configration.
+ */
+Route::group(['middleware' => 'auth', 'prefix' => 'dashboard'], function () {
+    Route::get('/', 'OauthController@index');
+    Route::post('/', 'OauthController@create');
+});
+/**
  * all of the route about users configration.
  */
 Route::group(['middleware' => 'auth', 'prefix' => 'user'], function () {

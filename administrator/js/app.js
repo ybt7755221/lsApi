@@ -223,7 +223,11 @@ $(function () {
     $('textarea').html('');
   })
 /** End: The all method work on the fields view in this area. */
-
+/** Start: The all method work on the oauth view in this area. */
+  $('.oauth').click(function() {
+    sendMsg(url, '', {_token:_token}, 'post', false);
+  });
+/** End: The all method work on the oauth view in this area. */
   /**
    * click table button can show or hidden table.
    */

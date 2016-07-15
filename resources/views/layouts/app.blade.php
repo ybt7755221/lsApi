@@ -44,6 +44,7 @@
         <li><a href="{{ url('/user') }}">{{ trans('system.user') }}</a></li>
         <li><a href="{{ url('/menu') }}">{{ trans('system.category') }}</a></li>
         <li><a href="{{ url('/content') }}">{{ trans('system.content') }}</a></li>
+        <li><a href="{{ url('/dashboard') }}">{{ trans('system.oauth') }}</a></li>
       </ul>
 
       <!-- Right Side Of Navbar -->

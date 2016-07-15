@@ -44,5 +44,7 @@ return [
     'enable' => 'Enable',
     'enable_select' => 'Enable Selected',
     'NO_DATA' => 'No data that you need.',
-    'cancel' => 'Cancel'
+    'cancel' => 'Cancel',
+    'oauth' => 'Oauth2.0',
+    'create_oauth' => 'Generate Oauth2.0 Data'
 ];
