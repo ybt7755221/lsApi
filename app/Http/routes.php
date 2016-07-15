@@ -10,7 +10,10 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-Route::group(['prefix' => 'api/v1'], function () {
+Route::post('oauth/access_token', function() {
+    return Response::json(Authorizer::issueAccessToken());
+});
+Route::group(['middleware' => 'oauth', 'prefix' => 'api/v1'], function () {
     Route::resource('/users', 'UserController');
     Route::resource('/menu', 'CategoryController');
     Route::resource('/content', 'ContentController');
