@@ -39,12 +39,32 @@ class Controller extends BaseController
         }
         return false;
     }
+
+    /**
+     * Return success json data
+     *
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     */
     protected function successRes($data) {
         return $this->ResponseJson(1, $data);
     }
+    /**
+     * Return error json data
+     *
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     */
     protected function errorRes($data) {
         return $this->ResponseJson(0, $data);
     }
+    /**
+     * Return a json data. This function is strand for successRes and errorRes.
+     *
+     * @param $success
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     */
     private function ResponseJson($success, $data){
         return response()->json(['success'=>$success,'result'=>$data]);
     }
@@ -53,7 +73,6 @@ class Controller extends BaseController
      *
      * @param $level
      * @param $op
-     * @param bool $auto_return
      * @return bool
      */
     public function userDisable($level, $op) {
@@ -75,6 +94,9 @@ class Controller extends BaseController
         }
         return $res;
     }
+    /**
+     *
+     */
     /**
      * Upload a image for content.
      *
@@ -116,8 +138,19 @@ class Controller extends BaseController
         }
         return $record;
     }
-    public function error()
+
+    /**
+     * Return a error information.
+     *
+     * @return $this
+     */
+    protected function error()
     {
         return view('errors/503')->with('errorInfo', ['errorCode' => trans('errors.LS40301_NAME'), 'errorMsg' => trans('errors.LS40301_INFO')]);
+    }
+    protected function getUserStatusForApi($access_token){
+        $oauth_access_token = DB::table('oauth_access_tokens')->where('id',$access_token)->first();
+        $oauth_sessions = DB::table('oauth_sessions')->where(id,$oauth_access_token['session_id'])->first();
+        return User::find($oauth_sessions['owner_id']);
     }
 }

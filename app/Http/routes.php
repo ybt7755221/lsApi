@@ -48,9 +48,9 @@ Route::group(['middleware' => 'auth'], function () {
  * all of the route about oauth configration.
  */
 Route::group(['middleware' => 'auth', 'prefix' => 'dashboard'], function () {
+    Route::resource('/', '');
     Route::get('/', 'OauthController@index');
     Route::post('/', 'OauthController@store');
-    Route::put('/', 'OauthController@update');
     Route::post('/create', 'OauthController@create');
 });
 /**
