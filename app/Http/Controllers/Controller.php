@@ -148,9 +148,22 @@ class Controller extends BaseController
     {
         return view('errors/503')->with('errorInfo', ['errorCode' => trans('errors.LS40301_NAME'), 'errorMsg' => trans('errors.LS40301_INFO')]);
     }
-    protected function getUserStatusForApi($access_token){
+
+    /**
+     * Get User Information for Api request.
+     *
+     * @param $access_token
+     * @return bool
+     */
+    protected function getUserForApi($access_token){
+        $result = false;
         $oauth_access_token = DB::table('oauth_access_tokens')->where('id',$access_token)->first();
-        $oauth_sessions = DB::table('oauth_sessions')->where(id,$oauth_access_token['session_id'])->first();
-        return User::find($oauth_sessions['owner_id']);
+        if(isset($oauth_access_token['session_id']) && !empty($oauth_access_token['session_id']) ){
+            $oauth_sessions = DB::table('oauth_sessions')->where(id,$oauth_access_token['session_id'])->first();
+            if(isset($oauth_sessions['owner_id']) && !empty($oauth_sessions['owner_id'])) {
+               $result = User::find($oauth_sessions['owner_id']);
+            }
+        }
+        return $result;
     }
 }
