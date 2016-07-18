@@ -61,9 +61,9 @@ class Controller extends BaseController
         if(!empty($level) && !empty($op)) {
             $allow_list=[
                     [],
-                    ['create','edit','delete'],
-                    ['create','edit','delete'],
-                    ['create','edit','delete'],
+                    ['create','edit','delete','refresh'],
+                    ['create','edit','delete','refresh'],
+                    ['create','edit','delete','refresh'],
             ];
             if($level == 4){
                 $res = true;
@@ -115,5 +115,9 @@ class Controller extends BaseController
             }
         }
         return $record;
+    }
+    public function error()
+    {
+        return view('errors/503')->with('errorInfo', ['errorCode' => trans('errors.LS40301_NAME'), 'errorMsg' => trans('errors.LS40301_INFO')]);
     }
 }

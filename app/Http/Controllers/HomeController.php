@@ -28,9 +28,4 @@ class HomeController extends Controller
         
         return view('home/home',['fieldsObj' => $fieldsObj, 'serverArr' => $serverArr, 'linkObj' => $linkObj, 'n' => 0]);
     }
-
-    public function error()
-    {
-        return view('errors/503')->with('errorInfo', ['errorCode' => trans('errors.LS40301_NAME'), 'errorMsg' => trans('errors.LS40301_INFO')]);
-    }
 }

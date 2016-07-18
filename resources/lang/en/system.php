@@ -46,5 +46,6 @@ return [
     'NO_DATA' => 'No data that you need.',
     'cancel' => 'Cancel',
     'oauth' => 'Oauth2.0',
-    'create_oauth' => 'Generate Oauth2.0 Data'
+    'create_oauth' => 'Generate Oauth2.0 Data',
+    'refresh_oauth' => 'Refresh Your Oauth Secret',
 ];

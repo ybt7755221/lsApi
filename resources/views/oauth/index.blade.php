@@ -19,13 +19,19 @@
         <div class="panel-body">
           <div class="row">
             <span class="col-md-6"><h4 style="padding: 0 10px;">Oauth2.0 By <strong>{{ Auth::user()->name }}</strong></h4></span>
-            <span class="col-md-6 text-right"><a href='' class="oauth" style="line-height:40px; padding: 0 10px;">{{trans('system.create_oauth')}}</a></span>
+            <span class="col-md-6 text-right">
+            @if(!isset($oauth_obj->secret) && empty($oauth_obj->secret) )
+              <a href='Javascript:void(0);' class="db-oauth db-create" style="line-height:40px; padding: 0 10px;">{{trans('system.create_oauth')}}</a>
+            @else
+                <!--a href='Javascript:void(0);' class="db-oauth db-refresh" style="line-height:40px; padding: 0 10px;">{{trans('system.refresh_oauth')}}</a-->
+            @endif
+            </span>
           </div>
           @if($oauth_obj)
           <ul class="list-group">
             <li class="list-group-item"><strong>{{trans('database.oauth.name')}} : </strong>{{$oauth_obj->name}}</li>
-            <li class="list-group-item"><strong>{{trans('database.oauth.id')}} : </strong>{{$oauth_obj->id}}</li>
-            <li class="list-group-item"><strong>{{trans('database.oauth.sercet')}} : </strong>{{$oauth_obj->secret}}</li>
+            <li class="list-group-item"><strong>{{trans('database.oauth.id')}} : </strong><span id="oauth_id">{{$oauth_obj->id}}</span></li>
+            <li class="list-group-item"><strong>{{trans('database.oauth.secret')}} : </strong><span id="oauth_secret">{{$oauth_obj->secret}}</span></li>
             <li class="list-group-item"><strong>{{trans('database.created_at')}} : </strong>{{$oauth_obj->created_at}}</li>
           </ul>
           @endif

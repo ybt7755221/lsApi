@@ -37,6 +37,11 @@ $(function () {
       }else {
         $('#status option[value=' + status + ']').attr('selected', true);
       }
+    }else if(currentClass === 'oauth'){
+      var url_arr = url.split('/');
+      url_arr.pop();
+      var new_url = url_arr.join('/')+'/dashboard';
+      sendMsg(new_url,'create',{id:id, _token: _token}, 'post', false);
     }
   });
 /** End: The all method work on the user view in this area. */
@@ -224,8 +229,13 @@ $(function () {
   })
 /** End: The all method work on the fields view in this area. */
 /** Start: The all method work on the oauth view in this area. */
-  $('.oauth').click(function() {
-    sendMsg(url, '', {_token:_token}, 'post', false);
+  $('.db-oauth').click(function() {
+    var currentClass = $(this).attr('class').split(" ")[1].split("-")[1];
+    if ( currentClass == 'create') {
+      sendMsg(url, '', {_token:'oauth'}, 'post', false);
+    }else if( currentClass == 'refresh'){
+      sendMsg(url, '', {_token:'oauth'}, 'put', false);
+    }
   });
 /** End: The all method work on the oauth view in this area. */
   /**
@@ -320,12 +330,19 @@ $(function () {
         $('.will-hide').hide();
         $('#alert-static p').html(res.result);
         if (res.success === 1) {
-          $('#alert-static').attr('class', 'alert alert-success');
-          if (request_type === 'delete') {
-            if(data.html_id){
-              $('#' + data.html_id + '_' + data.id).remove();
-            }else{
-              $('#tr_' + data.id).remove();
+          if(res.result.info){
+            $('#alert-static').html(res.result.info);
+            $('#oauth_id').html(res.result.data.id);
+            $('#oauth_secret').html(res.result.data.secret);
+            $('#alert-static').attr('class', 'alert alert-success');
+          }else{
+            $('#alert-static').attr('class', 'alert alert-success');
+            if (request_type === 'delete') {
+              if(data.html_id){
+                $('#' + data.html_id + '_' + data.id).remove();
+              }else{
+                $('#tr_' + data.id).remove();
+              }
             }
           }
         } else if (res.success === 0) {

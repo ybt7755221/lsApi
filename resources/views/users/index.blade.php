@@ -45,8 +45,8 @@
                              value="{{ base64_encode($user->id.'||'.$user->name.'||'.$user->email.'||'.$user->status.'||'.$user->password) }}"
                              readonly>
                       <a data-toggle="modal" data-target="#myModal" class="db-href db-edit">{{trans('system.edit')}}</a>&nbsp;|&nbsp;
-                      <a class="db-href db-disabled">{{trans('system.disable')}}</a>&nbsp;|&nbsp;
-                      <a class="db-href db-removed">{{trans('system.remove')}}</a>
+                      <a class="db-href db-removed">{{trans('system.remove')}}</a>&nbsp;|&nbsp;
+                      <a class="db-href db-oauth">{{trans('system.oauth')}}</a>
                     </td>
                   </tr>
                 @endforeach
