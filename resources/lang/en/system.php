@@ -48,4 +48,5 @@ return [
     'oauth' => 'Oauth2.0',
     'create_oauth' => 'Generate Oauth2.0 Data',
     'refresh_oauth' => 'Refresh Your Oauth Secret',
+    'oauth_request' => 'Your Request Number',
 ];

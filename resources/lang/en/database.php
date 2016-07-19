@@ -59,6 +59,9 @@ return [
       'id' => 'Client ID',
       'secret' => 'Client Sercet',
       'name' => 'Client Name',
+      'owner_type' => 'Owner Type',
+      'created_at' => 'First Request Time',
+      'updated_at' => 'Last Request Time'
     ],
     'commentValue' => ['Disable', 'Enable'],
     'stateValue' => ['Hidden', 'Published', 'Removed'],

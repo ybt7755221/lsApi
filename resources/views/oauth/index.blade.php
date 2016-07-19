@@ -38,7 +38,32 @@
         </div>
       </div>
     </div>
-    <h2 class="sub-header">Section title</h2>
-
+    <div class="row">
+      <h2 class="sub-header">{{trans('system.oauth_request')}}</h2>
+      @if($oauth_history)
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{{trans('database.oauth.owner_type')}}</th>
+            <th>{{trans('database.oauth.id')}}</th>
+            <th>{{trans('database.oauth.secret')}}</th>
+            <th>{{trans('database.oauth.created_at')}}</th>
+            <th>{{trans('database.oauth.updated_at')}}</th>
+          </tr>
+        </thead>
+        <tbody>
+        @foreach($oauth_history as $idx=>$history)
+          <tr>
+            <td>{{$history->owner_type}}</td>
+            <td>{{$history->client_id}}</td>
+            <td>{{$history->secret}}</td>
+            <td>{{$history->created_at}}</td>
+            <td>{{$history->updated_at}}</td>
+          </tr>
+        @endforeach
+        </tbody>
+      </table>
+      @endif
+    </div>
   </div>
 @endsection

@@ -13,11 +13,25 @@ use App\Models\User;
 class OauthController extends Controller
 {
     private $table = 'oauth_clients';
+
+    /**
+     * Show the oauth information for user.
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index() {
         $oauth_id = Auth::user()->oauth_id != 'NULL' ? Auth::user()->oauth_id : 'NULL' ;
         $oauth_client = DB::table('oauth_clients')->where('id', $oauth_id)->first();
-        return view('oauth/index',['oauth_obj' => $oauth_client]);
+        $oauth_history = DB::table('oauth_sessions')->select('oauth_sessions.client_id', 'oauth_sessions.owner_type', 'oauth_sessions.created_at', 'oauth_sessions.updated_at', 'oauth_clients.secret')->leftJoin('oauth_clients', 'oauth_sessions.client_id', '=', 'oauth_clients.id')->where('owner_id', Auth::user()->id)->orderBy('updated_at', 'DESC')->limit(15)->get();
+        return view('oauth/index',['oauth_obj' => $oauth_client, 'oauth_history' => $oauth_history]);
     }
+
+    /**
+     * Refresh a oauth for user.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function create(Request $request){
         $user = User::find((int) $request['id']);
         $a = $user->email;
@@ -43,6 +57,12 @@ class OauthController extends Controller
         return $this->errorRes(trans('errors.LS40401_UNKNOWN'));
     }
 
+    /**
+     * Create a new oauth
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(Request $request) {
         $current_user_status = Auth::user()->status;
         if ($this->userDisable($current_user_status, 'create')){
@@ -68,6 +88,12 @@ class OauthController extends Controller
         return $this->errorRes(trans('errors.LS40401_UNKNOWN'));
     }
 
+    /**
+     * Update a oauth.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(Request $request){
         $current_user_status = Auth::user()->status;
         if ($this->userDisable($current_user_status, 'refresh')){
@@ -93,6 +119,12 @@ class OauthController extends Controller
         return $this->errorRes(trans('errors.LS40401_UNKNOWN'));
     }
 
+    /**
+     * Removed a oauth.
+     *
+     * @param $id
+     * @return mixed
+     */
     private function removeData($id){
         return DB::table($this->table)->where('id',$id)->delete();
     }
