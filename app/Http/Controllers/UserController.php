@@ -53,10 +53,9 @@ class UserController extends Controller
      * @param Request $request
      * @return mixed
      */
-    public function update(Request $request, $id=-1) {
+    public function update(Request $request, $id) {
         $current_user_status = $this->isRestApi() ? (int) $this->user_for_api->status : Auth::user()->status ;
-        if( $id == -1 )
-            $id = $request['id'];
+        $id = (int) $id;
         $user = User::find($id);
         if ($current_user_status === 0) {
             if ($this->isRestApi()){
@@ -213,12 +212,12 @@ class UserController extends Controller
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Request $request, $id = -1) {
+    public function destroy(Request $request, $id) {
         if(!$this->isRestApi()){
             return $this->errorRes(trans('errors.LS40401_UNKNOWN'));
         }
         $current_user_status = (int) $this->user_for_api->status ? (int) $this->user_for_api->status : 0 ;
-        $id = $id == -1 ? $id : (int) $request['id'];
+        $id = (int) $request['id'];
         $record = $this->removeData($current_user_status, $id);
         if(empty($record)){
             return $this->errorRes(trans('errors.LS40401_UNKNOWN'));

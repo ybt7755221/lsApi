@@ -211,10 +211,8 @@ class CategoryController extends Controller
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Request $request,  $id = -1) {
-        if ($id == -1) {
-            $id = (int)$request['id'];
-        }
+    public function destroy(Request $request,  $id) {
+        $id = (int) $id;
         $record = $this->removeData((int) $this->user_for_api->status, $id);
         return response()->json($record);
     }

@@ -2,16 +2,91 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
+use App\Models\Link;
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Models\Link;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\StoreLinkPostRequest;
-use Auth;
 use Illuminate\Support\Facades\Session;
 
 class LinkController extends Controller
 {
+    /**
+     * Restful Api Function - Show the list for link.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index(){
+        if( $this->userDisable($this->user_for_api->status, 'create') ){
+            $linkObj = Link::all(['id', 'title', 'url', 'thumb', 'status', 'description']);
+            if($linkObj){
+                return $this->successRes($linkObj);
+            }
+            return $this->errorRes(trans('errors.LS40401_UNKNOWN'));
+        }else{
+            return $this->errorRes(trans('validation.user.disabled_power',['op' => 'Create']));
+        }
+    }
+
+    /**
+     * Restful Api Function - Create a Link data.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(Request $request){
+        if( $this->userDisable($this->user_for_api->status, 'create') ){
+            $create_data = ['title' => $request['title'], 'url' => $request['url'], 'status' => $request['status'], 'description' => $request['description'], 'thumb' => '/storage/uploads/default.png'];
+            $result = Link::create($create_data);
+            if ( $result ) {
+                return $this->successRes(trans('validation.user.successful',['name' => 'Data']));
+            }else{
+                return $this->errorRes(trans('errors.LS40401_UNKNOWN'));
+            }
+        }else{
+            return $this->errorRes(trans('validation.user.disabled_power',['op' => 'Create']));
+        }
+    }
+
+    /**
+     * Restful Api Function - update a data.
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request, $id){
+        if ( $this->userDisable($this->user_for_api->status, 'edit') ) {
+            $update_data = ['title' => $request['title'], 'url' => $request['url'], 'status' => $request['status'], 'description' => $request['description']];
+            $result = Link::find((int) $id)->update($update_data);
+            if ( $result ) {
+                $update_data['id'] = $id;
+                return $this->successRes($update_data);
+            }else{
+                return $this->errorRes(trans('errors.LS40401_UNKNOWN'));
+            }
+        }else{
+            return $this->errorRes(trans('validation.user.disabled_power',['op' => 'Edit']));
+        }
+    }
+
+    /**
+     * Restful Api Function - Delete a data.
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy(Request $request, $id){
+        if ( $this->userDisable($this->user_for_api->status, 'delete') && $this->isRestApi() ) {
+            $record = Link::destroy($id);
+            if($record){
+                return $this->successRes(trans('validation.user.successful'));
+            }
+        }
+        return $this->errorRes(trans('errors.LS40401_UNKNOWN'));
+    }
     /**
      * Create a Link data
      *
@@ -19,7 +94,7 @@ class LinkController extends Controller
      * @return mixed
      */
     public function create(Request $request) {
-        if ( $this->userDisable(Auth::user()->status, 'edit') ) {
+        if ( $this->userDisable(Auth::user()->status, 'create') ) {
             $create_data = ['title' => $request['title'], 'url' => $request['url'], 'status' => $request['status'], 'description' => $request['description'], 'thumb' => '/storage/uploads/default.png'];
             if(!empty($_FILES['thumb']['name'])){
                 $img_res = $this->uploadImage($this->base_path);
@@ -34,7 +109,7 @@ class LinkController extends Controller
                 $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
             }
         }else{
-            $record = ['success' => 0, 'result' => trans('validation.user.disabled_power'),['op' => 'Edit']];
+            $record = ['success' => 0, 'result' => trans('validation.user.disabled_power',['op' => 'Edit'])];
         }
         $request->session()->flash($record['success'] == 1 ? 'success' : 'error', $record['result']);
         return Redirect::to('/');
@@ -61,7 +136,7 @@ class LinkController extends Controller
                 $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
             }
         }else{
-            $record = ['success' => 0, 'result' => trans('validation.user.disabled_power'),['op' => 'Edit']];
+            $record = ['success' => 0, 'result' => trans('validation.user.disabled_power',['op' => 'Edit'])];
         }
         $request->session()->flash($record['success'] == 1 ? 'success' : 'error', $record['result']);
         return Redirect::to('/');
@@ -81,7 +156,7 @@ class LinkController extends Controller
                 $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
             }
         }else{
-            $record = ['success' => 0, 'result' => trans('validation.user.disabled_power'),['op' => 'Remove']];
+            $record = ['success' => 0, 'result' => trans('validation.user.disabled_power',['op' => 'Remove'])];
         }
         return json_encode($record);
     }
