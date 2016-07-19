@@ -53,8 +53,8 @@ class UserController extends Controller
      * @param Request $request
      * @return mixed
      */
-    public function update(Request $request,  $id=-1) {
-        $current_user_status = $this->isRestApi() ? (int) $request['self_status'] : Auth::user()->status ;
+    public function update(Request $request, $id=-1) {
+        $current_user_status = $this->isRestApi() ? (int) $this->user_for_api->status : Auth::user()->status ;
         if( $id == -1 )
             $id = $request['id'];
         $user = User::find($id);
@@ -186,7 +186,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $current_user_status = (int) $request['self_status'];
+        $current_user_status = (int) $this->user_for_api->status;
         if ($current_user_status === 0) {
             if ( $this->isRestApi() ) {
                 return $this->errorRes(trans('validation.user.disabled_power',['op' => 'create']));
@@ -217,7 +217,7 @@ class UserController extends Controller
         if(!$this->isRestApi()){
             return $this->errorRes(trans('errors.LS40401_UNKNOWN'));
         }
-        $current_user_status = (int) $request['self_status'] ? (int) $request['self_status'] : 0 ;
+        $current_user_status = (int) $this->user_for_api->status ? (int) $this->user_for_api->status : 0 ;
         $id = $id == -1 ? $id : (int) $request['id'];
         $record = $this->removeData($current_user_status, $id);
         if(empty($record)){

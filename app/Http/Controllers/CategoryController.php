@@ -215,12 +215,12 @@ class CategoryController extends Controller
         if ($id == -1) {
             $id = (int)$request['id'];
         }
-        $record = $this->removeData($request['self_status'], $id);
+        $record = $this->removeData((int) $this->user_for_api->status, $id);
         return response()->json($record);
     }
     public function update(Request $request, $id) {
-        if(isset($request['self_status']) && !empty($request['self_status'])) {
-            $status = (int) $request['self_status'];
+        if(isset($this->user_for_api->status) && !empty($this->user_for_api->status)) {
+            $status = (int) $this->user_for_api->status;
         }else{
             $status = 0;
         }
@@ -273,7 +273,7 @@ class CategoryController extends Controller
      * @return mixed
      */
     public function store(Request $request) {
-        $current_user_status = $request['self_status'];
+        $current_user_status = $this->user_for_api->status;
         if ($this->userDisable($current_user_status, 'create')) {
             $fid = (int) $request['fid'];
             if ($request['type'] ===  'local')
@@ -339,6 +339,7 @@ class CategoryController extends Controller
     /**
      * Remove a category
      *
+     * @param $current_user_status
      * @param $id
      * @return array
      */

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Http\Requests\Request;
 use DB;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
@@ -16,6 +17,7 @@ class Controller extends BaseController
     protected $pagination_number;
     protected $base_path = '/uploads';
     protected $rest_name = '/api';
+    protected $user_for_api = false;
     /**
      * Create a new controller instance.
      *
@@ -26,6 +28,12 @@ class Controller extends BaseController
         $this->pagination_number = 25;
         if(!$this->isRestApi()) {
             $this->middleware('auth');
+        }else{
+            if($_SERVER['REQUEST_METHOD'] == 'GET'){
+                $this->user_for_api = $this->getUserForApi($_GET['access_token']);
+            }else{
+                $this->user_for_api = $this->getUserForApi($_POST['access_token']);
+            }
         }
     }
     /**
@@ -80,9 +88,9 @@ class Controller extends BaseController
         if(!empty($level) && !empty($op)) {
             $allow_list=[
                     [],
-                    ['create','edit','delete','refresh'],
-                    ['create','edit','delete','refresh'],
-                    ['create','edit','delete','refresh'],
+                    ['create','edit','update','delete','refresh'],
+                    ['create','edit','update','delete','refresh'],
+                    ['create','edit','update','delete','refresh'],
             ];
             if($level == 4){
                 $res = true;
@@ -157,11 +165,14 @@ class Controller extends BaseController
      */
     protected function getUserForApi($access_token){
         $result = false;
+        if(empty($access_token) ){
+            return $result;
+        }
         $oauth_access_token = DB::table('oauth_access_tokens')->where('id',$access_token)->first();
-        if(isset($oauth_access_token['session_id']) && !empty($oauth_access_token['session_id']) ){
-            $oauth_sessions = DB::table('oauth_sessions')->where(id,$oauth_access_token['session_id'])->first();
-            if(isset($oauth_sessions['owner_id']) && !empty($oauth_sessions['owner_id'])) {
-               $result = User::find($oauth_sessions['owner_id']);
+        if(isset($oauth_access_token->session_id) && !empty($oauth_access_token->session_id) ){
+            $oauth_sessions = DB::table('oauth_sessions')->where('id',$oauth_access_token->session_id)->first();
+            if(isset($oauth_sessions->owner_id) && !empty($oauth_sessions->owner_id)) {
+               $result = DB::table('users')->where('id',$oauth_sessions->owner_id)->first();
             }
         }
         return $result;

@@ -33,27 +33,36 @@ class ContentController extends Controller
                         $query->select('id', 'cat_name');
                     }])->limit($this->pagination_number)->get();
         }
-        $categoryObj = Category::where('type', '!=', 'link')->select('id', 'cat_name', 'path')->orderBy('path')->get();
-        foreach($categoryObj as $category) {
-            $count = substr_count($category->path, '|') - 2;
-            if ($count > 0) {
-                $symbol = '&nbsp;&nbsp;';
-                for ($i = 0; $i < $count; $i++) {
-                    $symbol .= "&nbsp;&nbsp;";
+        if ( $this->isRestApi() ) {
+            return $this->successRes($contentObj);
+        }else {
+            $categoryObj = Category::where('type', '!=', 'link')->select('id', 'cat_name', 'path')->orderBy('path')->get();
+            foreach ($categoryObj as $category) {
+                $count = substr_count($category->path, '|') - 2;
+                if ($count > 0) {
+                    $symbol = '&nbsp;&nbsp;';
+                    for ($i = 0; $i < $count; $i++) {
+                        $symbol .= "&nbsp;&nbsp;";
+                    }
+                    $category->cat_name = $symbol . $category->cat_name;
                 }
-                $category->cat_name = $symbol.$category->cat_name;
             }
-        }
-        if(isset($_GET['state'])) {
-            if( ($_GET['state'] == 0 || !empty($_GET['state'])) ){
-                Session::put('content_state', $_GET['state']);
+            if (isset($_GET['state'])) {
+                if (($_GET['state'] == 0 || !empty($_GET['state']))) {
+                    Session::put('content_state', $_GET['state']);
+                }
+            } else {
+                Session::forget('content_state');
             }
-        }else{
-            Session::forget('content_state');
+            return view('content/index', ['contentObj' => $contentObj, 'categoryObj' => $categoryObj]);
         }
-        //$this->isRestApi($contentObj);
-        return view('content/index', ['contentObj' => $contentObj, 'categoryObj' => $categoryObj]);
     }
+
+    /**
+     * Pagination function.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function pagination() {
         $result = ['success' => 0];
         if($_GET['paging']){
@@ -86,10 +95,12 @@ class ContentController extends Controller
         return response()->json($result);
 
     }
+
     /**
-     * Delete a record
+     * Delete a data.
      *
      * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function remove(Request $request){
         $http = $_SERVER['HTTP_REFERER'];
@@ -190,5 +201,81 @@ class ContentController extends Controller
             $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
         }
         return json_encode($record);
+    }
+
+    /**
+     * Restful Api Function - create a data.
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function store(Request $request) {
+        if ( $this->userDisable($this->user_for_api->status, 'create') ) {
+            $request->session()->flash('op', 'create');
+            $this->validate($request, ['title' => 'required|min:4|max:120|unique:content', 'body' => 'required']);
+            $record = Content::create(['title' => $request['title'], 'thumb' => '/storage/uploads/default.png', 'user_id' => $this->user_for_api->id, 'body' => $request['body'], 'comment_status' => $request['comment_status'], 'state' => $request['state'], 'cat_id' => $request['cat_id'],]);
+            if ($record) {
+                $result = ['success'=>1, 'result'=>$record];
+            } else {
+                $result = ['success'=>0, 'result'=>trans('errors.LS40401_UNKNOWN')];
+            }
+        }else {
+            $result = ['success'=>0, 'result'=>trans('errors.LS40401_UNKNOWN')];
+        }
+        if($result['success'] === 1) {
+            return $this->successRes($result['result']);
+        }
+        return $this->errorRes($result['result']);
+    }
+    /**
+     * Restful Api Function - Update a data.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request, $id){
+        $check = $this->userDisable($this->user_for_api->status, 'update');
+        if($check) {
+            $update_arr = ['title' => $request['title'], 'body' => $request['body'], 'comment_status' => $request['comment_status'], 'state' => $request['state'], 'cat_id' => $request['cat_id']];
+            $check = Content::where('id', (int) $id)->update($update_arr);
+            if ($check) {
+                $record['success'] = 1;
+                $record['result'] = $update_arr;
+                $record['result']['user_id'] = $this->user_for_api->id;
+                $record['result']['updated_at'] = $_SERVER['REQUEST_TIME'];
+            } else {
+                $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
+            }
+        }else{
+            $record = ['success' => 0, 'result' => trans('errors.LS40401_UNKNOWN')];
+        }
+        if($result['success'] === 1) {
+            return $this->successRes($result['result']);
+        }
+        return $this->errorRes($result['result']);
+    }
+
+    /**
+     * Restful Api Function - Removed a data.
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy(Request $request, $id) {
+        if(!$this->isRestApi()){
+            return $this->errorRes(trans('errors.LS40401_UNKNOWN'));
+        }
+        $current_user_status = (int) $this->user_for_api->status ? (int) $this->user_for_api->status : 0 ;
+        if($this->userDisable($current_user_status, 'delete')) {
+            $record = Content::destroy((int) $id);
+            if($record){
+                return  $this->successRes(trans('validation.user.successful'));
+            }
+            else{
+                return $this->errorRes(trans('errors.LS40401_UNKNOWN'));
+            }
+        }
+        return $this->errorRes(trans('validation.user.disabled_power',['op' => 'Removed']));
     }
 }
