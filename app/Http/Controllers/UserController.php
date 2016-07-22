@@ -62,7 +62,7 @@ class UserController extends Controller
             $status = $request['status'];
         }
         User::create(['name' => $request['name'], 'email' => $request['email'], 'password' => bcrypt($request['password']), 'status' => $status]);
-        Cache::destory($this->cache_key);
+        Cache::forget($this->cache_key);
         $request->session()->flash('success', trans('validation.user.create_success'));
         return Redirect::to('user');
     }
@@ -73,9 +73,9 @@ class UserController extends Controller
      * @param Request $request
      * @return mixed
      */
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id=-1) {
         $current_user_status = $this->current_user->status;
-        $id = (int) $id;
+        $id = (int) $id == -1 ? (int) $request['id'] : (int) $id;
         $user = User::find($id);
         if ($current_user_status === 0) {
             if ($this->isRestApi()){
@@ -121,7 +121,7 @@ class UserController extends Controller
             $request->session()->flash('error', trans('errors.LS40401_UNKNOWN'));
         } else {
             if($this->checkCache()){
-                Cache::destory($this->cache_key);
+                Cache::forget($this->cache_key);
             }
             if($this->isRestApi())
                 return $this->successRes(['id'=>$id, 'name'=>$user['name'], 'email'=>$user['email'], 'status' => $user['status'], 'created_at'=>$user['created_at'], 'updated-at'=>$user['updated_at'] ]);
@@ -140,7 +140,7 @@ class UserController extends Controller
         $current_user_status = $this->current_user->status;
         $id = $request['id'] * 1;
         $record = $this->removeData($current_user_status, $id);
-        Cache::flush();
+        Cache::forget($this->cache_key);
         return json_encode($record);
     }
     /**
