@@ -7,7 +7,7 @@ use App\Http\Requests;
 use App\Models\User;
 use App\Http\Requests\StoreUserPostRequest;
 use Redirect;
-use Auth;
+use Cache;
 
 class UserController extends Controller
 {
@@ -18,11 +18,30 @@ class UserController extends Controller
      */
     public function index()
     {
-        $userObj = User::limit(20)->orderBy('id', 'desc')->get(['id', 'name', 'email', 'password', 'status', 'created_at', 'updated_at']);
+        $userObj = $this->checkCache();
+        if( $userObj == false || empty($userObj) ){
+            $userObj = User::limit(20)->orderBy('id', 'desc')->get(['id', 'name', 'email', 'password', 'status', 'created_at', 'updated_at']);
+            Cache::put($this->cache_key, $userObj, $this->cache_time);
+        }
         if ( $this->isRestApi() ) {
             return $this->successRes($userObj);
         }
         return view('users/index', ['userObj' => $userObj]);
+    }
+
+    /**
+     * Restful Api Function - Get a data by id.
+     *
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show($id) {
+        $userObj = $this->checkCache();
+        if( $userObj == false || empty($userObj) ){
+            $userObj = User::where('id', (int) $id)->first(['id', 'name', 'email', 'password', 'status', 'created_at', 'updated_at']);
+            Cache::put($this->cache_key, $userObj, $this->cache_time);
+        }
+        return $this->successRes($userObj);
     }
     /**
      * Create a new user instance after a valid registration.
@@ -32,7 +51,7 @@ class UserController extends Controller
      */
     public function create(StoreUserPostRequest $request)
     {
-        $current_user_status = Auth::user()->status;
+        $current_user_status = $this->current_user->status;
         if ($current_user_status === 0) {
             $request->session()->flash('waring', trans('validation.user.disabled_power',['op' => 'create']));
             return Redirect::to('user');
@@ -43,6 +62,7 @@ class UserController extends Controller
             $status = $request['status'];
         }
         User::create(['name' => $request['name'], 'email' => $request['email'], 'password' => bcrypt($request['password']), 'status' => $status]);
+        Cache::destory($this->cache_key);
         $request->session()->flash('success', trans('validation.user.create_success'));
         return Redirect::to('user');
     }
@@ -54,7 +74,7 @@ class UserController extends Controller
      * @return mixed
      */
     public function update(Request $request, $id) {
-        $current_user_status = $this->isRestApi() ? (int) $this->user_for_api->status : Auth::user()->status ;
+        $current_user_status = $this->current_user->status;
         $id = (int) $id;
         $user = User::find($id);
         if ($current_user_status === 0) {
@@ -100,6 +120,9 @@ class UserController extends Controller
                 return $this->errorRes(trans('errors.LS40401_UNKNOWN'));
             $request->session()->flash('error', trans('errors.LS40401_UNKNOWN'));
         } else {
+            if($this->checkCache()){
+                Cache::destory($this->cache_key);
+            }
             if($this->isRestApi())
                 return $this->successRes(['id'=>$id, 'name'=>$user['name'], 'email'=>$user['email'], 'status' => $user['status'], 'created_at'=>$user['created_at'], 'updated-at'=>$user['updated_at'] ]);
             $request->session()->flash('success', trans('validation.user.edit_success'));
@@ -114,9 +137,10 @@ class UserController extends Controller
      */
     public function remove(Request $request)
     {
-        $current_user_status = Auth::user()->status;
+        $current_user_status = $this->current_user->status;
         $id = $request['id'] * 1;
         $record = $this->removeData($current_user_status, $id);
+        Cache::flush();
         return json_encode($record);
     }
     /**
@@ -126,15 +150,15 @@ class UserController extends Controller
      * @return string
      */
     public function disable(Request $request) {
-        $current_user_status = Auth::user()->status;
+        $current_user_status = $this->current_user->status;
         $id = $request['id'] * 1;
         $record = $this->disableData($current_user_status, $id);
         return json_encode($record);
     }
 
     public function multiOperation(){
-        $user_id = Auth::user()->id;
-        $current_user_status = Auth::user()->status;
+        $user_id = $this->current_user->id;
+        $current_user_status = $this->current_user->status;
         $res = ['success' => -2, 'result' => ''];
         switch ($_POST['op']) {
             case 'disable' :
@@ -185,7 +209,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $current_user_status = (int) $this->user_for_api->status;
+        $current_user_status = (int) $this->current_user->status;
         if ($current_user_status === 0) {
             if ( $this->isRestApi() ) {
                 return $this->errorRes(trans('validation.user.disabled_power',['op' => 'create']));
@@ -216,12 +240,13 @@ class UserController extends Controller
         if(!$this->isRestApi()){
             return $this->errorRes(trans('errors.LS40401_UNKNOWN'));
         }
-        $current_user_status = (int) $this->user_for_api->status ? (int) $this->user_for_api->status : 0 ;
+        $current_user_status = (int) $this->current_user->status ? (int) $this->current_user->status : 0 ;
         $id = (int) $request['id'];
         $record = $this->removeData($current_user_status, $id);
         if(empty($record)){
             return $this->errorRes(trans('errors.LS40401_UNKNOWN'));
         }
+        Cache::flush();
         return $this->successRes(trans('validation.user.successful'));
     }
     /**

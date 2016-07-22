@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use App\Http\Requests\Request;
 use DB;
+use Auth;
+use Cache;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -17,7 +19,9 @@ class Controller extends BaseController
     protected $pagination_number;
     protected $base_path = '/uploads';
     protected $rest_name = '/api';
-    protected $user_for_api = false;
+    protected $current_user = false;
+    protected $cache_key = '';
+    protected $cache_time = 60 * 60 * 24;
     /**
      * Create a new controller instance.
      *
@@ -28,13 +32,15 @@ class Controller extends BaseController
         $this->pagination_number = 25;
         if(!$this->isRestApi()) {
             $this->middleware('auth');
+            $this->current_user = json_decode(json_encode(Auth::user()['attributes']), FALSE);
         }else{
             if($_SERVER['REQUEST_METHOD'] == 'GET'){
-                $this->user_for_api = $this->getUserForApi($_GET['access_token']);
+                $this->current_user = $this->getUserForApi($_GET['access_token']);
             }else{
-                $this->user_for_api = $this->getUserForApi($_POST['access_token']);
+                $this->current_user = $this->getUserForApi($_POST['access_token']);
             }
         }
+        $this->cache_key = substr(md5($_SERVER['REQUEST_URI']), 8, 16);
     }
     /**
      * Judge a request weather is restful api.
@@ -176,5 +182,17 @@ class Controller extends BaseController
             }
         }
         return $result;
+    }
+
+    /**
+     * Check if have cache and return the cache data.
+     *
+     * @return bool
+     */
+    protected function checkCache() {
+        if( Cache::has($this->cache_key) ){
+            return Cache::get($this->cache_key);
+        }
+        return false;
     }
 }
