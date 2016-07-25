@@ -68,7 +68,20 @@ class ContentController extends Controller
         }
         return view('content/index', $resultArr);
     }
-
+    /**
+     * Restful Api Function - Get a data by id.
+     *
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show($id) {
+        $contentObj = $this->checkCache();
+        if( $contentObj == false || empty($contentObj) ){
+            $contentObj = Content::where('id', (int) $id)->first();
+            Cache::put($this->cache_key, $contentObj, $this->cache_time);
+        }
+        return $this->successRes($contentObj);
+    }
     /**
      * Pagination function.
      *
