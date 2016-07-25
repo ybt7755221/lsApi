@@ -8,6 +8,7 @@ use App\Models\Category;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\StoreCategoryPostRequest;
 use Auth;
+use Cache;
 
 class CategoryController extends Controller
 {
@@ -17,13 +18,30 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $categoryObj = Category::where('fid', 0)->orderBy('id', 'DESC')->get();
+        $categoryObj = $this->checkCache();
+        if($categoryObj == false) {
+            $categoryObj = Category::where('fid', 0)->orderBy('id', 'DESC')->get();
+            Cache::put($this->cache_key, $categoryObj, $this->cache_time);
+        }
         if($this->isRestApi()){
             return $this->successRes($categoryObj);
         }
         return view('category/index',['categoryObj' => $categoryObj]);
     }
-
+    /**
+     * Restful Api Function - Get a data by id.
+     *
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show($id) {
+        $categoryObj = $this->checkCache();
+        if( $categoryObj == false || empty($categoryObj) ){
+            $categoryObj = Category::where('id', (int) $id)->first();
+            Cache::put($this->cache_key, $categoryObj, $this->cache_time);
+        }
+        return $this->successRes($categoryObj);
+    }
     /**
      * create a category.
      *
@@ -31,7 +49,7 @@ class CategoryController extends Controller
      * @return mixed
      */
     public function create(StoreCategoryPostRequest $request) {
-        $current_user_status = Auth::user()->status;
+        $current_user_status = $this->current_user->status;
         if ($this->userDisable($current_user_status, 'create')) {
             $fid = (int) $request['fid'];
             if ($request['type'] ===  'local')
@@ -56,6 +74,7 @@ class CategoryController extends Controller
             } else
                 $current_path = '0|'.$res_arr['id'].'|'.$res_arr['sort'];
             Category::where('id',$res_arr['id'])->update(['path' => $current_path]);
+            Cache::forget($this->cache_key);
             $request->session()->flash('success', trans('validation.user.successful'));
         }else{
             $request->session()->flash('error', trans('validation.user.disabled_power',['op' => 'create']));
@@ -71,7 +90,7 @@ class CategoryController extends Controller
      */
     public function edit(Request $request) {
         $this->validate($request, ['cat_name' => 'required|max:255|unique:category,cat_name,'.$request['id'].',id']);
-        $check = $this->userDisable(Auth::user()->status, 'edit');
+        $check = $this->userDisable($this->current_user->status, 'edit');
         if($check) {
             $category = Category::find($request['id']);
             if(empty($category)){
@@ -108,6 +127,7 @@ class CategoryController extends Controller
             if (!empty($request['display']))
                 $category->display = $request['display'];
             $category->save();
+            Cache::forget($this->cache_key);
         }else{
             $request->session()->flash('error', trans('validation.user.disabled_power',['op' => 'eidt']));
         }
@@ -147,7 +167,7 @@ class CategoryController extends Controller
                 break;
             case 'removed' :
                 foreach($_POST['ids'] as $id) {
-                    $record = $this->removeData(Auth::user()->status, $id);
+                    $record = $this->removeData($this->current_user->status, $id);
                     if ($record['success'] !== 1) {
                         $res['success'] = 0;
                         $res['result'] .= $record['result'] . "</br>";
@@ -180,7 +200,7 @@ class CategoryController extends Controller
      * @return string
      */
     public function removed(Request $request) {
-        $record = $this->removeData(Auth::user()->status,(int)$request['id']);
+        $record = $this->removeData($this->current_user->status,(int)$request['id']);
         return response()->json($record);
     }
 
@@ -191,7 +211,7 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function subMenu(Request $request){
-        $check = $this->userDisable(Auth::user()->status, 'edit');
+        $check = $this->userDisable($this->current_user->status, 'edit');
         if ($check) {
            $record['result']  = Category::where('fid',$request['id']*1)->get();
             if(count($record['result']) > 0) {
@@ -213,12 +233,21 @@ class CategoryController extends Controller
      */
     public function destroy(Request $request,  $id) {
         $id = (int) $id;
-        $record = $this->removeData((int) $this->user_for_api->status, $id);
+        $record = $this->removeData((int) $this->current_user->status, $id);
+        Cache::forget($this->cache_key);
         return response()->json($record);
     }
+
+    /**
+     * Restful Api Function - remove a data.
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(Request $request, $id) {
-        if(isset($this->user_for_api->status) && !empty($this->user_for_api->status)) {
-            $status = (int) $this->user_for_api->status;
+        if(isset($this->current_user->status) && !empty($this->current_user->status)) {
+            $status = (int) $this->current_user->status;
         }else{
             $status = 0;
         }
@@ -259,6 +288,7 @@ class CategoryController extends Controller
             if (!empty($request['display']))
                 $category->display = $request['display'];
             $category->save();
+            Cache::forget($this->cache_key);
         }else{
             return $this->errorRes(trans('validation.user.disabled_power',['op' => 'eidt']));
         }
@@ -271,7 +301,7 @@ class CategoryController extends Controller
      * @return mixed
      */
     public function store(Request $request) {
-        $current_user_status = $this->user_for_api->status;
+        $current_user_status = $this->current_user->status;
         if ($this->userDisable($current_user_status, 'create')) {
             $fid = (int) $request['fid'];
             if ($request['type'] ===  'local')
@@ -315,7 +345,7 @@ class CategoryController extends Controller
      * @return array
      */
     private function ableData($request) {
-        $current_user_status = Auth::user()->status;
+        $current_user_status = $this->current_user->status;
         if ($this->userDisable($current_user_status, 'edit')) {
             if ( $request['op'] === 'disabled')
                 $display_str = 'hidden';
