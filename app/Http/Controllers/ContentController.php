@@ -20,42 +20,53 @@ class ContentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        if (isset($_GET['state']) && $_GET['state'] != '' && $_GET['state'] != -1 ){
-            $contentObj = Content::select('id', 'title', 'cat_id', 'user_id', 'comment_status', 'state', 'updated_at')->where('state', (int)$_GET['state'])->orderBy('updated_at')->with(['users' => function ($query) {
-                $query->select('id', 'name');
-            }, 'category' => function ($query) {
-                $query->select('id', 'cat_name');
-            }])->limit($this->pagination_number)->get();
-        } else {
-            $contentObj = Content::select('id', 'title', 'cat_id', 'user_id', 'comment_status', 'state', 'updated_at')->orderBy('updated_at')->with(['users' => function ($query) {
-                        $query->select('id', 'name');
-                    }, 'category' => function ($query) {
-                        $query->select('id', 'cat_name');
-                    }])->limit($this->pagination_number)->get();
-        }
-        if ( $this->isRestApi() ) {
-            return $this->successRes($contentObj);
-        }else {
-            $categoryObj = Category::where('type', '!=', 'link')->select('id', 'cat_name', 'path')->orderBy('path')->get();
-            foreach ($categoryObj as $category) {
-                $count = substr_count($category->path, '|') - 2;
-                if ($count > 0) {
-                    $symbol = '&nbsp;&nbsp;';
-                    for ($i = 0; $i < $count; $i++) {
-                        $symbol .= "&nbsp;&nbsp;";
-                    }
-                    $category->cat_name = $symbol . $category->cat_name;
-                }
-            }
-            if (isset($_GET['state'])) {
-                if (($_GET['state'] == 0 || !empty($_GET['state']))) {
-                    Session::put('content_state', $_GET['state']);
-                }
+        $result = $this->checkCache();
+        if($result == false) {
+            if (isset($_GET['state']) && $_GET['state'] != '' && $_GET['state'] != -1) {
+                $contentObj = Content::select('id', 'title', 'cat_id', 'user_id', 'comment_status', 'state', 'updated_at')->where('state', (int)$_GET['state'])->orderBy('updated_at')->with(['users' => function ($query) {
+                    $query->select('id', 'name');
+                }, 'category' => function ($query) {
+                    $query->select('id', 'cat_name');
+                }])->limit($this->pagination_number)->get();
             } else {
-                Session::forget('content_state');
+                $contentObj = Content::select('id', 'title', 'cat_id', 'user_id', 'comment_status', 'state', 'updated_at')->orderBy('updated_at')->with(['users' => function ($query) {
+                    $query->select('id', 'name');
+                }, 'category' => function ($query) {
+                    $query->select('id', 'cat_name');
+                }])->limit($this->pagination_number)->get();
             }
-            return view('content/index', ['contentObj' => $contentObj, 'categoryObj' => $categoryObj]);
+            if ($this->isRestApi()) {
+                Cache::put($this->cache_key.'_api',$contentObj, $this->cache_time);
+                return $this->successRes($contentObj);
+            } else {
+                $categoryObj = Category::where('type', '!=', 'link')->select('id', 'cat_name', 'path')->orderBy('path')->get();
+                foreach ($categoryObj as $category) {
+                    $count = substr_count($category->path, '|') - 2;
+                    if ($count > 0) {
+                        $symbol = '&nbsp;&nbsp;';
+                        for ($i = 0; $i < $count; $i++) {
+                            $symbol .= "&nbsp;&nbsp;";
+                        }
+                        $category->cat_name = $symbol . $category->cat_name;
+                    }
+                }
+                if (isset($_GET['state'])) {
+                    if (($_GET['state'] == 0 || !empty($_GET['state']))) {
+                        Session::put('content_state', $_GET['state']);
+                    }
+                } else {
+                    Session::forget('content_state');
+                }
+                Cache::put($this->cache_key,['contentObj' => $contentObj, 'categoryObj' => $categoryObj], $this->cache_time);
+                return view('content/index', ['contentObj' => $contentObj, 'categoryObj' => $categoryObj]);
+            }
         }
+        if ($this->isRestApi()) {
+            $resultArr = Cache::get($this->cache_key.'_api');
+        }else{
+            $resultArr = $result;
+        }
+        return view('content/index', $resultArr);
     }
 
     /**
@@ -64,36 +75,32 @@ class ContentController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function pagination() {
-        $result = ['success' => 0];
-        if($_GET['paging']){
-            switch ($_GET['paging']) {
-                case 'next' :
-                    $id = isset($_GET['start_id']) && !empty($_GET['start_id']) ? (int)$_GET['start_id'] : 0;
-                    $symbol = '>';
-                    break;
-                case 'prev' :
-                    $id = isset($_GET['last_id']) && !empty($_GET['last_id']) ? (int)$_GET['last_id'] : 0;
-                    $symbol = '<';
-                    break;
-                default :
-                    break;
-            }
-            if($id && $symbol) {
-                $result['success'] = 1;
-                $result['result'] = DB::table('content')
-                        ->where('content.id', $symbol, $id)
-                        ->leftJoin('users', 'users.id', '=', 'content.user_id')
-                        ->leftJoin('category', 'category.id', '=', 'content.cat_id')
-                        ->select('content.id', 'content.title', 'content.cat_id', 'content.user_id', 'content.comment_status', 'content.state', 'content.updated_at', 'category.cat_name', 'users.name')
-                        ->orderBy('content.id','ASC')
-                        ->limit($this->pagination_number)
-                        ->get();
-            }else{
-                $result['result'] = trans('validator.user.lost_fields');
+        $pagination_cache = Cache::get($this->cache_key.'_paging_'.$_GET['start_id']);
+        if($pagination_cache == false) {
+            if ($_GET['paging']) {
+                switch ($_GET['paging']) {
+                    case 'next' :
+                        $id = isset($_GET['start_id']) && !empty($_GET['start_id']) ? (int)$_GET['start_id'] : 0;
+                        $symbol = '>';
+                        break;
+                    case 'prev' :
+                        $id = isset($_GET['last_id']) && !empty($_GET['last_id']) ? (int)$_GET['last_id'] : 0;
+                        $symbol = '<';
+                        break;
+                    default :
+                        break;
+                }
+                if ($id && $symbol) {
+                    $result = DB::table('content')->where('content.id', $symbol, $id)->leftJoin('users', 'users.id', '=', 'content.user_id')->leftJoin('category', 'category.id', '=', 'content.cat_id')->select('content.id', 'content.title', 'content.cat_id', 'content.user_id', 'content.comment_status', 'content.state', 'content.updated_at', 'category.cat_name', 'users.name')->orderBy('content.id', 'ASC')->limit($this->pagination_number)->get();
+                    Cache::put($this->cache_key.'_paging_'.$_GET['start_id'], $result, $this->cache_time);
+                    return $this->successRes($result);
+                } else {
+                    $result = trans('validator.user.lost_fields');
+                    return $this->errorRes($result);
+                }
             }
         }
-        return response()->json($result);
-
+        return $this->successRes($pagination_cache);
     }
 
     /**
@@ -104,7 +111,7 @@ class ContentController extends Controller
      */
     public function remove(Request $request){
         $http = $_SERVER['HTTP_REFERER'];
-        $current_user_status = Auth::user()->status;
+        $current_user_status = $this->current_user->status;
         if ($this->userDisable($current_user_status, 'remove')) {
             $id = (int) $request['id'];
             $res = Content::find($id)->update(['state'=>2]);
@@ -126,7 +133,7 @@ class ContentController extends Controller
      * @return string
      */
     public function create(Request $request) {
-        if ( $this->userDisable(Auth::user()->status, 'create') ) {
+        if ( $this->userDisable($this->current_user->status, 'create') ) {
             $request->session()->flash('op', 'create');
             $this->validate($request, ['title' => 'required|min:4|max:120|unique:content', 'body' => 'required']);
             if (isset($_FILES['thumb']['name']) && !empty($_FILES['thumb']['name'])) {
@@ -137,7 +144,7 @@ class ContentController extends Controller
                 }
                 $this->thumb = $img_res['result'];
             }
-            $record = Content::create(['title' => $request['title'], 'thumb' => $this->thumb, 'user_id' => Auth::user()->id, 'body' => $request['body'], 'comment_status' => $request['comment_status'], 'state' => $request['state'], 'cat_id' => $request['cat_id'],]);
+            $record = Content::create(['title' => $request['title'], 'thumb' => $this->thumb, 'user_id' => $this->current_user->id, 'body' => $request['body'], 'comment_status' => $request['comment_status'], 'state' => $request['state'], 'cat_id' => $request['cat_id'],]);
             if ($record) {
                 $request->session()->flash('success', trans('validation.user.successful'));
             } else {
@@ -156,7 +163,7 @@ class ContentController extends Controller
      * @return mixed
      */
     public function edit(Request $request) {
-        $check = $this->userDisable(Auth::user()->status, 'edit');
+        $check = $this->userDisable($this->current_user->status, 'edit');
         if($check) {
             $request->session()->flash('op', 'edit');
             $request->session()->flash('edit_id', $request['id']);

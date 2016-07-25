@@ -8,6 +8,7 @@ use App\Models\Fields;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\StoreFieldsPostRequest;
 use Auth;
+use Cache;
 use Illuminate\Support\Facades\Session;
 
 class FieldsController extends Controller
@@ -18,17 +19,27 @@ class FieldsController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(){
-        if( $this->userDisable($this->user_for_api->status, 'create') ){
+        $fieldsObj = $this->checkCache();
+        if($fieldsObj == false){
             $fieldsObj = Fields::all(['id', 'label', 'key', 'params', 'publish', 'field_type']);
-            if($fieldsObj){
-                return $this->successRes($fieldsObj);
-            }
-            return $this->errorRes(trans('errors.LS40401_UNKNOWN'));
-        }else{
-            return $this->errorRes(trans('validation.user.disabled_power',['op' => 'Create']));
+            Cache::put($this->cache_key, $fieldsObj, $this->cache_time);
         }
+        return $this->successRes($fieldsObj);
     }
-
+    /**
+     * Restful Api Function - Get a data by id.
+     *
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show($id) {
+        $fieldsObj = $this->checkCache();
+        if( $fieldsObj == false || empty($fieldsObj) ){
+            $fieldsObj = Fields::where('id', (int) $id)->first(['id', 'label', 'key', 'params', 'publish', 'field_type']);
+            Cache::put($this->cache_key, $fieldsObj, $this->cache_time);
+        }
+        return $this->successRes($fieldsObj);
+    }
     /**
      * Restful Api Function - Create a data.
      *
@@ -36,7 +47,7 @@ class FieldsController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request){
-        if( $this->userDisable($this->user_for_api->status, 'create') ){
+        if( $this->userDisable($this->current_user->status, 'create') ){
             $record = Fields::create([
                     'label' => $request['label'],
                     'key' => $request['key'],
@@ -61,7 +72,7 @@ class FieldsController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id){
-        if( $this->userDisable($this->user_for_api->status, 'update') ){
+        if( $this->userDisable($this->current_user->status, 'update') ){
             $create_data = [];
             if(isset($request['label']) && !empty($request['label'])){
                 $create_data['label'] = $request['label'];
@@ -97,7 +108,7 @@ class FieldsController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(Request $request, $id){
-        if( $this->userDisable($this->user_for_api->status, 'delete') ){
+        if( $this->userDisable($this->current_user->status, 'delete') ){
             $record = Fields::destroy($id);
             if($record){
                 return $this->successRes(trans('validation.user.successful'));

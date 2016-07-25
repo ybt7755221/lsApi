@@ -18,17 +18,27 @@ class LinkController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(){
-        if( $this->userDisable($this->user_for_api->status, 'create') ){
+        $linkObj = $this->checkCache();
+        if($linkObj == false){
             $linkObj = Link::all(['id', 'title', 'url', 'thumb', 'status', 'description']);
-            if($linkObj){
-                return $this->successRes($linkObj);
-            }
-            return $this->errorRes(trans('errors.LS40401_UNKNOWN'));
-        }else{
-            return $this->errorRes(trans('validation.user.disabled_power',['op' => 'Create']));
+            Cache::put($this->cache_key, $linkObj, $this->cache_time);
         }
+        return $this->successRes($linkObj);
     }
-
+    /**
+     * Restful Api Function - Get a data by id.
+     *
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show($id) {
+        $linkObj = $this->checkCache();
+        if( $linkObj == false || empty($linkObj) ){
+            $linkObj = Fields::where('id', (int) $id)->first(['id', 'label', 'key', 'params', 'publish', 'field_type']);
+            Cache::put($this->cache_key, $linkObj, $this->cache_time);
+        }
+        return $this->successRes($linkObj);
+    }
     /**
      * Restful Api Function - Create a Link data.
      *
@@ -36,7 +46,7 @@ class LinkController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request){
-        if( $this->userDisable($this->user_for_api->status, 'create') ){
+        if( $this->userDisable($this->current_user->status, 'create') ){
             $create_data = ['title' => $request['title'], 'url' => $request['url'], 'status' => $request['status'], 'description' => $request['description'], 'thumb' => '/storage/uploads/default.png'];
             $result = Link::create($create_data);
             if ( $result ) {
@@ -57,7 +67,7 @@ class LinkController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id){
-        if ( $this->userDisable($this->user_for_api->status, 'edit') ) {
+        if ( $this->userDisable($this->current_user->status, 'edit') ) {
             $update_data = ['title' => $request['title'], 'url' => $request['url'], 'status' => $request['status'], 'description' => $request['description']];
             $result = Link::find((int) $id)->update($update_data);
             if ( $result ) {
@@ -79,7 +89,7 @@ class LinkController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(Request $request, $id){
-        if ( $this->userDisable($this->user_for_api->status, 'delete') && $this->isRestApi() ) {
+        if ( $this->userDisable($this->current_user->status, 'delete') && $this->isRestApi() ) {
             $record = Link::destroy($id);
             if($record){
                 return $this->successRes(trans('validation.user.successful'));
