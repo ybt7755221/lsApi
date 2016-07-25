@@ -75,8 +75,8 @@ class UserController extends Controller
      */
     public function update(Request $request, $id=-1) {
         $current_user_status = $this->current_user->status;
-        $id = (int) $id == -1 ? (int) $request['id'] : (int) $id;
-        $user = User::find($id);
+        $id = $id == -1 ? $request['id'] : $id;
+        $user = User::find((int) $id);
         if ($current_user_status === 0) {
             if ($this->isRestApi()){
                 return $this->errorRes(trans('validation.user.disabled_power',['op' => 'edit']));
