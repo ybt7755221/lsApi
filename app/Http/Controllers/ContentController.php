@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Auth;
+use Cache;
 use App\Models\Content;
 use Illuminate\Http\Request;
 use App\Models\Category;
