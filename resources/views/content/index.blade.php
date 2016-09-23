@@ -4,7 +4,7 @@
     <div class="row">
       @include('alert')
       <!--the Menu table div-->
-      <div class="col-md-10 col-md-offset-1">
+      <div class="col-md-12">
         <div class="panel panel-default">
           <!--the user table header-->
           <div class="panel-heading bg-black text-grey col-md-12">

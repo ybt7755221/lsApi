@@ -4,7 +4,7 @@
     <div class="row">
     @include('alert')
       <!--the field table div-->
-      <div class="col-md-10 col-md-offset-1">
+      <div class="col-md-12">
         <div class="panel panel-default">
           <!--the field table header-->
           <div class="panel-heading bg-black text-grey">
@@ -64,7 +64,7 @@
         </div>
       </div>
       <!--the field table div-->
-      <div class="col-md-5 col-md-offset-1">
+      <div class="col-md-6">
         <!--The Friend Link-->
         <div class="panel panel-default">
           <div class="panel-heading bg-black text-grey">
@@ -112,7 +112,7 @@
         <!--The Friend Link-->
       </div>
 
-      <div class="col-md-5">
+      <div class="col-md-6">
         <!--the project information-->
         <div class="panel panel-default">
           <!--the project information header-->
