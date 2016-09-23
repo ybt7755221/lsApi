@@ -18,8 +18,8 @@
       <div class="panel col-xs-12 col-md-6">
         <div class="panel-body">
           <div class="row">
-            <span class="col-md-6"><h4 style="padding: 0 10px;">Oauth2.0 By <strong>{{ Auth::user()->name }}</strong></h4></span>
-            <span class="col-md-6 text-right">
+            <span class="col-md-7"><h4 style="padding: 0 10px;">Oauth2.0 By <strong>{{ Auth::user()->name }}</strong></h4></span>
+            <span class="col-md-5 text-right">
             @if(!isset($oauth_obj->secret) && empty($oauth_obj->secret) )
               <a href='Javascript:void(0);' class="db-oauth db-create" style="line-height:40px; padding: 0 10px;">{{trans('system.create_oauth')}}</a>
             @else
