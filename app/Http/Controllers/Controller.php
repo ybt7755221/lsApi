@@ -48,7 +48,7 @@ class Controller extends BaseController
      * @return bool
      */
     protected function isRestApi(){
-        if( stripos($_SERVER['REQUEST_URI'], $this->rest_name) > 0 ) {
+        if( stripos($_SERVER['REQUEST_URI'], $this->rest_name) !== false ) {
             return true;
         }
         return false;
