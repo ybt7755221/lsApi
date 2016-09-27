@@ -34,10 +34,24 @@ class Controller extends BaseController
             $this->middleware('auth');
             $this->current_user = json_decode(json_encode(Auth::user()['attributes']), FALSE);
         }else{
-            if($_SERVER['REQUEST_METHOD'] == 'GET'){
-                $this->current_user = $this->getUserForApi($_GET['access_token']);
-            }else{
-                $this->current_user = $this->getUserForApi($_POST['access_token']);
+            switch($_SERVER['REQUEST_METHOD'])
+            {
+                case 'GET' :
+                    $this->current_user = $this->getUserForApi($_GET['access_token']);
+                    break;
+                case 'POST' :
+                    $this->current_user = $this->getUserForApi($_POST['access_token']);
+                    break;
+                case 'PUT' :
+                    parse_str(file_get_contents('php://input'), $_POST);
+                    $this->current_user = $this->getUserForApi($_POST['access_token']);
+                    break;
+                case 'DELETE' :
+                    $_DELETE = parse_str(file_get_contents('php://input'), $_POST);
+                    $this->current_user = $this->getUserForApi($_POST['access_token']);
+                    break;
+                default:
+                    break;
             }
         }
         $this->cache_key = substr(md5($_SERVER['REQUEST_URI']), 8, 16);
@@ -61,7 +75,7 @@ class Controller extends BaseController
      * @return \Illuminate\Http\JsonResponse
      */
     protected function successRes($data) {
-        return $this->ResponseJson(1, $data);
+        return response()->json($data,200);
     }
     /**
      * Return error json data
@@ -69,8 +83,8 @@ class Controller extends BaseController
      * @param $data
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function errorRes($data) {
-        return $this->ResponseJson(0, $data);
+    protected function errorRes($data, $http_status_code=0) {
+        return $this->ResponseJson($data, $http_status_code);
     }
     /**
      * Return a json data. This function is strand for successRes and errorRes.

@@ -79,14 +79,14 @@ class UserController extends Controller
         $user = User::find((int) $id);
         if ($current_user_status === 0) {
             if ($this->isRestApi()){
-                return $this->errorRes(trans('validation.user.disabled_power',['op' => 'edit']));
+                return $this->errorRes(trans('validation.user.disabled_power',['op' => 'edit']), 401);
             }
             $request->session()->flash('waring', trans('validation.user.disabled_power',['op' => 'edit']));
             return Redirect::to('user');
         }
         if ($current_user_status < $user['status']) {
             if ($this->isRestApi()){
-                return $this->errorRes(trans('validation.user.disabled_level'));
+                return $this->errorRes(trans('validation.user.disabled_level'), 403);
             }
             $request->session()->flash('waring', trans('validation.user.disabled_level'));
             return Redirect::to('user');
@@ -106,7 +106,7 @@ class UserController extends Controller
         else{
             if($request['status'] == 4){
                 if ($this->isRestApi()){
-                    return $this->errorRes(trans('validation.user.disabled_power',['op' => 'edit']));
+                    return $this->errorRes(trans('validation.user.disabled_power',['op' => 'edit']), 401);
                 }
                 $request->session()->flash('waring', trans('validation.user.disabled_power',['op' => 'edit']));
                 return Redirect::to('user');
@@ -117,7 +117,7 @@ class UserController extends Controller
         $result = $user->save();
         if ( !$result ) {
             if($this->isRestApi())
-                return $this->errorRes(trans('errors.LS40401_UNKNOWN'));
+                return $this->errorRes(trans('errors.LS40401_UNKNOWN'), 401);
             $request->session()->flash('error', trans('errors.LS40401_UNKNOWN'));
         } else {
             if($this->checkCache()){
@@ -212,7 +212,7 @@ class UserController extends Controller
         $current_user_status = (int) $this->current_user->status;
         if ($current_user_status === 0) {
             if ( $this->isRestApi() ) {
-                return $this->errorRes(trans('validation.user.disabled_power',['op' => 'create']));
+                return $this->errorRes(trans('validation.user.disabled_power',['op' => 'create']), 401);
             }
             $request->session()->flash('waring', trans('validation.user.disabled_power',['op' => 'create']));
             return Redirect::to('user');
@@ -238,13 +238,15 @@ class UserController extends Controller
      */
     public function destroy(Request $request, $id) {
         if(!$this->isRestApi()){
-            return $this->errorRes(trans('errors.LS40401_UNKNOWN'));
+            return $this->errorRes(trans('errors.LS40401_UNKNOWN'), 401);
         }
         $current_user_status = (int) $this->current_user->status ? (int) $this->current_user->status : 0 ;
+        var_dump($current_user_status); exit;
+
         $id = (int) $request['id'];
         $record = $this->removeData($current_user_status, $id);
         if(empty($record)){
-            return $this->errorRes(trans('errors.LS40401_UNKNOWN'));
+            return $this->errorRes(trans('errors.LS40401_UNKNOWN'), 401);
         }
         Cache::flush();
         return $this->successRes(trans('validation.user.successful'));

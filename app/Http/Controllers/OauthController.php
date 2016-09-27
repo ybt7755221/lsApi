@@ -83,9 +83,9 @@ class OauthController extends Controller
                 }
             }
         }else{
-            return $this->errorRes(trans('validation.user.disabled_power',['op' => 'create']));
+            return $this->errorRes(trans('validation.user.disabled_power',['op' => 'create']), 401);
         }
-        return $this->errorRes(trans('errors.LS40401_UNKNOWN'));
+        return $this->errorRes(trans('errors.LS40401_UNKNOWN'), 401);
     }
 
     /**
