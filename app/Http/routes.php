@@ -14,6 +14,10 @@ Route::post('oauth/access_token', function() {
     return Response::json(Authorizer::issueAccessToken());
 });
 Route::group(['middleware' => 'oauth', 'prefix' => 'api/v1'], function () {
+    if($_SERVER['REQUEST_METHOD'] === 'PUT' || $_SERVER['REQUEST_METHOD'] === 'DELETE' )
+    {
+        parse_str(file_get_contents('php://input'),$_POST);
+    }
     Route::resource('/users', 'UserController');
     Route::resource('/menu', 'CategoryController');
     Route::resource('/content', 'ContentController');
