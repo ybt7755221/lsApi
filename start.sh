@@ -1,5 +1,4 @@
 #!/bin/sh
-
 # Author : Burt
 # Script follows here:
 

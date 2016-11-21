@@ -11,7 +11,7 @@
           <input type="hidden" name="table_name" value="link" readonly="true"/>
           <div class="col-md-6">
             <label>{{trans('database.link.thumb')}}</label>
-            <img id="thumb" src={{url('/../storage/uploads/default.png')}} width="180px" />
+            <img id="thumb" src={{url('/images/default.png')}} width="180px" />
             <input class="can_be_clear" type="file" name="thumb" value="{{old('thumb')}}" />
           </div>
           <div class="col-md-6">
