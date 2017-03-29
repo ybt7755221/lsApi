@@ -1,6 +1,5 @@
 #!/bin/sh
 # Author : Burt Yu
-# branch : test1
 # Script follows here:
 
 # Check the composer.
