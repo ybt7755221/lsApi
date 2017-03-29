@@ -1,5 +1,5 @@
 #!/bin/sh
-# Author : Burt Yu
+# Author : Burt
 # Script follows here:
 
 # Check the composer.
